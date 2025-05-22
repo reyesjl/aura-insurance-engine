@@ -15,8 +15,8 @@ class Question(models.Model):
 class ApplicationSession(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    carriers = models.ManyToManyField(Carrier)
-    coverages = models.ManyToManyField(CoverageLine)
+    carriers = models.ManyToManyField(Carrier, blank=True)
+    coverages = models.ManyToManyField(CoverageLine, blank=True)
     status = models.CharField(default='pending', max_length=20)
 
 class Submission(models.Model):
