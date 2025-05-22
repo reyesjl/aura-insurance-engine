@@ -9,8 +9,8 @@ class CoverageLine(models.Model):
 
 class Question(models.Model):
     text = models.TextField()
-    carriers = models.ManyToManyField(Carrier)
-    coverages = models.ManyToManyField(CoverageLine)
+    carriers = models.ManyToManyField(Carrier, blank=True)
+    coverages = models.ManyToManyField(CoverageLine, blank=True)
 
 class ApplicationSession(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
