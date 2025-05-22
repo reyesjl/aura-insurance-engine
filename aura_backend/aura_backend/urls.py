@@ -4,6 +4,8 @@ from core import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/carriers/', views.get_carriers),
+    path('api/v1/coverages/', views.get_coverages),
     path('api/v1/create-session/', views.create_session),
     path('api/v1/fill/<uuid:token>/', views.fill_session),
     path('api/v1/submit/<uuid:token>/', views.submit_form),

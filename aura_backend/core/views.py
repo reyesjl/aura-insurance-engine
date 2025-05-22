@@ -57,3 +57,15 @@ def get_status(request, token):
             return JsonResponse({'status': session.status})
     except ApplicationSession.DoesNotExist:
         return JsonResponse({'error': 'Invalid token'}, status=404)
+    
+def get_carriers(request):
+    carriers = Carrier.objects.all()
+    return JsonResponse({
+        'carriers': [{'id': c.id, 'name': c.name} for c in carriers]
+    })
+
+def get_coverages(request):
+    coverages = CoverageLine.objects.all()
+    return JsonResponse({
+        'coverages': [{'id': c.id, 'name': c.name} for c in coverages]
+    })
