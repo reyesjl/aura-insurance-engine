@@ -12,16 +12,33 @@ def create_session(request):
         session.coverages.set(CoverageLine.objects.filter(id__in=data['coverages']))
         session.save()
         return JsonResponse({'token': str(session.token)}, status=201)
+    
+def get_sessions(request):
+    sessions = ApplicationSession.objects.all()
+    return JsonResponse({
+        'sessions': [{'token': str(s.token), 'status': s.status} for s in sessions]
+    })
 
 def fill_session(request, token):
     try:
         session = ApplicationSession.objects.get(token=token)
         carrier_ids = session.carriers.values_list('id', flat=True)
         coverage_ids = session.coverages.values_list('id', flat=True)
-        questions = Question.objects.filter(
+        
+        # Questions matching selected carriers and coverages
+        specific_questions = Question.objects.filter(
             carriers__id__in=carrier_ids,
             coverages__id__in=coverage_ids
-        ).distinct()
+        )
+
+        # Questions with no carriers (global to all carriers)
+        global_carrier_questions = Question.objects.filter(carriers__isnull=True)
+
+        # Questions with no coverages (global to all coverages)
+        global_coverage_questions = Question.objects.filter(coverages__isnull=True)
+
+        # Combine all and remove duplicates
+        questions = (specific_questions | global_carrier_questions | global_coverage_questions).distinct()
 
         return JsonResponse({
             'questions': [{'id': q.id, 'text': q.text} for q in questions]
@@ -68,4 +85,10 @@ def get_coverages(request):
     coverages = CoverageLine.objects.all()
     return JsonResponse({
         'coverages': [{'id': c.id, 'name': c.name} for c in coverages]
+    })
+
+def get_questions(request):
+    questions = Question.objects.all()
+    return JsonResponse({
+        'questions': [{'id': q.id, 'text': q.text} for q in questions]
     })
