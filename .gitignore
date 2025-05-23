@@ -20,3 +20,61 @@ env/
 venv/
 ENV/
 .venv/
+
+# Node.js dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*.local
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+
+# Cache directories
+.cache/
+.vite/
+*.log
+
+# Testing
+coverage/
+*.lcov
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm/
+
+# Linting
+.eslintcache
+
+# TypeScript
+*.tsbuildinfo
+
+# Vue-specific
+public/hot
+public/dist
+public/assets
+*.local
+*.bak
+*.bak.*
