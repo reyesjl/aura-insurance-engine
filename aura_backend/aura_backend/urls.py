@@ -7,6 +7,7 @@ urlpatterns = [
     path('api/v1/carriers/', views.get_carriers),
     path('api/v1/coverages/', views.get_coverages),
     path('api/v1/questions/', views.get_questions),
+    path('api/v1/preview-questions/', views.preview_questions),
     path('api/v1/sessions/', views.get_sessions),
     path('api/v1/create-session/', views.create_session),
     path('api/v1/fill/<uuid:token>/', views.fill_session),

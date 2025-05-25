@@ -1,4 +1,4 @@
-import type { Carrier, CoverageLine } from '@/types'
+import type { Carrier, CoverageLine, Question } from '@/types'
 
 const API_VERSION = import.meta.env.VITE_API_VERSION
 const BASE_URL = `${import.meta.env.VITE_API_BASE}${API_VERSION}`
@@ -52,6 +52,27 @@ export async function createSession(
     return await handleResponse<{ token: string }>(res, 'token')
   } catch (error) {
     console.error('Error creating session:', error)
+    throw error
+  }
+}
+
+// Preview Questions
+export async function previewQuestions(
+  carrierIds: number[],
+  coverageIds: number[],
+): Promise<Question[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/preview-questions/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        carriers: carrierIds,
+        coverages: coverageIds,
+      }),
+    })
+    return await handleResponse<Question[]>(res, 'questions')
+  } catch (error) {
+    console.error('Error previewing questions:', error)
     throw error
   }
 }

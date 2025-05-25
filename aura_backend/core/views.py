@@ -2,8 +2,10 @@ from django.http import JsonResponse
 from .models import *
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 @csrf_exempt
+@require_POST
 def create_session(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -89,6 +91,26 @@ def get_coverages(request):
 
 def get_questions(request):
     questions = Question.objects.all()
+    return JsonResponse({
+        'questions': [{'id': q.id, 'text': q.text} for q in questions]
+    })
+
+@csrf_exempt
+@require_POST
+def preview_questions(request):
+    data = json.loads(request.body)
+    carrier_ids = data.get('carriers', [])
+    coverage_ids = data.get('coverages', [])
+
+    specific_questions = Question.objects.filter(
+        carriers__id__in=carrier_ids,
+        coverages__id__in=coverage_ids
+    )
+    global_carrier_questions = Question.objects.filter(carriers__isnull=True)
+    global_coverage_questions = Question.objects.filter(coverages__isnull=True)
+
+    questions = (specific_questions | global_carrier_questions | global_coverage_questions).distinct()
+
     return JsonResponse({
         'questions': [{'id': q.id, 'text': q.text} for q in questions]
     })

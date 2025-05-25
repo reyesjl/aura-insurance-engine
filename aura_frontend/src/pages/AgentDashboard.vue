@@ -5,12 +5,12 @@
 
     <!-- Carrier Selection -->
     <div>
-      <label class="block font-medium">Select Carriers:</label>
-      <div class="space-y-2">
+      <label class="block font-medium">Select Carriers</label>
+      <div class="mt-4">
         <div
           v-for="carrier in carriers"
           :key="carrier.id"
-          class="flex items-center space-x-2"
+          class="flex items-center space-x-10"
         >
           <input
             type="checkbox"
@@ -19,7 +19,7 @@
             v-model="selectedCarriers"
             class="form-checkbox"
           />
-          <label :for="'carrier-' + carrier.id">
+          <label class="mx-2" :for="'carrier-' + carrier.id">
             {{ carrier.name }}
           </label>
         </div>
@@ -28,8 +28,8 @@
 
     <!-- Coverage Selection -->
     <div>
-      <label class="block font-medium">Select Coverages:</label>
-      <div class="space-y-2">
+      <label class="block font-medium">Select Coverages</label>
+      <div class="mt-2">
         <div
           v-for="coverage in coverages"
           :key="coverage.id"
@@ -42,11 +42,19 @@
             v-model="selectedCoverages"
             class="form-checkbox"
           />
-          <label :for="'coverage-' + coverage.id">
+          <label class="mx-2" :for="'coverage-' + coverage.id">
             {{ coverage.name }}
           </label>
         </div>
       </div>
+    </div>
+
+    <!-- Preview Questions Section -->
+    <div v-if="questions.length" class="mt-6">
+      <h2 class="font-semibold">Preview Questions</h2>
+      <ul class="list-disc ml-6">
+        <li v-for="q in questions" :key="q.id">{{ q.text }}</li>
+      </ul>
     </div>
 
     <!-- Create Session Button -->
@@ -68,9 +76,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { fetchCarriers, fetchCoverageLines, createSession } from '@/api/sessions'
-import type { Carrier, CoverageLine } from '@/types'
+import { ref, onMounted, watch } from 'vue'
+import { fetchCarriers, fetchCoverageLines, createSession, previewQuestions } from '@/api/sessions'
+import type { Carrier, CoverageLine, Question } from '@/types'
 
 const carriers = ref<Carrier[]>([])
 const coverages = ref<CoverageLine[]>([])
@@ -79,9 +87,24 @@ const selectedCarriers = ref<number[]>([])
 const selectedCoverages = ref<number[]>([])
 const generatedLink = ref<string>('')
 
+const questions = ref<Question[]>([])
+
 onMounted(async () => {
   carriers.value = await fetchCarriers()
   coverages.value = await fetchCoverageLines()
+})
+
+// Watch for changes and update questions
+watch([selectedCarriers, selectedCoverages], async () => {
+  if (selectedCarriers.value.length || selectedCoverages.value.length) {
+    try {
+      questions.value = await previewQuestions(selectedCarriers.value, selectedCoverages.value)
+    } catch (e) {
+      questions.value = []
+    }
+  } else {
+    questions.value = []
+  }
 })
 
 async function handleCreateSession() {
