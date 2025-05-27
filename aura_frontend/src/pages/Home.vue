@@ -45,6 +45,9 @@
       <p>
         Thank you for your time and insight.
       </p>
+      <p>
+        <a href="https://forms.gle/9T3hno3iGvyiuWGd7" target="_blank" rel="noopener" class="text-blue-400 underline hover:text-blue-600">Leave feedback here</a>
+      </p>
     </div>
   </div>
 </template>
