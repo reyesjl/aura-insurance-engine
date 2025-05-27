@@ -2,10 +2,10 @@ from django.http import JsonResponse
 from .models import *
 import json
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods
 
 @csrf_exempt
-@require_POST
+@require_http_methods(["POST"])
 def create_session(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -20,6 +20,22 @@ def get_sessions(request):
     return JsonResponse({
         'sessions': [{'token': str(s.token), 'status': s.status} for s in sessions]
     })
+
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_session(request, token):
+    try:
+        session = ApplicationSession.objects.get(token=token)
+        session.delete()
+        return JsonResponse({'status': 'deleted'})
+    except ApplicationSession.DoesNotExist:
+        return JsonResponse({'error': 'Invalid token'}, status=404)
+    
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_all_sessions(request):
+    ApplicationSession.objects.all().delete()
+    return JsonResponse({'status': 'all deleted'})
 
 def fill_session(request, token):
     try:
@@ -96,7 +112,7 @@ def get_questions(request):
     })
 
 @csrf_exempt
-@require_POST
+@require_http_methods(["POST"])
 def preview_questions(request):
     data = json.loads(request.body)
     carrier_ids = data.get('carriers', [])

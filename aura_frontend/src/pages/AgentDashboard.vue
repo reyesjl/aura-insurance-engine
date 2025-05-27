@@ -1,12 +1,23 @@
 <template>
   <!-- Navigation Bar -->
-  <div class="bg-black border-b-1 border-white">
-    <div class="border-r-1 border-white p-4 w-fit text-2xl font-bold">
-      Aura Solutions
-    </div>
+  <div class="bg-black border-b-1 border-white flex">
+      <div class="border-r-1 border-white p-6 px-10 w-fit text-2xl font-bold">
+          AURA SOLUTIONS
+      </div>
+      <div class="border-r-1 border-white p-6 px-10 w-fit flex align-center items-center gap-8 text-sm">
+          <router-link to="/" class="text-white hover:underline underline-offset-6">
+              Home
+          </router-link>
+            <router-link to="/agent" class="text-white hover:underline underline-offset-6">
+              Create
+          </router-link>
+            <router-link to="/sessions" class="text-white hover:underline underline-offset-6">
+              Track
+          </router-link>
+      </div>
   </div>
-  <div class="container mx-auto p-6">
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div class="container mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Left Column: Selections and Actions -->
       <div class="space-y-6">
         <!-- Carrier Selection -->
@@ -59,14 +70,16 @@
         <button
           class="transition-[.3ms] px-4 py-2 border-1 border-white bg-black text-white  hover:bg-white hover:text-black"
           @click="handleCreateSession"
+          :disabled="isLoading"
         >
-          Create Session
+          <span v-if="isLoading">...</span>
+           <span v-else>Create Session +</span>
         </button>
 
         <!-- Generated Link -->
-        <div v-if="generatedLink" class="mt-4">
-          <p class="font-helvetica font-bold">Aura Application Link</p>
-          <a :href="generatedLink" class="text-white underline" target="_blank">
+        <div v-if="generatedLink" class="mt-8">
+          <p class="font-helvetica font-bold mb-2">Aura Public Link</p>
+          <a :href="generatedLink" class="text-yellow-500 underline" target="_blank">
             {{ generatedLink }}
           </a>
         </div>
@@ -87,8 +100,8 @@
               </div>
             </span>
           </div>
-          <ul class="list-none p-0 ml-2">
-            <li class="mb-2" v-for="q in questions" :key="q.id">{{ q.text }}</li>
+          <ul class="list-none p-0">
+            <li class="mb-2 text-gray-400" v-for="q in questions" :key="q.id">{{ q.text }}</li>
           </ul>
         </div>
         <div v-else>
@@ -111,6 +124,11 @@ const selectedCarriers = ref<number[]>([])
 const selectedCoverages = ref<number[]>([])
 const generatedLink = ref<string>('')
 
+// handle submit button state
+const isLoading = ref(false)
+const errorMessage = ref('')
+const successMessage = ref('')
+
 const questions = ref<Question[]>([])
 const lastPreviewRequestAt = ref<Date | null>(null)
 
@@ -132,26 +150,34 @@ onMounted(async () => {
 
 // Watch for changes and update questions
 watch([selectedCarriers, selectedCoverages], async () => {
+  isLoading.value = true
     try {
       questions.value = await previewQuestions(selectedCarriers.value, selectedCoverages.value)
       updatePreviewTimestamp()
+      isLoading.value = false
     } catch (e) {
       questions.value = []
+      isLoading.value = false
+    } finally {
+      isLoading.value = false
     }
 })
 
 async function handleCreateSession() {
+  isLoading.value = true
   try {
     const token = await createSession(selectedCarriers.value, selectedCoverages.value)
     if (token) {
       generatedLink.value = `http://127.0.0.1:8000/api/v1/fill/${token}`
     } else {
       generatedLink.value = ''
-      alert('No token returned from API')
+      errorMessage.value = 'No token was returned form API'
     }
   } catch (error) {
-    alert('Failed to create session')
+    errorMessage.value = 'Failed to create session. Please try again.'
     console.error(error)
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -165,7 +191,7 @@ function formatTimestamp(date: Date | null) {
 <style scoped>
 .questions-container {
   border: 1px solid white;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 500px;
 }
 </style>

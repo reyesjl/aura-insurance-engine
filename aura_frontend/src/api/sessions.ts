@@ -1,4 +1,4 @@
-import type { Carrier, CoverageLine, Question } from '@/types'
+import type { ApplicationSession, Carrier, CoverageLine, Question } from '@/types'
 
 const API_VERSION = import.meta.env.VITE_API_VERSION
 const BASE_URL = `${import.meta.env.VITE_API_BASE}${API_VERSION}`
@@ -20,6 +20,17 @@ export async function fetchCarriers(): Promise<Carrier[]> {
     return await handleResponse<Carrier[]>(res, 'carriers')
   } catch (error) {
     console.error('Error fetching carriers:', error)
+    throw error
+  }
+}
+
+// Fetch sessions
+export async function fetchSessions(): Promise<ApplicationSession[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/sessions/`)
+    return await handleResponse<ApplicationSession[]>(res, 'sessions')
+  } catch (error) {
+    console.error('Error fetching sessions:', error)
     throw error
   }
 }
@@ -52,6 +63,32 @@ export async function createSession(
     return await handleResponse<{ token: string }>(res, 'token')
   } catch (error) {
     console.error('Error creating session:', error)
+    throw error
+  }
+}
+
+// Delete a session
+export async function deleteSession(token: string): Promise<void> {
+  try {
+    const res = await fetch(`${BASE_URL}/delete-session/${token}/`, {
+      method: 'DELETE',
+    })
+    await handleResponse<void>(res)
+  } catch (error) {
+    console.error('Error deleting session:', error)
+    throw error
+  }
+}
+
+// Delete all sessions
+export async function deleteAllSessions(): Promise<void> {
+  try {
+    const res = await fetch(`${BASE_URL}/delete-all-sessions/`, {
+      method: 'DELETE',
+    })
+    await handleResponse<void>(res)
+  } catch (error) {
+    console.error('Error deleting all sessions:', error)
     throw error
   }
 }
