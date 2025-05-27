@@ -1,76 +1,100 @@
 <template>
-  <div class="container mx-auto p-6 space-y-6">
-    <h1 class="text-2xl font-bold">Agent Dashboard</h1>
-    <p>Create → Track → Complete</p>
+  <!-- Navigation Bar -->
+  <div class="bg-black border-b-1 border-white">
+    <div class="border-r-1 border-white p-4 w-fit text-2xl font-bold">
+      Aura Solutions
+    </div>
+  </div>
+  <div class="container mx-auto p-6">
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Left Column: Selections and Actions -->
+      <div class="space-y-6">
+        <!-- Carrier Selection -->
+        <div>
+          <label class="block font-bold font-helvetica">Select Carriers</label>
+          <div class="mt-2">
+            <div
+              v-for="carrier in carriers"
+              :key="carrier.id"
+              class="flex items-center space-x-10"
+            >
+              <input
+                type="checkbox"
+                :id="'carrier-' + carrier.id"
+                :value="carrier.id"
+                v-model="selectedCarriers"
+                class="form-checkbox"
+              />
+              <label class="mx-2" :for="'carrier-' + carrier.id">
+                {{ carrier.name }}
+              </label>
+            </div>
+          </div>
+        </div>
 
-    <!-- Carrier Selection -->
-    <div>
-      <label class="block font-medium">Select Carriers</label>
-      <div class="mt-4">
-        <div
-          v-for="carrier in carriers"
-          :key="carrier.id"
-          class="flex items-center space-x-10"
+        <!-- Coverage Selection -->
+        <div>
+          <label class="block font-bold font-helvetica">Select Coverages</label>
+          <div class="mt-2">
+            <div
+              v-for="coverage in coverages"
+              :key="coverage.id"
+              class="flex items-center space-x-2"
+            >
+              <input
+                type="checkbox"
+                :id="'coverage-' + coverage.id"
+                :value="coverage.id"
+                v-model="selectedCoverages"
+                class="form-checkbox"
+              />
+              <label class="mx-2" :for="'coverage-' + coverage.id">
+                {{ coverage.name }}
+              </label>
+            </div>
+          </div>
+        </div> 
+
+        <!-- Create Session Button -->
+        <button
+          class="transition-[.3ms] px-4 py-2 border-1 border-white bg-black text-white  hover:bg-white hover:text-black"
+          @click="handleCreateSession"
         >
-          <input
-            type="checkbox"
-            :id="'carrier-' + carrier.id"
-            :value="carrier.id"
-            v-model="selectedCarriers"
-            class="form-checkbox"
-          />
-          <label class="mx-2" :for="'carrier-' + carrier.id">
-            {{ carrier.name }}
-          </label>
+          Create Session
+        </button>
+
+        <!-- Generated Link -->
+        <div v-if="generatedLink" class="mt-4">
+          <p class="font-helvetica font-bold">Aura Application Link</p>
+          <a :href="generatedLink" class="text-white underline" target="_blank">
+            {{ generatedLink }}
+          </a>
         </div>
       </div>
-    </div>
 
-    <!-- Coverage Selection -->
-    <div>
-      <label class="block font-medium">Select Coverages</label>
-      <div class="mt-2">
-        <div
-          v-for="coverage in coverages"
-          :key="coverage.id"
-          class="flex items-center space-x-2"
-        >
-          <input
-            type="checkbox"
-            :id="'coverage-' + coverage.id"
-            :value="coverage.id"
-            v-model="selectedCoverages"
-            class="form-checkbox"
-          />
-          <label class="mx-2" :for="'coverage-' + coverage.id">
-            {{ coverage.name }}
-          </label>
+      <!-- Right Column: Preview Questions -->
+      <div class="questions-container p-4 pb-1 min-h-[300px]">
+        <div v-if="questions.length">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-semibold">Preview Questions [{{ questions.length }}]</h2>
+            <span v-if="lastPreviewRequestAt" class="flex items-center text-xs text-gray-400 gap-1">
+              <svg class="w-3 h-3 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="10" />
+              </svg>
+              <div class="flex items-center gap-1">
+                <span>Last updated: </span>
+                {{ formatTimestamp(lastPreviewRequestAt) }}
+              </div>
+            </span>
+          </div>
+          <ul class="list-none p-0 ml-2">
+            <li class="mb-2" v-for="q in questions" :key="q.id">{{ q.text }}</li>
+          </ul>
+        </div>
+        <div v-else>
+          <p class="text-gray-500">No questions to preview. Please select carriers and coverages.</p>
         </div>
       </div>
-    </div>
-
-    <!-- Preview Questions Section -->
-    <div v-if="questions.length" class="mt-6">
-      <h2 class="font-semibold">Preview Questions</h2>
-      <ul class="list-disc ml-6">
-        <li v-for="q in questions" :key="q.id">{{ q.text }}</li>
-      </ul>
-    </div>
-
-    <!-- Create Session Button -->
-    <button
-      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      @click="handleCreateSession"
-    >
-      Create Session
-    </button>
-
-    <!-- Generated Link -->
-    <div v-if="generatedLink" class="mt-4">
-      <p class="font-semibold">Form Link:</p>
-      <a :href="generatedLink" class="text-blue-600 underline" target="_blank">
-        {{ generatedLink }}
-      </a>
     </div>
   </div>
 </template>
@@ -88,23 +112,32 @@ const selectedCoverages = ref<number[]>([])
 const generatedLink = ref<string>('')
 
 const questions = ref<Question[]>([])
+const lastPreviewRequestAt = ref<Date | null>(null)
+
+function updatePreviewTimestamp() {
+  lastPreviewRequestAt.value = new Date()
+}
 
 onMounted(async () => {
   carriers.value = await fetchCarriers()
   coverages.value = await fetchCoverageLines()
+
+  try {
+    questions.value = await previewQuestions(selectedCarriers.value, selectedCoverages.value)
+    updatePreviewTimestamp()
+  } catch (e) {
+    questions.value = []
+  }
 })
 
 // Watch for changes and update questions
 watch([selectedCarriers, selectedCoverages], async () => {
-  if (selectedCarriers.value.length || selectedCoverages.value.length) {
     try {
       questions.value = await previewQuestions(selectedCarriers.value, selectedCoverages.value)
+      updatePreviewTimestamp()
     } catch (e) {
       questions.value = []
     }
-  } else {
-    questions.value = []
-  }
 })
 
 async function handleCreateSession() {
@@ -121,4 +154,18 @@ async function handleCreateSession() {
     console.error(error)
   }
 }
+
+// Format helper for timestamp
+function formatTimestamp(date: Date | null) {
+  if (!date) return ''
+  return date.toLocaleTimeString()
+}
 </script>
+
+<style scoped>
+.questions-container {
+  border: 1px solid white;
+  overflow-y: scroll;
+  max-height: 500px;
+}
+</style>
