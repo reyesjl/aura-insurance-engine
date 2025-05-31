@@ -5,7 +5,7 @@ import SessionList from '../pages/SessionList.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
-  { path : '/sessions', name: 'SessionList', component: SessionList },
+  { path: '/sessions', name: 'SessionList', component: SessionList },
   { path: '/agent', name: 'AgentDashboard', component: AgentDashboard },
 ]
 
@@ -15,4 +15,3 @@ const router = createRouter({
 })
 
 export default router
-

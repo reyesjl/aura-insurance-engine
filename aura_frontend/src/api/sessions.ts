@@ -49,7 +49,7 @@ export async function fetchCoverageLines(): Promise<CoverageLine[]> {
 // Create session
 export async function createSession(
   carrierIds: number[],
-  coverageIds: number[]
+  coverageIds: number[],
 ): Promise<{ token: string }> {
   try {
     const res = await fetch(`${BASE_URL}/create-session/`, {

@@ -1,21 +1,5 @@
 <template>
-  <!-- Navigation Bar -->
-  <div class="bg-black border-b-1 border-white flex">
-      <div class="border-r-1 border-white p-6 px-10 w-fit text-2xl font-bold">
-          AURA SOLUTIONS
-      </div>
-      <div class="border-r-1 border-white p-6 px-10 w-fit flex align-center items-center gap-8 text-sm">
-          <router-link to="/" class="text-white hover:underline underline-offset-6">
-              Home
-          </router-link>
-            <router-link to="/agent" class="text-white hover:underline underline-offset-6">
-              Create
-          </router-link>
-            <router-link to="/sessions" class="text-white hover:underline underline-offset-6">
-              Track
-          </router-link>
-      </div>
-  </div>
+  <NavBar />
   <div class="container mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Left Column: Selections and Actions -->
@@ -24,11 +8,7 @@
         <div>
           <label class="block font-bold font-helvetica">Select Carriers</label>
           <div class="mt-2">
-            <div
-              v-for="carrier in carriers"
-              :key="carrier.id"
-              class="flex items-center space-x-10"
-            >
+            <div v-for="carrier in carriers" :key="carrier.id" class="flex items-center space-x-10">
               <input
                 type="checkbox"
                 :id="'carrier-' + carrier.id"
@@ -64,16 +44,16 @@
               </label>
             </div>
           </div>
-        </div> 
+        </div>
 
         <!-- Create Session Button -->
         <button
-          class="transition-[.3ms] px-4 py-2 border-1 border-white bg-black text-white  hover:bg-white hover:text-black"
+          class="transition-[.3ms] px-4 py-2 border-1 border-white bg-black text-white hover:bg-white hover:text-black"
           @click="handleCreateSession"
           :disabled="isLoading"
         >
           <span v-if="isLoading">...</span>
-           <span v-else>Create Session +</span>
+          <span v-else>Create Session +</span>
         </button>
 
         <!-- Generated Link -->
@@ -105,7 +85,9 @@
           </ul>
         </div>
         <div v-else>
-          <p class="text-gray-500">No questions to preview. Please select carriers and coverages.</p>
+          <p class="text-gray-500">
+            No questions to preview. Please select carriers and coverages.
+          </p>
         </div>
       </div>
     </div>
@@ -114,6 +96,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
+import NavBar from '@/components/NavBar.vue'
 import { fetchCarriers, fetchCoverageLines, createSession, previewQuestions } from '@/api/sessions'
 import type { Carrier, CoverageLine, Question } from '@/types'
 
@@ -151,16 +134,16 @@ onMounted(async () => {
 // Watch for changes and update questions
 watch([selectedCarriers, selectedCoverages], async () => {
   isLoading.value = true
-    try {
-      questions.value = await previewQuestions(selectedCarriers.value, selectedCoverages.value)
-      updatePreviewTimestamp()
-      isLoading.value = false
-    } catch (e) {
-      questions.value = []
-      isLoading.value = false
-    } finally {
-      isLoading.value = false
-    }
+  try {
+    questions.value = await previewQuestions(selectedCarriers.value, selectedCoverages.value)
+    updatePreviewTimestamp()
+    isLoading.value = false
+  } catch (e) {
+    questions.value = []
+    isLoading.value = false
+  } finally {
+    isLoading.value = false
+  }
 })
 
 async function handleCreateSession() {

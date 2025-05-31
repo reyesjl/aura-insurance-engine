@@ -31,7 +31,7 @@ export interface ApplicationSession {
 // Match: Submission model
 export interface Submission {
   id: number
-  session: number                   // session ID or token-based link
-  answers: Record<string, any>      // or more specific shape if you define it
+  session: number // session ID or token-based link
+  answers: Record<string, any> // or more specific shape if you define it
   submitted_at: string
 }
