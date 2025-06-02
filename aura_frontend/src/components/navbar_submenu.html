@@ -1,0 +1,32 @@
+<!-- Snippet for navbar submenu on link hover -->
+<!-- Different than toggable menu button, and only available on desktop this one -->
+<div class="hidden fixed w-full top-[101px] menu bg-black md:flex flex-col md:flex-row">
+    <div class="border-r-1 border-white w-full md:w-1/2 p-20 text-sm flex flex-col gap-4">
+      <div class="submenu_title uppercase">Personal</div>
+      <div class="submenu_list">
+        <ul class="list-none list-inside flex flex-col gap-2 text-3xl">
+          <li>
+            <router-link to="/agent" class="text-white hover:underline underline-offset-6">
+              MyAgent+
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/agent/auto" class="text-white hover:underline underline-offset-6">
+              Auto Insurance
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/agent/home" class="text-white hover:underline underline-offset-6">
+              Home Insurance
+            </router-link>
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+    <div class="border-r-1 border-white p-20">
+      <div class="w-full md:w-1/2 text-xl">
+      Handle personal insurance applications with ease. Select carriers, fill out the form, and
+      download the completed application. Perfect for personal lines agents.</div>
+    </div>
+  </div>

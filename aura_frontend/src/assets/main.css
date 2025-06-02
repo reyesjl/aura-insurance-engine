@@ -6,7 +6,11 @@
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
+}
+
+.content {
   margin-top: 100px;
+  margin-bottom: 100px;
 }
 
 .nav-spacer {
@@ -14,8 +18,7 @@
 }
 
 body {
-  background-color: black;
-  color: white;
+  font-family: Helvetica, sans-serif;
 }
 
 .fade-enter-active, .fade-leave-active {
