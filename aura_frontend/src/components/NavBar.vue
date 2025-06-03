@@ -1,21 +1,22 @@
 <template>
   <div
     :class="[
-      'fixed w-full top-0 flex transition-colors duration-300',
+      'fixed w-full top-0 flex justify-between transition-colors duration-300 z-9999',
       isScrolled
-        ? 'bg-[#FAF3E3] text-black border-b border-black'
-        : 'bg-transparent text-white border-b border-white'
+        ? 'bg-beige-200 text-black border-b border-black'
+        : 'bg-transparent text-white border-b border-white',
+      isHidden && isScrolled ? '-translate-y-full' : 'translate-y-0',
+      'transition-transform duration-300'
     ]"
   >
     <div
       :class="[
-        'p-10 md:p-8 w-fit text-2xl font-bold font-scp flex items-center align-center duration-300',
+        'p-10 md:p-8 w-fit text-2xl font-bold font-scp flex flex-grow-1 md:flex-grow-0 items-center align-center duration-300',
         isScrolled
           ? 'border-r border-black hover:bg-gray-200 hover:text-black'
-          : 'border-r border-white hover:bg-gray-400 hover:text-black'
+          : 'border-r border-white hover:bg-gray-400 hover:text-black',
       ]"
     >
-
       <router-link to="/">
         <img
           v-if="!isScrolled"
@@ -33,40 +34,47 @@
     </div>
     <div
       :class="[
-        'px-10 w-fit flex flex-grow align-center items-center gap-8',
-        isScrolled ? 'border-r border-black' : 'border-r border-white'
+        'px-10 w-fit hidden md:flex flex-grow align-center items-center gap-8',
+        isScrolled ? 'border-r border-black' : 'border-r border-white',
       ]"
     >
       <router-link
         to="/"
         :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-      >Home</router-link>
+        >Home</router-link
+      >
       <router-link
-        to="/agent"
+        to="/personal"
         :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-      >Personal</router-link>
+        >Personal</router-link
+      >
       <router-link
-        to="/sessions"
+        to="/commercial"
         :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-      >Commercial</router-link>
+        >Commercial</router-link
+      >
       <router-link
         to="/about"
         :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-      >About Us</router-link>
+        >About Us</router-link
+      >
     </div>
-    <div class="flex align-center items-center px-10">
+    <div class="md:flex align-center items-center px-10 hidden">
       <a
         href="https://forms.gle/9T3hno3iGvyiuWGd7"
         target="_blank"
         rel="noopener"
         :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-      >Leave Feedback</a>
+        >Leave Feedback</a
+      >
     </div>
     <div
-    :class="['bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black', 
-      isScrolled ? 'border-l border-black' : 'border-l border-white'
-    ]">
-      <router-link to="/about"><button>Menu</button></router-link>
+      :class="[
+        'bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black',
+        isScrolled ? 'border-l border-black' : 'border-l border-white',
+      ]"
+    >
+      <router-link to="/"><button>Menu</button></router-link>
     </div>
   </div>
 </template>
@@ -75,9 +83,26 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const isScrolled = ref(false)
+const isHidden = ref(false)
+let lastScrollY = window.scrollY
+let wasScrolled = false
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 10
+  const currentY = window.scrollY
+  const prevScrolled = isScrolled.value
+  isScrolled.value = currentY > 10
+
+  if (!isScrolled.value) {
+    isHidden.value = false
+  } else {
+    // Only allow hiding if already in scrolled state before this event
+    if (prevScrolled && currentY > lastScrollY && !isHidden.value) {
+      isHidden.value = true
+    } else if (currentY < lastScrollY && isHidden.value) {
+      isHidden.value = false
+    }
+  }
+  lastScrollY = currentY
 }
 
 onMounted(() => {

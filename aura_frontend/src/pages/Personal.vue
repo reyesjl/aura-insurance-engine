@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue'
-import bannerImage from '@/assets/industry-bg.jpg'
+import bannerImage from '@/assets/family-bg.jpg'
 import Blinker from '@/components/Blinker.vue'
 </script>
 
