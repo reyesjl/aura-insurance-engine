@@ -6,7 +6,7 @@
         ? 'bg-beige-200 text-black border-b border-black'
         : 'bg-transparent text-white border-b border-white',
       isHidden && isScrolled ? '-translate-y-full' : 'translate-y-0',
-      'transition-transform duration-300'
+      'transition-transform duration-300',
     ]"
   >
     <div

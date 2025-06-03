@@ -7,9 +7,7 @@
     aria-label="Family in a field"
   >
     <!-- Down Icon in bottom right -->
-    <ScrollButton>
-      [SCROLL]
-    </ScrollButton>
+    <ScrollButton> [SCROLL] </ScrollButton>
   </div>
 
   <!-- Our Mission Section -->

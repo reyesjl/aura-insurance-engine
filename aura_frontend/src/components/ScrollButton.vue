@@ -33,8 +33,13 @@ onUnmounted(() => {
 
 <style scoped>
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 .blink-cursor {
   animation: blink 1.2s steps(1) infinite;

@@ -1,5 +1,5 @@
 <!-- PLACEHODLER FOR PAGE -->
- <template>
+<template>
   <NavBar />
   <!-- Background Image Banner -->
   <div
@@ -8,13 +8,9 @@
     aria-label="Family in a field"
   >
     <!-- Blinker Notice -->
-     <Blinker>
-      [COMING SOON]
-    </Blinker>
+    <Blinker> [COMING SOON] </Blinker>
   </div>
-
-  </template>
-
+</template>
 
 <script setup lang="ts">
 import NavBar from '@/components/NavBar.vue'
