@@ -95,8 +95,8 @@ const handleScroll = () => {
   if (!isScrolled.value) {
     isHidden.value = false
   } else {
-    // Only allow hiding if already in scrolled state before this event
-    if (prevScrolled && currentY > lastScrollY && !isHidden.value) {
+    // Only allow hiding if already in scrolled state before this event AND scrolled at least 300px
+    if (prevScrolled && currentY > lastScrollY && !isHidden.value && currentY > 300) {
       isHidden.value = true
     } else if (currentY < lastScrollY && isHidden.value) {
       isHidden.value = false
