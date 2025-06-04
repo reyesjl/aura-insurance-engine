@@ -22,11 +22,11 @@ html {
 }
 
 .font-helvetica {
-  font-family: Helvetica, sans-serif;
+  font-family: Helvetica, sans-serif !important;
 }
 
 .font-scp {
-  font-family: 'Source Code Pro', monospace;
+  font-family: 'Source Code Pro', monospace !important;
 }
 
 /* Sections

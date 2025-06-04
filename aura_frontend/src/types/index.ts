@@ -25,7 +25,7 @@ export interface ApplicationSession {
   created_at: string // ISO date string from Django
   carriers: number[]
   coverages: number[]
-  status: 'pending' | 'complete'
+  status: 'pending' | 'completed' | 'error'
 }
 
 // Match: Submission model

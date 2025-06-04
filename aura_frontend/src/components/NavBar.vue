@@ -11,13 +11,13 @@
   >
     <div
       :class="[
-        'p-10 md:p-8 w-fit text-2xl font-bold font-scp flex flex-grow-1 md:flex-grow-0 items-center align-center duration-300',
+        'p-10 md:p-8 w-fit font-bold font-scp flex flex-grow-1 md:flex-grow-0 items-center align-center duration-300',
         isScrolled
           ? 'border-r border-black hover:bg-gray-200 hover:text-black'
           : 'border-r border-white hover:bg-gray-400 hover:text-black',
       ]"
     >
-      <router-link to="/">
+      <router-link class="min-h-[37px]" to="/">
         <img
           v-if="!isScrolled"
           src="@/assets/aura_logo_light.svg"
@@ -34,7 +34,7 @@
     </div>
     <div
       :class="[
-        'px-10 w-fit hidden md:flex flex-grow align-center items-center gap-8',
+        'px-10 w-fit text-lg hidden md:flex flex-grow align-center items-center gap-8',
         isScrolled ? 'border-r border-black' : 'border-r border-white',
       ]"
     >
@@ -59,7 +59,7 @@
         >About Us</router-link
       >
     </div>
-    <div class="md:flex align-center items-center px-10 hidden">
+    <div class="md:flex align-center items-center px-10 hidden text-lg">
       <a
         href="https://forms.gle/9T3hno3iGvyiuWGd7"
         target="_blank"
@@ -70,7 +70,7 @@
     </div>
     <div
       :class="[
-        'bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black',
+        'text-lg bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black',
         isScrolled ? 'border-l border-black' : 'border-l border-white',
       ]"
     >
@@ -85,7 +85,6 @@ import { ref, onMounted, onUnmounted } from 'vue'
 const isScrolled = ref(false)
 const isHidden = ref(false)
 let lastScrollY = window.scrollY
-let wasScrolled = false
 
 const handleScroll = () => {
   const currentY = window.scrollY
