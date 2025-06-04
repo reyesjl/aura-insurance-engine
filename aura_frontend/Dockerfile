@@ -1,5 +1,5 @@
-# Use latest Node LTS image
-FROM node:18
+# Stage 1: Build the app
+FROM node:18 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -11,8 +11,20 @@ RUN npm install
 # Copy the rest of the app
 COPY . .
 
-# Expose Vite's dev server port
-EXPOSE 5173
+# Build the app
+RUN npm run build
 
-# Run Vite dev server
-CMD ["npm", "run", "dev", "--", "--host"]
+# Stage 2: Serve with Nginx
+FROM nginx:alpine
+
+# Copy built app from builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy Nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Run Nginx
+CMD ["nginx", "-g", "daemon off;"]
