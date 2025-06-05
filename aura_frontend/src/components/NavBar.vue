@@ -69,12 +69,42 @@
       >
     </div>
     <div
+      @click="toggleMenu"
       :class="[
         'text-lg bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black',
         isScrolled ? 'border-l border-black' : 'border-l border-white',
       ]"
     >
-      <router-link to="/"><button>Menu</button></router-link>
+      <button>Menu</button>
+    </div>
+  </div>
+
+  <!-- Toggable menu -->
+  <div 
+    v-if="menuOpen"
+    class="bg-black text-white w-full fixed top-[119px] md:top-[101px] z-999"
+  >
+    <div class="container">
+      <ul class="flex list-none m-0 p-0 flex-col text-2xl md:text-4xl">
+        <li class="py-10 border-b-1">
+          <router-link to="/">Home</router-link>
+        </li>
+        <li class="py-10 border-b-1">
+          <router-link to="/personal">Personal</router-link>
+        </li>
+        <li class="py-10 border-b-1">
+          <router-link to="/commercial">Commercial</router-link>
+        </li>
+        <li class="py-10 border-b-1">
+          <router-link to="/about">About Us</router-link>
+        </li>
+        <li class="py-10 border-b-1">
+          <a
+        href="https://forms.gle/9T3hno3iGvyiuWGd7"
+        target="_blank"
+        rel="noopener">Leave Feedback</a>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -85,6 +115,13 @@ import { ref, onMounted, onUnmounted } from 'vue'
 const isScrolled = ref(false)
 const isHidden = ref(false)
 let lastScrollY = window.scrollY
+
+const menuOpen = ref(false)
+
+const toggleMenu = () => {
+  menuOpen.value = !menuOpen.value
+  console.log('Menu toggled:', menuOpen.value)
+}
 
 const handleScroll = () => {
   const currentY = window.scrollY
