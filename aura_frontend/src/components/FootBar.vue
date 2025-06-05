@@ -3,7 +3,7 @@
     <div class="container content">
       <div class="flex flex-col md:flex-row gap-8 md:justify-between">
         <!-- Left footer column -->
-        <div>
+        <div calss="flex flex-col">
           <div class="w-fit">
             <router-link to="/">
               <img
@@ -12,6 +12,12 @@
                 class="mr-5 min-w-[80px] max-w-[80px] md:max-w-[90px]"
               />
             </router-link>
+          </div>
+          <!-- Footer badges -->
+          <div class="text-xs py-5">
+            Happy
+            <img :src="prideBadge" alt="Pride Badge" class="inline-block align-middle" />
+            Month!
           </div>
         </div>
 
@@ -60,7 +66,14 @@
           </ul>
         </div>
       </div>
-      <div class="text-xs py-5">hi maddie :)</div>
+
+      <div class="text-xs py-5">
+        hi maddie :)
+      </div>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import prideBadge from '@/assets/pride-badge.gif';
+</script>
