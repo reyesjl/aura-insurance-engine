@@ -60,6 +60,7 @@
           </ul>
         </div>
       </div>
+      <div class="text-xs py-5">hi maddie :)</div>
     </div>
   </div>
 </template>
