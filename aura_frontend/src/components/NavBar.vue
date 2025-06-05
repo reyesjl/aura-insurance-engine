@@ -139,6 +139,7 @@ const handleScroll = () => {
     }
   }
   lastScrollY = currentY
+  menuOpen.value = false; // Close menu on scroll
 }
 
 onMounted(() => {
