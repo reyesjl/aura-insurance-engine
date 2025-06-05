@@ -14,10 +14,18 @@
             </router-link>
           </div>
           <!-- Footer badges -->
-          <div class="text-xs py-5">
-            Happy
-            <img :src="prideBadge" alt="Pride Badge" class="inline-block align-middle" />
-            Month!
+          <div class="text-xs py-5 flex flex-col gap-1">
+            <div>
+              Happy
+              <img :src="prideBadge" alt="Pride Badge" class="inline-block align-middle" />
+              Month!
+            </div>
+            <div>
+              Be
+              <img :src="niceBadge" alt="Nice Badge" class="inline-block align-middle" />
+              Always!
+            </div>
+
           </div>
         </div>
 
@@ -76,4 +84,5 @@
 
 <script setup lang="ts">
 import prideBadge from '@/assets/pride-badge.gif';
+import niceBadge from '@/assets/nice-badge.gif';
 </script>
