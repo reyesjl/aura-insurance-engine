@@ -1,31 +1,70 @@
 from django.contrib import admin
-from core.models import Carrier, CoverageLine, Question, ApplicationSession, Submission
+from .models import (
+    InsuranceType,
+    Carrier,
+    CoverageLine,
+    Question,
+    ApplicationTemplate,
+    TemplateQuestionSnapshot,
+    ApplicationSession,
+    ApplicationAnswer,
+    Submission,
+)
 
+@admin.register(InsuranceType)
+class InsuranceTypeAdmin(admin.ModelAdmin):
+    search_fields = ['key', 'label']
+    list_display = ['key', 'label']
+    list_filter = ['key']
+
+@admin.register(Carrier)
 class CarrierAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
-    search_fields = ('name',)
+    search_fields = ['name']
+    list_display = ['name']
+    filter_horizontal = ['insurance_types']
+    list_filter = ['insurance_types']
 
+@admin.register(CoverageLine)
 class CoverageLineAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
-    search_fields = ('name',)
+    search_fields = ['name', 'abbreviation']
+    list_display = ['name', 'abbreviation']
+    filter_horizontal = ['insurance_types']
+    list_filter = ['insurance_types']
 
+@admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text')
-    search_fields = ('text',)
-    filter_horizontal = ('carriers', 'coverages')
+    search_fields = ['text']
+    list_display = ['text']
+    filter_horizontal = ['carriers', 'coverages', 'insurance_types']
+    list_filter = ['insurance_types', 'carriers', 'coverages']
 
+@admin.register(ApplicationTemplate)
+class ApplicationTemplateAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = ['name', 'insurance_type', 'created_at']
+    filter_horizontal = ['carriers', 'coverages']
+    list_filter = ['insurance_type', 'carriers', 'coverages']
+
+@admin.register(TemplateQuestionSnapshot)
+class TemplateQuestionSnapshotAdmin(admin.ModelAdmin):
+    search_fields = ['question_text']
+    list_display = ['template', 'original_question', 'question_text']
+    list_filter = ['template', 'original_question']
+
+@admin.register(ApplicationSession)
 class ApplicationSessionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'token', 'created_at', 'status')
-    search_fields = ('token', 'status')
-    list_filter = ('status', 'created_at')
-    filter_horizontal = ('carriers', 'coverages')
+    search_fields = ['name', 'token']
+    list_display = ['name', 'template', 'token', 'created_at', 'status']
+    list_filter = ['template', 'status']
 
+@admin.register(ApplicationAnswer)
+class ApplicationAnswerAdmin(admin.ModelAdmin):
+    search_fields = ['answer', 'question_snapshot__question_text']
+    list_display = ['session', 'question_snapshot', 'answer']
+    list_filter = ['session', 'question_snapshot']
+
+@admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'session', 'submitted_at')
-    search_fields = ('session__token',)
-
-admin.site.register(Carrier, CarrierAdmin)
-admin.site.register(CoverageLine, CoverageLineAdmin)
-admin.site.register(Question, QuestionAdmin)
-admin.site.register(ApplicationSession, ApplicationSessionAdmin)
-admin.site.register(Submission, SubmissionAdmin)
+    search_fields = ['session__name', 'session__token']
+    list_display = ['session', 'submitted_at']
+    list_filter = ['submitted_at']
