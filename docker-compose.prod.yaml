@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+    volumes:
+      - static_volume:/app/static/
     depends_on:
       - backend
     environment:
@@ -20,6 +22,8 @@ services:
       dockerfile: Dockerfile
     expose:
       - "8000"
+    volumes:
+      - static_volume:/app/static/
     env_file:
       - ./aura_backend/.env
     networks:
@@ -28,3 +32,6 @@ services:
 networks:
   aura:
     driver: bridge
+
+volumes:
+  static_volume:

@@ -14,6 +14,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # Parse ALLOWED_HOSTS from comma-separated string
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+# Uncomment the following line if you want to use a list comprehension to filter out empty hosts
+#ALLOWED_HOSTS = [h for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h]
 
 
 # Application definition
@@ -103,7 +105,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
