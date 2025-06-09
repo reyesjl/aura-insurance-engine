@@ -43,6 +43,12 @@
 
 This project uses Docker and Docker Compose for both development and production environments.
 
+### Shared Static Volume in Production
+
+In production, Django and Nginx run in separate containers. To ensure Django's static files (such as admin CSS/JS) are available to Nginx for serving, a **shared Docker volume** (`static_volume`) is used. Both the backend and frontend containers mount this volume at `/app/static/`. When Django runs `collectstatic`, it writes all static files to this shared location, and Nginx serves them at the `/static/` URL.
+
+This setup ensures that static assets are always up-to-date and available to the web server, without manual copying or rebuilding.
+
 ### Development
 
 - **Frontend**:  
