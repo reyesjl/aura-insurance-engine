@@ -19,6 +19,7 @@
 | Styling     | Tailwind CSS           |
 | Backend     | Django + DRF           |
 | Database    | SQLite (local/dev)     |
+| Containerization | Docker, Docker Compose |
 
 ## 📁 Project Structure
 
@@ -33,8 +34,79 @@
 │   ├── views/
 │   ├── assets/
 │   └── ...
+├── docker-compose.dev.yaml       # Docker Compose for development
+├── docker-compose.prod.yaml      # Docker Compose for production
 └── README.md
 ```
+
+## 🐳 Dockerized Setup
+
+This project uses Docker and Docker Compose for both development and production environments.
+
+### Development
+
+- **Frontend**:  
+  Uses `aura_frontend/Dockerfile.dev` (Node 18). Runs the Vite dev server with hot reload on port **5173**. Local code is mounted for instant feedback.
+- **Backend**:  
+  Uses `aura_backend/Dockerfile` (Python 3.11). Runs Django's development server on port **8000**. Local code is mounted for live reload.
+- **Networking**:  
+  Both services are on the `aura` Docker network for easy API communication.
+
+#### Quick Start (Dev)
+
+1. **Create your backend environment file:**
+
+   Copy `.env.example` (if present) or create `.env` in `aura_backend/` with your settings.
+
+   ```bash
+   cp aura_backend/.env.example aura_backend/.env
+   # Edit aura_backend/.env as needed
+   ```
+
+2. **Start the dev environment:**
+
+   ```bash
+   docker compose -f docker-compose.dev.yaml up --build
+   ```
+
+   - Frontend: [http://localhost:5173](http://localhost:5173)
+   - Backend: [http://localhost:8000](http://localhost:8000)
+
+### Production
+
+- **Frontend**:  
+  Uses `aura_frontend/Dockerfile` (multi-stage: Node 18 for build, Nginx for serving static files). Exposes port **80**.
+- **Backend**:  
+  Uses `aura_backend/Dockerfile` (Python 3.11, runs Gunicorn WSGI server). Exposes port **8000** internally.
+- **Networking**:  
+  Both services are on the `aura` Docker network.
+
+Start the production environment:
+
+```bash
+docker compose -f docker-compose.prod.yaml up --build
+```
+
+### Frontend Dockerfile Details
+
+The production frontend Dockerfile uses a multi-stage build:
+
+1. **Build Stage** (`node:18`):
+    - Installs dependencies and builds the Vue app.
+2. **Serve Stage** (`nginx:alpine`):
+    - Copies the built static files to Nginx and serves them on port 80.
+    - Uses a custom `nginx.conf` for routing and caching.
+
+#### Example Commands
+
+Build the frontend image manually:
+
+```bash
+docker build -t aura-frontend ./aura_frontend
+docker run -p 80:80 aura-frontend
+```
+
+---
 
 ## 🧩 Core Models
 
@@ -47,12 +119,14 @@
 - `ApplicationSession`: Tracks end-user filling out a template
 - `ApplicationAnswer`: Stores answer to a question within a session
 
-## 🧪 Getting Started (Dev)
+## 🧪 Getting Started (Manual Setup - Optional)
+
+If you prefer not to use Docker, you can still run the backend and frontend manually:
 
 ### Backend
 
 ```bash
-cd backend/
+cd aura_backend/
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt

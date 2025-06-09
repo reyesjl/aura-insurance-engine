@@ -7,5 +7,24 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+    depends_on:
+      - backend
     environment:
       - NODE_ENV=production
+    networks:
+      - aura
+
+  backend:
+    build:
+      context: ./aura_backend
+      dockerfile: Dockerfile
+    expose:
+      - "8000"
+    env_file:
+      - ./aura_backend/.env
+    networks:
+      - aura
+
+networks:
+  aura:
+    driver: bridge
