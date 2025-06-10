@@ -17,7 +17,7 @@
 |-------------|------------------------|
 | Frontend    | Vue 3 + TypeScript     |
 | Styling     | Tailwind CSS           |
-| Backend     | Django + DRF           |
+| Backend     | Django                 |
 | Database    | SQLite (local/dev)     |
 | Containerization | Docker, Docker Compose |
 
