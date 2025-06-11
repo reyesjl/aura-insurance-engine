@@ -1,3 +1,6 @@
+# Local dev setup
+.story_id
+
 # Python
 __pycache__/
 *.py[cod]
