@@ -88,7 +88,7 @@
       :style="{ top: `var(--navbar-height)` }"
     >
       <div class="container">
-        <ul class="flex list-none m-0 p-0 flex-col text-2xl md:text-4xl">
+        <ul class="flex list-none m-0 p-0 py-10 flex-col text-2xl md:text-4xl">
           <li class="py-5 border-b-1">
             <router-link to="/">Home</router-link>
           </li>
@@ -178,12 +178,12 @@ onUnmounted(() => {
 
 .slide-menu-enter-from,
 .slide-menu-leave-to {
-  transform: translateY(100%);
+  transform: translateX(100%);
   opacity: 0;
 }
 .slide-menu-enter-to,
 .slide-menu-leave-from {
-  transform: translateY(0);
+  transform: translateX(0);
   opacity: 1;
 }
 </style>

@@ -73,7 +73,6 @@ const active = ref('Types')
 
 function handleClick(feature: string) {
   active.value = feature
-  console.log('Clicked:', feature)
 }
 </script>
 
