@@ -5,6 +5,7 @@ import Personal from '../pages/Personal.vue'
 import Commercial from '@/pages/Commercial.vue'
 import About from '../pages/About.vue'
 import SessionList from '../pages/SessionList.vue'
+import Register from '@/pages/Register.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
@@ -13,6 +14,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/about', name: 'About', component: About },
   { path: '/sessions', name: 'SessionList', component: SessionList },
   { path: '/agent', name: 'AgentDashboard', component: AgentDashboard },
+  { path: '/auth/register', name: 'Register', component: Register },
 ]
 
 const router = createRouter({

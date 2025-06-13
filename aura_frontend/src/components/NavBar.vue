@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="navbarRef"
     :class="[
       'fixed w-full top-0 flex justify-between transition-colors duration-300 z-9999',
       isScrolled
@@ -11,7 +12,7 @@
   >
     <div
       :class="[
-        'p-10 md:p-8 w-fit font-bold font-scp flex flex-grow-1 md:flex-grow-0 items-center align-center duration-300',
+        'p-4 md:p-6 w-fit font-bold font-scp flex flex-grow-1 md:flex-grow-0 items-center align-center duration-300',
         isScrolled
           ? 'border-r border-black hover:bg-gray-200 hover:text-black'
           : 'border-r border-white hover:bg-gray-400 hover:text-black',
@@ -34,7 +35,7 @@
     </div>
     <div
       :class="[
-        'px-10 w-fit text-lg hidden md:flex flex-grow align-center items-center gap-8',
+        'px-10 w-fit text-lg hidden lg:flex flex-grow align-center items-center gap-8',
         isScrolled ? 'border-r border-black' : 'border-r border-white',
       ]"
     >
@@ -80,47 +81,60 @@
   </div>
 
   <!-- Toggable menu -->
-  <div 
-    v-if="menuOpen"
-    class="bg-black text-white w-full fixed top-[119px] md:top-[101px] z-999"
-  >
-    <div class="container">
-      <ul class="flex list-none m-0 p-0 flex-col text-2xl md:text-4xl">
-        <li class="py-10 border-b-1">
-          <router-link to="/">Home</router-link>
-        </li>
-        <li class="py-10 border-b-1">
-          <router-link to="/personal">Personal</router-link>
-        </li>
-        <li class="py-10 border-b-1">
-          <router-link to="/commercial">Commercial</router-link>
-        </li>
-        <li class="py-10 border-b-1">
-          <router-link to="/about">About Us</router-link>
-        </li>
-        <li class="py-10 border-b-1">
-          <a
-        href="https://forms.gle/9T3hno3iGvyiuWGd7"
-        target="_blank"
-        rel="noopener">Leave Feedback</a>
-        </li>
-      </ul>
+  <transition name="slide-menu">
+    <div
+      v-if="menuOpen"
+      class="bg-black text-white w-full fixed z-999"
+      :style="{ top: `var(--navbar-height)` }"
+    >
+      <div class="container">
+        <ul class="flex list-none m-0 p-0 flex-col text-2xl md:text-4xl">
+          <li class="py-5 border-b-1">
+            <router-link to="/">Home</router-link>
+          </li>
+          <li class="py-5 border-b-1">
+            <router-link to="/personal">Personal</router-link>
+          </li>
+          <li class="py-5 border-b-1">
+            <router-link to="/commercial">Commercial</router-link>
+          </li>
+          <li class="py-5 border-b-1">
+            <router-link to="/about">About Us</router-link>
+          </li>
+          <li class="py-5 border-b-1">
+            <a href="https://forms.gle/9T3hno3iGvyiuWGd7" target="_blank" rel="noopener"
+              >Leave Feedback</a
+            >
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 
+const navbarRef = ref<HTMLElement | null>(null)
 const isScrolled = ref(false)
 const isHidden = ref(false)
 let lastScrollY = window.scrollY
 
 const menuOpen = ref(false)
 
+const setNavbarHeight = () => {
+  if (navbarRef.value) {
+    const height = navbarRef.value.offsetHeight
+    document.documentElement.style.setProperty('--navbar-height', `${height}px`)
+  }
+  console.log(
+    'Navbar height set to:',
+    document.documentElement.style.getPropertyValue('--navbar-height'),
+  )
+}
+
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
-  console.log('Menu toggled:', menuOpen.value)
 }
 
 const handleScroll = () => {
@@ -131,7 +145,6 @@ const handleScroll = () => {
   if (!isScrolled.value) {
     isHidden.value = false
   } else {
-    // Only allow hiding if already in scrolled state before this event AND scrolled at least 300px
     if (prevScrolled && currentY > lastScrollY && !isHidden.value && currentY > 300) {
       isHidden.value = true
     } else if (currentY < lastScrollY && isHidden.value) {
@@ -139,18 +152,38 @@ const handleScroll = () => {
     }
   }
   lastScrollY = currentY
-  menuOpen.value = false; // Close menu on scroll
+  menuOpen.value = false
 }
 
 onMounted(() => {
+  setNavbarHeight()
+  window.addEventListener('resize', setNavbarHeight)
   window.addEventListener('scroll', handleScroll)
+  nextTick(setNavbarHeight)
 })
 
 onUnmounted(() => {
+  window.removeEventListener('resize', setNavbarHeight)
   window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
 <style scoped>
-/* No extra styles needed, all handled by Tailwind */
+.slide-menu-enter-active,
+.slide-menu-leave-active {
+  transition:
+    transform 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.5s;
+}
+
+.slide-menu-enter-from,
+.slide-menu-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.slide-menu-enter-to,
+.slide-menu-leave-from {
+  transform: translateY(0);
+  opacity: 1;
+}
 </style>

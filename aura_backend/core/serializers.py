@@ -1,9 +1,31 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 from .models import (
     InsuranceType, Carrier, CoverageLine, Question,
     ApplicationTemplate, TemplateQuestionSnapshot,
     ApplicationSession, ApplicationAnswer, Submission
 )
+
+
+User = get_user_model()
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "is_agent",
+            "agent_name",
+            "agency",
+            "phone_number",
+            "level",
+            "xp",
+            # add other fields as needed
+        ]
 
 class InsuranceTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,7 +66,7 @@ class ApplicationSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationSession
         fields = [
-            'id', 'template', 'token', 'name', 'created_at', 'status'
+            'id', 'template', 'agent', 'token', 'name', 'created_at', 'status'
         ]
 
 class ApplicationAnswerSerializer(serializers.ModelSerializer):

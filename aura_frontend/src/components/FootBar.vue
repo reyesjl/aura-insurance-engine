@@ -16,16 +16,23 @@
           <!-- Footer badges -->
           <div class="text-xs py-5 flex flex-col gap-1">
             <div>
+              Sic Semper Tyrannis
+              <img
+                :src="vaSeal"
+                alt="VA Flag Seal"
+                class="max-h-[18px] inline-block align-middle"
+              />
+            </div>
+            <div>
               Happy
               <img :src="prideBadge" alt="Pride Badge" class="inline-block align-middle" />
-              Month!
+              Month
             </div>
             <div>
               Be
               <img :src="niceBadge" alt="Nice Badge" class="inline-block align-middle" />
-              Always!
+              Always
             </div>
-
           </div>
         </div>
 
@@ -75,14 +82,15 @@
         </div>
       </div>
 
-      <div class="text-xs py-5">
-        hi maddie :)
-      </div>
+      <!-- <div class="text-xs py-5">
+        Sic semper tyrannis
+      </div> -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import prideBadge from '@/assets/pride-badge.gif';
-import niceBadge from '@/assets/nice-badge.gif';
+import prideBadge from '@/assets/pride-badge.gif'
+import niceBadge from '@/assets/nice-badge.gif'
+import vaSeal from '@/assets/va-seal.png'
 </script>

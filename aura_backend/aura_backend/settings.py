@@ -17,6 +17,24 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 # Uncomment the following line if you want to use a list comprehension to filter out empty hosts
 #ALLOWED_HOSTS = [h for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h]
 
+AUTH_USER_MODEL = 'core.User'
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_HOST = 'smtp.mailgun.org'  # or SendGrid, Gmail, etc.
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST_USER = 'your@email.com'
+#EMAIL_HOST_PASSWORD = 'yourpassword'
+
+# REST Framework settings
+REST_FRAMEWORK = {
+     'DEFAULT_PERMISSION_CLASSES': (
+         'rest_framework.permissions.IsAuthenticated',
+     ),
+    'DEFAULT_AUTHENTICATION_CLASSES':
+    ('rest_framework.authentication.TokenAuthentication',
+)}
 
 # Application definition
 INSTALLED_APPS = [
@@ -27,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'core',
 ]
 
@@ -64,12 +83,25 @@ WSGI_APPLICATION = 'aura_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DB_ENGINE = os.getenv('DB_ENGINE', 'sqlite')
+if DB_ENGINE == 'postgres':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB', 'aura'),
+            'USER': os.getenv('POSTGRES_USER', 'aura'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'aura'),
+            'HOST': os.getenv('POSTGRES_HOST', 'your-db-host.rds.aura.com'),
+            'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
