@@ -1,7 +1,7 @@
 <template>
-  <div class="mt-20">
-    <div class="container content bg-white">
-      <div v-if="active === 'Types'">
+  <div class="mt-10">
+    <div class="container bg-white">
+      <div v-if="active === 'Types'" class="py-20">
         <div class="md:w-1/2">
           <div class="text-2xl font-bold">Select a Type</div>
           <div class="divider h-[2px] bg-black my-5"></div>
@@ -11,7 +11,7 @@
           </div>
         </div>
       </div>
-      <div v-else-if="active === 'Carriers'">
+      <div v-else-if="active === 'Carriers'" class="py-20">
         <div class="md:w-1/2">
           <div class="text-2xl font-bold">Select the Carriers</div>
           <div class="divider h-[2px] bg-black my-5"></div>
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div v-else-if="active === 'Lines'">
+      <div v-else-if="active === 'Lines'" class="py-20">
         <div class="md:w-1/2">
           <div class="text-2xl font-bold">Select any Coverage</div>
           <div class="divider h-[2px] bg-black my-5"></div>
@@ -73,7 +73,6 @@ const active = ref('Types')
 
 function handleClick(feature: string) {
   active.value = feature
-  console.log('Clicked:', feature)
 }
 </script>
 

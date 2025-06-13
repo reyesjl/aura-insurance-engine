@@ -1,5 +1,8 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+
 from .models import (
+    User,
     InsuranceType,
     Carrier,
     CoverageLine,
@@ -10,6 +13,23 @@ from .models import (
     ApplicationAnswer,
     Submission,
 )
+
+# Register your custom User model with the built-in UserAdmin
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    # Add custom fields to the admin if you want them editable/searchable
+    fieldsets = list(UserAdmin.fieldsets) + [
+        ('Agent Info', {
+            'fields': ('is_agent', 'agent_name', 'agency', 'phone_number', 'level', 'xp')
+        }),
+    ]
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ('Agent Info', {
+            'fields': ('is_agent', 'agent_name', 'agency', 'phone_number', 'level', 'xp')
+        }),
+    )
+    list_display = tuple(UserAdmin.list_display) + ('is_agent', 'agent_name', 'agency', 'phone_number', 'level', 'xp')
+    search_fields = list(UserAdmin.search_fields) + ['agent_name', 'agency', 'phone_number']
 
 @admin.register(InsuranceType)
 class InsuranceTypeAdmin(admin.ModelAdmin):

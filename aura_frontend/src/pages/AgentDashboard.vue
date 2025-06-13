@@ -1,180 +1,107 @@
 <template>
   <NavBar />
-  <div class="container mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Left Column: Selections and Actions -->
-      <div class="space-y-6">
-        <!-- Carrier Selection -->
-        <div>
-          <label class="block font-bold font-helvetica">Select Carriers</label>
-          <div class="mt-2">
-            <div v-for="carrier in carriers" :key="carrier.id" class="flex items-center space-x-10">
-              <input
-                type="checkbox"
-                :id="'carrier-' + carrier.id"
-                :value="carrier.id"
-                v-model="selectedCarriers"
-                class="form-checkbox"
-              />
-              <label class="mx-2" :for="'carrier-' + carrier.id">
-                {{ carrier.name }}
-              </label>
-            </div>
-          </div>
-        </div>
+  <div class="page-spacer bg-black"></div>
 
-        <!-- Coverage Selection -->
-        <div>
-          <label class="block font-bold font-helvetica">Select Coverages</label>
-          <div class="mt-2">
-            <div
-              v-for="coverage in coverages"
-              :key="coverage.id"
-              class="flex items-center space-x-2"
-            >
-              <input
-                type="checkbox"
-                :id="'coverage-' + coverage.id"
-                :value="coverage.id"
-                v-model="selectedCoverages"
-                class="form-checkbox"
-              />
-              <label class="mx-2" :for="'coverage-' + coverage.id">
-                {{ coverage.name }}
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Create Session Button -->
-        <button
-          class="transition-[.3ms] px-4 py-2 border-1 border-white bg-black text-white hover:bg-white hover:text-black"
-          @click="handleCreateSession"
-          :disabled="isLoading"
-        >
-          <span v-if="isLoading">...</span>
-          <span v-else>Create Session +</span>
-        </button>
-
-        <!-- Generated Link -->
-        <div v-if="generatedLink" class="mt-8">
-          <p class="font-helvetica font-bold mb-2">Aura Public Link</p>
-          <a :href="generatedLink" class="text-yellow-500 underline" target="_blank">
-            {{ generatedLink }}
-          </a>
-        </div>
-      </div>
-
-      <!-- Right Column: Preview Questions -->
-      <div class="questions-container p-4 pb-1 min-h-[300px]">
-        <div v-if="questions.length">
-          <div class="flex items-center justify-between mb-2">
-            <h2 class="font-semibold">Preview Questions [{{ questions.length }}]</h2>
-            <span v-if="lastPreviewRequestAt" class="flex items-center text-xs text-gray-400 gap-1">
-              <svg class="w-3 h-3 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="10" />
-              </svg>
-              <div class="flex items-center gap-1">
-                <span>Last updated: </span>
-                {{ formatTimestamp(lastPreviewRequestAt) }}
-              </div>
-            </span>
-          </div>
-          <ul class="list-none p-0">
-            <li class="mb-2 text-gray-400" v-for="q in questions" :key="q.id">{{ q.text }}</li>
-          </ul>
-        </div>
-        <div v-else>
-          <p class="text-gray-500">
-            No questions to preview. Please select carriers and coverages.
-          </p>
-        </div>
-      </div>
+  <Section mode="light">
+    <div class="text-4xl md:text-5xl font-bold mb-10">
+      Welcome back, {{ user?.username || 'Agent' }}
     </div>
-  </div>
+
+    <!-- Show different content based on agent status -->
+    <div v-if="!userStore.isAgent" class="mb-6 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
+      <p class="font-semibold">Account Pending Agent Approval</p>
+      <p>Your account is being reviewed for agent access. Please contact support for assistance.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 border border-gray-300">
+            <h3 class="text-xl font-bold mb-4">Create Application</h3>
+            <p class="mb-4">Start a new insurance application</p>
+            <button 
+              :disabled="!userStore.isAgent"
+              class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              Get Started
+            </button>
+        </div>
+
+        <div class="p-6 border border-gray-300">
+            <h3 class="text-xl font-bold mb-4">My Sessions</h3>
+            <p class="mb-4">View active application sessions</p>
+            <button 
+              :disabled="!userStore.isAgent"
+              class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              View Sessions
+            </button>
+        </div>
+
+        <div class="p-6 border border-gray-300">
+            <h3 class="text-xl font-bold mb-4">Site Carriers</h3>
+            <p class="mb-4">View and manage carriers</p>
+            <button 
+              :disabled="!userStore.isAgent"
+              class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              View Carriers
+            </button>
+        </div>
+
+        <div class="p-6 border border-gray-300">
+            <h3 class="text-xl font-bold mb-4">Site Coverages</h3>
+            <p class="mb-4">View and manage coverages</p>
+            <button 
+              :disabled="!userStore.isAgent"
+              class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              View Coverages
+            </button>
+        </div>
+
+        <div class="p-6 border border-gray-300">
+            <h3 class="text-xl font-bold mb-4">Profile</h3>
+            <p class="mb-4">Manage your profile</p>
+            <button class="bg-black text-white px-4 py-2 hover:bg-gray-800">Edit Profile</button>
+        </div>
+        <div class="p-6 border border-gray-300">
+            <h3 class="text-xl font-bold mb-4">Logout</h3>
+            <p class="mb-4">Logout of your profile</p>
+            <button @click="handleLogout" class="bg-black text-white px-4 py-2 hover:bg-gray-800">Leave</button>
+        </div>
+    </div>
+  </Section>
+
+  <FootBar />
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user.ts'
 import NavBar from '@/components/NavBar.vue'
-import { fetchCarriers, fetchCoverageLines, createSession, previewQuestions } from '@/api/sessions'
-import type { Carrier, CoverageLine, Question } from '@/types'
+import FootBar from '@/components/FootBar.vue'
+import Section from '@/components/Section.vue'
 
-const carriers = ref<Carrier[]>([])
-const coverages = ref<CoverageLine[]>([])
+const userStore = useUserStore()
+const router = useRouter()
+const { user } = userStore
 
-const selectedCarriers = ref<number[]>([])
-const selectedCoverages = ref<number[]>([])
-const generatedLink = ref<string>('')
-
-// handle submit button state
-const isLoading = ref(false)
-const errorMessage = ref('')
-const successMessage = ref('')
-
-const questions = ref<Question[]>([])
-const lastPreviewRequestAt = ref<Date | null>(null)
-
-function updatePreviewTimestamp() {
-  lastPreviewRequestAt.value = new Date()
-}
-
-onMounted(async () => {
-  carriers.value = await fetchCarriers()
-  coverages.value = await fetchCoverageLines()
-
+const handleLogout = async () => {
   try {
-    questions.value = await previewQuestions(selectedCarriers.value, selectedCoverages.value)
-    updatePreviewTimestamp()
-  } catch (e) {
-    questions.value = []
-  }
-})
-
-// Watch for changes and update questions
-watch([selectedCarriers, selectedCoverages], async () => {
-  isLoading.value = true
-  try {
-    questions.value = await previewQuestions(selectedCarriers.value, selectedCoverages.value)
-    updatePreviewTimestamp()
-    isLoading.value = false
-  } catch (e) {
-    questions.value = []
-    isLoading.value = false
-  } finally {
-    isLoading.value = false
-  }
-})
-
-async function handleCreateSession() {
-  isLoading.value = true
-  try {
-    const token = await createSession(selectedCarriers.value, selectedCoverages.value)
-    if (token) {
-      generatedLink.value = `http://127.0.0.1:8000/api/v1/fill/${token}`
-    } else {
-      generatedLink.value = ''
-      errorMessage.value = 'No token was returned form API'
-    }
+    await userStore.logout()
+    router.push('/')
   } catch (error) {
-    errorMessage.value = 'Failed to create session. Please try again.'
-    console.error(error)
-  } finally {
-    isLoading.value = false
+    console.error('Logout failed:', error)
+    router.push('/') // Redirect anyway
   }
 }
 
-// Format helper for timestamp
-function formatTimestamp(date: Date | null) {
-  if (!date) return ''
-  return date.toLocaleTimeString()
-}
+// Protect the route - redirect if not logged in, but allow non-agents
+onMounted(() => {
+  if (!userStore.isLoggedIn) {
+    router.push('/auth/login')
+  }
+  // Remove the isAgent check - let logged in users access the dashboard
+  // They'll just see limited functionality if they're not agents
+})
 </script>
-
-<style scoped>
-.questions-container {
-  border: 1px solid white;
-  overflow-y: auto;
-  max-height: 500px;
-}
-</style>

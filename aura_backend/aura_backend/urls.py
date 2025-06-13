@@ -1,9 +1,13 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenRefreshView
 from core import views
+from core.views import ApiInfo, ApiHealth
+from core.auth_views import login_view, register_view, logout_view, user_profile_view
 
 router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
 router.register(r'insurance-types', views.InsuranceTypeViewSet)
 router.register(r'carriers', views.CarrierViewSet)
 router.register(r'coverage-lines', views.CoverageLineViewSet)
@@ -17,4 +21,13 @@ router.register(r'submissions', views.SubmissionViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/info/', ApiInfo.as_view(), name='api-info'),
+    path('api/health/', ApiHealth.as_view(), name='api-health'),
+    
+    # JWT Auth endpoints
+    path('api/auth/login/', login_view, name='login'),
+    path('api/auth/register/', register_view, name='register'),
+    path('api/auth/logout/', logout_view, name='logout'),
+    path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/auth/profile/', user_profile_view, name='user_profile'),
 ]
