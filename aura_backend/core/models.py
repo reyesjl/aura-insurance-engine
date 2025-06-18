@@ -1,5 +1,48 @@
 import uuid
 from django.db import models
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+
+# --- User Model ---
+
+class User(AbstractUser):
+    """
+    Custom user model for agents and platform users.
+
+    Inherits all fields from AbstractUser, including:
+        - id
+        - password
+        - last_login
+        - is_superuser
+        - username
+        - first_name
+        - last_name
+        - email                                                 # Expected for drfpassworless login
+        - is_staff
+        - is_active
+        - date_joined
+        - groups
+        - user_permissions
+
+    Custom fields below:
+        - is_agent: Boolean, True if user is an agent
+        - agent_name: Optional, agent's display name
+        - agency: Optional, agency name
+        - phone_number: Optional, agent's phone number          # Expected for drfpassworless login
+        - level: Integer, agent's level for gamification
+        - xp: Integer, experience points for achievements
+        - (future) achievements: ManyToMany to Achievement model
+    """
+    is_agent = models.BooleanField(default=False)
+    agent_name = models.CharField(max_length=255, blank=True, null=True)
+    agency = models.CharField(max_length=255, blank=True, null=True)
+    phone_number = models.CharField(max_length=30, blank=True, null=True)
+    level = models.PositiveIntegerField(default=1)
+    xp = models.PositiveIntegerField(default=0)
+    # achievements = models.ManyToManyField('Achievement', blank=True)  # Uncomment when Achievement model is added
+
+    def __str__(self):
+        return self.agent_name or self.username
 
 # --- Core Classifications ---
 
@@ -94,6 +137,12 @@ class ApplicationSession(models.Model):
     It holds a secure UUID token and is tied to the original template and question snapshots.
     """
     template = models.ForeignKey(ApplicationTemplate, on_delete=models.PROTECT)
+    agent = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='application_sessions',
+        null=True, blank=True
+    )
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

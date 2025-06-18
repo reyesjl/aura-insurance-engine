@@ -4,8 +4,18 @@
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+  padding: 0 2rem;
+}
+
+.container-sm {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.wrapper-sm {
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 .content {
@@ -36,4 +46,20 @@ body {
 
 .bg-beige-200 {
   background-color: #eee7e3;
+}
+
+.font-breston {
+  font-family: 'Breston', Helvetica, sans-serif;
+}
+
+.font-helvetica {
+  font-family: Helvetica, sans-serif !important;
+}
+
+.font-scp {
+  font-family: 'Source Code Pro', monospace !important;
+}
+
+.page-spacer {
+  padding-top: var(--navbar-height, 80px);
 }
