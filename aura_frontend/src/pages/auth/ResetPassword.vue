@@ -11,16 +11,16 @@
       <div class="text-white mb-10">
         <form @submit.prevent="handleResetPassword" class="flex flex-col gap-5">
           <!-- Error message display -->
-          <div 
-            v-if="errorMessage" 
+          <div
+            v-if="errorMessage"
             class="p-3 bg-red-500/80 backdrop-blur-sm border border-red-400 text-white text-sm rounded"
           >
             {{ errorMessage }}
           </div>
 
           <!-- Success message display -->
-          <div 
-            v-if="successMessage" 
+          <div
+            v-if="successMessage"
             class="p-3 bg-green-500/80 backdrop-blur-sm border border-green-400 text-white text-sm rounded"
           >
             {{ successMessage }}
@@ -34,7 +34,7 @@
             @input="clearMessages"
             class="p-2 backdrop-blur-sm bg-black/20 mb-4 border-b-1 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          
+
           <button
             type="submit"
             :disabled="isLoading || !!successMessage"

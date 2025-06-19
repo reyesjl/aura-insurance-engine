@@ -2,8 +2,8 @@ import type { User } from '@/stores/user'
 
 // In production, API_BASE should be empty (same origin)
 // In development, it should be http://localhost:8000
-const API_BASE = import.meta.env.VITE_API_BASE || 
-  (import.meta.env.PROD ? '' : 'http://localhost:8000')
+const API_BASE =
+  import.meta.env.VITE_API_BASE || (import.meta.env.PROD ? '' : 'http://localhost:8000')
 const API_VERSION = import.meta.env.VITE_API_VERSION || '/api'
 const BASE_URL = `${API_BASE}${API_VERSION}`
 
@@ -34,7 +34,7 @@ class AuthAPI {
     const token = localStorage.getItem('access_token')
     return {
       'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` })
+      ...(token && { Authorization: `Bearer ${token}` }),
     }
   }
 

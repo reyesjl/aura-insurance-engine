@@ -11,16 +11,16 @@
       <div class="text-white mb-10">
         <form @submit.prevent="handleRegister" class="flex flex-col gap-5">
           <!-- Error message display -->
-          <div 
-            v-if="errorMessage" 
+          <div
+            v-if="errorMessage"
             class="p-3 bg-red-500/80 backdrop-blur-sm border border-red-400 text-white text-sm rounded"
           >
             {{ errorMessage }}
           </div>
 
           <!-- Success message display -->
-          <div 
-            v-if="successMessage" 
+          <div
+            v-if="successMessage"
             class="p-3 bg-green-500/80 backdrop-blur-sm border border-green-400 text-white text-sm rounded"
           >
             {{ successMessage }}
@@ -133,14 +133,18 @@ async function handleRegister() {
   }
 
   try {
-    await userStore.register(email.value.toLowerCase(), username.value.toLowerCase(), password.value, confirmPassword.value)
+    await userStore.register(
+      email.value.toLowerCase(),
+      username.value.toLowerCase(),
+      password.value,
+      confirmPassword.value,
+    )
     successMessage.value = 'Registration successful! Redirecting...'
-    
+
     // Redirect to agent dashboard after brief delay
     setTimeout(() => {
       router.push('/agent')
     }, 1500)
-    
   } catch (error: any) {
     console.error('Registration failed:', error)
     errorMessage.value = error.message || 'Registration failed. Please try again.'

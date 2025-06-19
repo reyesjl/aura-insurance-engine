@@ -63,13 +63,13 @@ export const useUserStore = defineStore('user', () => {
     isLoading.value = true
     try {
       const response = await authAPI.login({ email, password })
-      
+
       user.value = response.user
       accessToken.value = response.access
       refreshToken.value = response.refresh
-      
+
       saveToStorage()
-      
+
       console.log('User logged in:', user.value)
     } catch (error) {
       console.error('Login failed:', error)
@@ -80,17 +80,22 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // Register
-  async function register(email: string, username: string, password: string, confirmPassword: string) {
+  async function register(
+    email: string,
+    username: string,
+    password: string,
+    confirmPassword: string,
+  ) {
     isLoading.value = true
     try {
       const response = await authAPI.register({ email, username, password, confirmPassword })
-      
+
       user.value = response.user
       accessToken.value = response.access
       refreshToken.value = response.refresh
-      
+
       saveToStorage()
-      
+
       console.log('User registered:', user.value)
     } catch (error) {
       console.error('Registration failed:', error)
@@ -153,11 +158,11 @@ export const useUserStore = defineStore('user', () => {
     accessToken,
     refreshToken,
     isLoading,
-    
+
     // Computed
     isLoggedIn,
     isAgent,
-    
+
     // Actions
     login,
     logout,

@@ -11,8 +11,8 @@
       <div class="text-white mb-10">
         <form @submit.prevent="handleLogin" class="flex flex-col gap-5">
           <!-- Error message display -->
-          <div 
-            v-if="errorMessage" 
+          <div
+            v-if="errorMessage"
             class="p-3 bg-red-500/80 backdrop-blur-sm border border-red-400 text-white text-sm rounded"
           >
             {{ errorMessage }}
@@ -80,7 +80,8 @@ async function handleLogin() {
     router.push('/agent')
   } catch (error: any) {
     console.error('Login failed:', error)
-    errorMessage.value = error.message || 'Login failed. Please check your credentials and try again.'
+    errorMessage.value =
+      error.message || 'Login failed. Please check your credentials and try again.'
   } finally {
     isLoading.value = false
   }
