@@ -56,19 +56,20 @@
         :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
         >Feedback</a>
     </div>
-    <div class="md:flex align-center items-center px-10 hidden text-lg">
-      <!-- <a
-        href="https://forms.gle/9T3hno3iGvyiuWGd7"
-        target="_blank"
-        rel="noopener"
-        :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-        >Leave Feedback</a
-      > -->
-      <router-link
-        v-if="!userStore.isLoggedIn"
-        to="/agent"
-        :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-        >Login/Signup</router-link>
+    <div 
+      v-if="!userStore.isLoggedIn"
+      class="md:flex align-center items-center px-10 hidden text-lg">
+        <!-- <a
+          href="https://forms.gle/9T3hno3iGvyiuWGd7"
+          target="_blank"
+          rel="noopener"
+          :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
+          >Leave Feedback</a
+        > -->
+        <router-link
+          to="/agent"
+          :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
+          >Login/Signup</router-link>
     </div>
     <div
       @click="toggleMenu"
