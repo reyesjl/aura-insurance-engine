@@ -74,7 +74,7 @@
     <div
       @click="toggleMenu"
       :class="[
-        'text-lg bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black',
+        'text-lg bg-black text-white flex align-center items-center px-4 md:px-10 duration-300 hover:bg-white hover:text-black',
         isScrolled ? 'border-l border-black' : 'border-l border-white',
       ]"
     >
@@ -84,7 +84,7 @@
       v-if="userStore.isLoggedIn"
       @click="navToAgent"
       :class="[
-        'text-lg bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black',
+        'text-lg bg-black text-white flex align-center items-center px-4 md:px-10 duration-300 hover:bg-white hover:text-black',
         isScrolled ? 'border-l border-black' : 'border-l border-white',
       ]"
     >
