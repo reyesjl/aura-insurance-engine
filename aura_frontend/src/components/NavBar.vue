@@ -264,6 +264,6 @@ onUnmounted(() => {
 
 /* Hover effect for the hamburger container */
 .hamburger-menu:hover .hamburger-line {
-  background-color: inherit;
+  background-color: white;
 }
 </style>
