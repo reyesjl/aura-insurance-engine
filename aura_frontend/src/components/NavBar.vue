@@ -13,7 +13,9 @@
     <div
       :class="[
         'p-4 md:p-6 w-fit font-bold font-scp flex flex-grow-1 md:flex-grow-0 items-center align-center duration-300',
-        isScrolled ? 'hover:bg-gray-200 hover:text-black' : 'hover:bg-gray-400 hover:text-black',
+        isScrolled
+          ? 'hover:bg-gray-200 hover:text-black'
+          : 'hover:bg-gray-400 hover:text-black',
       ]"
     >
       <router-link class="min-h-[37px]" to="/">
@@ -52,47 +54,35 @@
         target="_blank"
         rel="noopener"
         :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-        >Feedback</a
-      >
+        >Feedback</a>
     </div>
-    <div
+    <div 
       v-if="!userStore.isLoggedIn"
-      class="md:flex align-center items-center px-10 hidden text-lg"
-    >
-      <!-- <a
+      class="md:flex align-center items-center px-10 hidden text-lg">
+        <!-- <a
           href="https://forms.gle/9T3hno3iGvyiuWGd7"
           target="_blank"
           rel="noopener"
           :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
           >Leave Feedback</a
         > -->
-      <router-link
-        to="/agent"
-        :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-        >Login/Signup</router-link
-      >
+        <router-link
+          to="/agent"
+          :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
+          >Login/Signup</router-link>
     </div>
     <div
       @click="toggleMenu"
       :class="[
-        'text-lg bg-black text-white flex align-center items-center px-4 md:px-10 duration-300 hover:bg-white hover:text-black',
+        'text-lg bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black cursor-pointer',
         isScrolled ? 'border-l border-black' : 'border-l border-white',
       ]"
     >
-      <!-- Hamburger menu icon -->
-      <div
-        @click="toggleMenu"
-        :class="[
-          'text-lg bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black cursor-pointer',
-          isScrolled ? 'border-l border-black' : 'border-l border-white',
-        ]"
-      >
-        <!-- Replace button with hamburger icon -->
-        <div class="hamburger-menu" :class="{ active: menuOpen }">
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-        </div>
+      <!-- Replace button with hamburger icon -->
+      <div class="hamburger-menu" :class="{ active: menuOpen }">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
       </div>
     </div>
     <div
@@ -120,11 +110,13 @@
         <ul class="flex list-none m-0 p-0 py-10 flex-col text-2xl md:text-4xl">
           <li class="py-5 border-b-1 text-right md:text-left">
             <router-link to="/">Home</router-link>
-          </li>
+          </li>          
           <li class="py-5 border-b-1 text-right md:text-left">
             <router-link to="/about">About Us</router-link>
           </li>
-          <li v-if="!userStore.isLoggedIn" class="py-5 border-b-1 text-right md:text-left">
+          <li 
+            v-if="!userStore.isLoggedIn"
+            class="py-5 border-b-1 text-right md:text-left">
             <router-link to="/auth/login">Login/Signup</router-link>
           </li>
           <li class="py-5 border-b-1 text-right md:text-left">
@@ -238,40 +230,5 @@ onUnmounted(() => {
 .slide-menu-leave-from {
   transform: translateX(0);
   opacity: 1;
-}
-
-/* Hamburger menu styles */
-.hamburger-menu {
-  display: flex;
-  flex-direction: column;
-  width: 24px;
-  height: 18px;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.hamburger-line {
-  width: 100%;
-  height: 2px;
-  background-color: currentColor;
-  transition: all 0.3s ease;
-  transform-origin: center;
-}
-
-.hamburger-menu.active .hamburger-line:nth-child(1) {
-  transform: rotate(45deg) translate(6px, 6px);
-}
-
-.hamburger-menu.active .hamburger-line:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger-menu.active .hamburger-line:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
-}
-
-/* Hover effect for the hamburger container */
-.hamburger-menu:hover .hamburger-line {
-  background-color: inherit;
 }
 </style>
