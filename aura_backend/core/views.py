@@ -6,6 +6,7 @@ from datetime import timedelta, datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from .permissions import IsAgentUser
 
 # Starttime for uptime tracking
 APP_START_TIME = time.time()
@@ -39,51 +40,61 @@ from .serializers import (
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAgentUser]
 
 
 class InsuranceTypeViewSet(viewsets.ModelViewSet):
     queryset = InsuranceType.objects.all()
     serializer_class = InsuranceTypeSerializer
+    permission_classes = [IsAgentUser]
 
 
 class CarrierViewSet(viewsets.ModelViewSet):
     queryset = Carrier.objects.all()
     serializer_class = CarrierSerializer
+    permission_classes = [IsAgentUser]
 
 
 class CoverageLineViewSet(viewsets.ModelViewSet):
     queryset = CoverageLine.objects.all()
     serializer_class = CoverageLineSerializer
+    permission_classes = [IsAgentUser]
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [IsAgentUser]
 
 
 class ApplicationTemplateViewSet(viewsets.ModelViewSet):
     queryset = ApplicationTemplate.objects.all()
     serializer_class = ApplicationTemplateSerializer
+    permission_classes = [IsAgentUser]
 
 
 class TemplateQuestionSnapshotViewSet(viewsets.ModelViewSet):
     queryset = TemplateQuestionSnapshot.objects.all()
     serializer_class = TemplateQuestionSnapshotSerializer
+    permission_classes = [IsAgentUser]
 
 
 class ApplicationSessionViewSet(viewsets.ModelViewSet):
     queryset = ApplicationSession.objects.all()
     serializer_class = ApplicationSessionSerializer
+    permission_classes = [IsAgentUser]
 
 
 class ApplicationAnswerViewSet(viewsets.ModelViewSet):
     queryset = ApplicationAnswer.objects.all()
     serializer_class = ApplicationAnswerSerializer
+    permission_classes = [IsAgentUser]
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
+    permission_classes = [IsAgentUser]
 
 
 class ApiInfo(APIView):
