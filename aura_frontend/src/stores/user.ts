@@ -1,20 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import type { User } from '@/types'
 import { authAPI, type LoginRequest, type RegisterRequest } from '@/api/auth'
-
-export interface User {
-  id: number
-  username: string
-  email: string
-  first_name: string
-  last_name: string
-  is_agent: boolean
-  agent_name?: string
-  agency?: string
-  phone_number?: string
-  level: number
-  xp: number
-}
 
 export const useUserStore = defineStore('user', () => {
   // State
@@ -59,10 +46,10 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // Login
-  async function login(email: string, password: string) {
+  async function login(loginField: string, password: string) {
     isLoading.value = true
     try {
-      const response = await authAPI.login({ email, password })
+      const response = await authAPI.login({ loginField, password })
 
       user.value = response.user
       accessToken.value = response.access

@@ -51,7 +51,7 @@ class ApplicationTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationTemplate
         fields = [
-            'id', 'name', 'insurance_type', 'carriers',
+            'id', 'agent', 'name', 'insurance_type', 'carriers',
             'coverages', 'created_at'
         ]
 

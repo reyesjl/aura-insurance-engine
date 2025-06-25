@@ -18,7 +18,7 @@ def login_view(request):
     Login endpoint that returns JWT tokens
     Accepts both email and username for login
     """
-    login_field = request.data.get('email') or request.data.get('username')
+    login_field = request.data.get('email') or request.data.get('username') or request.data.get('loginField')
     password = request.data.get('password')
     
     if not login_field or not password:

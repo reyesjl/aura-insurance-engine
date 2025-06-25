@@ -107,6 +107,12 @@ class ApplicationTemplate(models.Model):
     It stores a static question snapshot so changes to the base questions do not affect existing templates.
     """
     name = models.CharField(max_length=255)
+    agent = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='application_templates',
+        null=True, blank=True
+    )
     insurance_type = models.ForeignKey(InsuranceType, on_delete=models.PROTECT)
     carriers = models.ManyToManyField(Carrier)
     coverages = models.ManyToManyField(CoverageLine)

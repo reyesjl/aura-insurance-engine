@@ -1,4 +1,4 @@
-import type { User } from '@/stores/user'
+import type { User } from '@/types'
 
 // In production, API_BASE should be empty (same origin)
 // In development, it should be http://localhost:8000
@@ -8,7 +8,9 @@ const API_VERSION = import.meta.env.VITE_API_VERSION || '/api'
 const BASE_URL = `${API_BASE}${API_VERSION}`
 
 export interface LoginRequest {
-  email: string
+  // email: string
+  // username: string
+  loginField: string // using this one!
   password: string
 }
 
@@ -39,12 +41,18 @@ class AuthAPI {
   }
 
   async login(credentials: LoginRequest): Promise<AuthResponse> {
+     // Transform loginField to the backend expected format
+    const payload = {
+      email: credentials.loginField, // Backend expects 'email' field for login
+      password: credentials.password
+    }
+
     const response = await fetch(`${BASE_URL}/auth/login/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify(payload),
     })
 
     const data = await response.json()

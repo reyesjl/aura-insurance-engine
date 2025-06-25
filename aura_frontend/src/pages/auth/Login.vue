@@ -18,21 +18,49 @@
             {{ errorMessage }}
           </div>
 
-          <input
-            placeholder="Email or Username"
-            v-model="email"
-            type="text"
-            @input="clearError"
-            class="p-2 backdrop-blur-sm bg-black/20 mb-4 border-b-1 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <!-- Email/Username field with validation -->
+          <div class="flex flex-col">
+            <input
+              placeholder="Email or Username"
+              v-model="loginField"
+              type="text"
+              @input="clearFieldError('loginField')"
+              :class="[
+                'p-2 backdrop-blur-sm bg-black/20 mb-2 border-b-1 focus:outline-none focus:ring-2',
+                validationErrors.loginField 
+                  ? 'border-red-400 focus:ring-red-500' 
+                  : 'border-gray-300 focus:ring-blue-500'
+              ]"
+            />
+            <div 
+              v-if="validationErrors.loginField" 
+              class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit"
+            >
+              {{ validationErrors.loginField }}
+            </div>
+          </div>
 
-          <input
-            placeholder="Password"
-            v-model="password"
-            type="password"
-            @input="clearError"
-            class="p-2 backdrop-blur-sm bg-black/20 mb-4 border-b-1 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <!-- Password field with validation -->
+          <div class="flex flex-col">
+            <input
+              placeholder="Password"
+              v-model="password"
+              type="password"
+              @input="clearFieldError('password')"
+              :class="[
+                'p-2 backdrop-blur-sm bg-black/20 mb-2 border-b-1 focus:outline-none focus:ring-2',
+                validationErrors.password 
+                  ? 'border-red-400 focus:ring-red-500' 
+                  : 'border-gray-300 focus:ring-blue-500'
+              ]"
+            />
+            <div 
+              v-if="validationErrors.password" 
+              class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit"
+            >
+              {{ validationErrors.password }}
+            </div>
+          </div>
 
           <button
             type="submit"
@@ -56,27 +84,68 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { loginSchema, type LoginFormData } from '@/schemas/auth.schema'
 import NavBar from '@/components/NavBar.vue'
 import loginBanner from '@/assets/mountains-bg.jpg'
 import ImageSection from '@/components/ImageSection.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
-const email = ref('')
+const loginField = ref('')
 const password = ref('')
 const errorMessage = ref('')
 const isLoading = ref(false)
 
-async function handleLogin() {
-  // Clear previous error
+// Validation errors state
+const validationErrors = reactive<Partial<Record<keyof LoginFormData, string>>>({})
+
+// Clear validation errors
+function clearFieldError(field: keyof LoginFormData) {
+  if (validationErrors[field]) {
+    delete validationErrors[field]
+  }
+  // Also clear general error message when user starts typing
+  if (errorMessage.value) {
+    errorMessage.value = ''
+  }
+}
+
+function clearAllErrors() {
+  Object.keys(validationErrors).forEach(key => {
+    delete validationErrors[key as keyof LoginFormData]
+  })
   errorMessage.value = ''
+}
+
+async function handleLogin() {
+  // Clear all previous errors
+  clearAllErrors()
+  
+  // Validate form data
+  const formData = {
+    loginField: loginField.value.trim(),
+    password: password.value
+  }
+
+  const validation = loginSchema.safeParse(formData)
+
+  if (!validation.success) {
+    // Handle validation errors
+    validation.error.errors.forEach(error => {
+      const field = error.path[0] as keyof LoginFormData
+      validationErrors[field] = error.message
+    })
+    return
+  }
+
+  // Proceed with login if validation passes
   isLoading.value = true
 
   try {
-    await userStore.login(email.value.toLowerCase(), password.value)
+    await userStore.login(validation.data.loginField.toLowerCase(), validation.data.password)
     router.push('/agent')
   } catch (error: any) {
     console.error('Login failed:', error)
@@ -84,13 +153,6 @@ async function handleLogin() {
       error.message || 'Login failed. Please check your credentials and try again.'
   } finally {
     isLoading.value = false
-  }
-}
-
-// Clear error when user starts typing
-function clearError() {
-  if (errorMessage.value) {
-    errorMessage.value = ''
   }
 }
 

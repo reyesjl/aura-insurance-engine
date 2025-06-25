@@ -1,7 +1,11 @@
 import type { ApplicationSession, Carrier, CoverageLine, Question } from '@/types'
 
-const API_VERSION = import.meta.env.VITE_API_VERSION
-const BASE_URL = `${import.meta.env.VITE_API_BASE}${API_VERSION}`
+// In production, API_BASE should be empty (same origin)
+// In development, it should be http://localhost:8000
+const API_BASE =
+  import.meta.env.VITE_API_BASE || (import.meta.env.PROD ? '' : 'http://localhost:8000')
+const API_VERSION = import.meta.env.VITE_API_VERSION || '/api'
+const BASE_URL = `${API_BASE}${API_VERSION}`
 
 // Helper function to handle API responses
 async function handleResponse<T>(res: Response, key?: string): Promise<T> {
