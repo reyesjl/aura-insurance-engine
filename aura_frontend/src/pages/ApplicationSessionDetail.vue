@@ -1,6 +1,6 @@
 <template>
   <Section mode="dark">
-    <router-link to="/agent" class="text-white underline underline-offset-4 mb-4 inline-block">
+    <router-link to="/applications" class="text-white underline underline-offset-4 mb-4 inline-block">
       Back
     </router-link>
     <h1 class="text-2xl font-bold">Application Details</h1>
