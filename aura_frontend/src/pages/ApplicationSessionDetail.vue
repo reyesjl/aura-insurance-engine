@@ -19,7 +19,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="text-sm font-medium text-gray-600">Session Name</label>
-            <p class="text-lg">{{ session.name }}</p>
+            <p class="text-lg">{{ session.name || 'Unnamed Session' }}</p>
           </div>
           <div>
             <label class="text-sm font-medium text-gray-600">Status</label>
@@ -33,31 +33,39 @@
             <p>{{ formatDate(session.created_at) }}</p>
           </div>
           <div>
-            <label class="text-sm font-medium text-gray-600">Last Updated</label>
-            <p>{{ formatDate(session.updated_at) }}</p>
+            <label class="text-sm font-medium text-gray-600">Session ID</label>
+            <p>{{ session.id }}</p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Template ID</label>
+            <p>{{ session.template }}</p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600">Token</label>
+            <p class="font-mono text-sm break-all">{{ session.token }}</p>
           </div>
         </div>
       </div>
 
       <!-- Template Information -->
-      <div class="bg-white p-6 border rounded-lg" v-if="session.template">
+      <div class="bg-white p-6 border rounded-lg" v-if="templateData">
         <h2 class="text-xl font-semibold mb-4">Template Information</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="text-sm font-medium text-gray-600">Template Name</label>
-            <p>{{ session.template.name }}</p>
+            <p>{{ templateData.name }}</p>
           </div>
           <div>
             <label class="text-sm font-medium text-gray-600">Insurance Type</label>
-            <p>{{ session.template.insurance_type?.label || 'N/A' }}</p>
+            <p>{{ templateData.insurance_type?.label || 'N/A' }}</p>
           </div>
         </div>
         
         <!-- Carriers -->
-        <div class="mt-4" v-if="session.template.carriers && session.template.carriers.length > 0">
+        <div class="mt-4" v-if="templateData.carriers && templateData.carriers.length > 0">
           <label class="text-sm font-medium text-gray-600">Selected Carriers</label>
           <div class="flex flex-wrap gap-2 mt-2">
-            <span v-for="carrier in session.template.carriers" :key="carrier.id"
+            <span v-for="carrier in templateData.carriers" :key="carrier.id"
                   class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
               {{ carrier.name }}
             </span>
@@ -65,10 +73,10 @@
         </div>
 
         <!-- Coverages -->
-        <div class="mt-4" v-if="session.template.coverages && session.template.coverages.length > 0">
+        <div class="mt-4" v-if="templateData.coverages && templateData.coverages.length > 0">
           <label class="text-sm font-medium text-gray-600">Coverage Lines</label>
           <div class="flex flex-wrap gap-2 mt-2">
-            <span v-for="coverage in session.template.coverages" :key="coverage.id"
+            <span v-for="coverage in templateData.coverages" :key="coverage.id"
                   class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
               {{ coverage.name }} ({{ coverage.abbreviation }})
             </span>
@@ -77,10 +85,10 @@
       </div>
 
       <!-- Questions Summary -->
-      <div class="bg-white p-6 border rounded-lg" v-if="session.template?.question_snapshots">
-        <h2 class="text-xl font-semibold mb-4">Questions ({{ session.template.question_snapshots.length }})</h2>
+      <div class="bg-white p-6 border rounded-lg" v-if="templateData?.question_snapshots">
+        <h2 class="text-xl font-semibold mb-4">Questions ({{ templateData.question_snapshots.length }})</h2>
         <div class="space-y-3">
-          <div v-for="(question, index) in session.template.question_snapshots" 
+          <div v-for="(question, index) in templateData.question_snapshots" 
                :key="question.id"
                class="p-4 border border-gray-200 rounded">
             <div class="flex items-start justify-between">
@@ -103,10 +111,6 @@
           <button v-if="session.status === 'pending'"
                   class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
             Start Application
-          </button>
-          <button v-if="session.status === 'in_progress'"
-                  class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            Continue Application
           </button>
           <button class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
             Export Data
@@ -144,6 +148,7 @@ const sessionId = computed(() => {
 })
 
 const session = ref<ApplicationSession | null>(null)
+const templateData = ref<any>(null) // We'll need to fetch template data separately
 const loading = ref(false)
 const error = ref('')
 
@@ -160,6 +165,8 @@ const loadSession = async () => {
   
   try {
     session.value = await applicationsAPI.getApplicationSession(id)
+    // Note: You may need to fetch template data separately if needed
+    // templateData.value = await applicationsAPI.getApplicationTemplate(session.value.template)
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Failed to load application session'
     console.error('Failed to load session:', err)
@@ -182,11 +189,9 @@ const getStatusClass = (status: string) => {
   switch (status) {
     case 'pending':
       return 'bg-yellow-100 text-yellow-800'
-    case 'in_progress':
-      return 'bg-blue-100 text-blue-800'
     case 'completed':
       return 'bg-green-100 text-green-800'
-    case 'cancelled':
+    case 'error':
       return 'bg-red-100 text-red-800'
     default:
       return 'bg-gray-100 text-gray-800'
