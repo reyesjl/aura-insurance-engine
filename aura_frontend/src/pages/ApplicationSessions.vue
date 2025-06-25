@@ -13,25 +13,29 @@
     <div v-else-if="error" class="text-red-600">{{ error }}</div>
     <div v-else-if="!sessions || sessions.length === 0" class="text-gray-600">
       <p>No application sessions found.</p>
-      <router-link to="/applications/create" class="text-blue-600 underline">
+      <router-link to="/applications/create" class="text-black underline underline-offset-5">
         Create your first application
       </router-link>
     </div>
     <div v-else class="space-y-4">
-      <div v-for="session in sessions" :key="session.id"
-           class="p-4 border hover:bg-gray-50 cursor-pointer"
-           @click="viewSession(session.id)">
+      <div
+        v-for="session in sessions"
+        :key="session.id"
+        class="p-4 border hover:bg-gray-50 cursor-pointer"
+        @click="viewSession(session.id)"
+      >
         <div class="flex items-center justify-between">
           <div>
             <h3 class="font-semibold text-lg">{{ session.name || 'Untitled Application' }}</h3>
             <p class="text-sm text-gray-600">Token: {{ session.token }}</p>
-            <p class="text-sm text-gray-500">
-              Created: {{ formatDate(session.created_at) }}
-            </p>
+            <p class="text-sm text-gray-500">Created: {{ formatDate(session.created_at) }}</p>
           </div>
+
           <div class="text-right">
-            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium"
-                  :class="getStatusClass(session.status)">
+            <span
+              class="inline-block px-3 py-1 rounded-full text-sm font-medium"
+              :class="getStatusClass(session.status)"
+            >
               {{ session.status }}
             </span>
           </div>
@@ -79,7 +83,7 @@ const formatDate = (dateString: string) => {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
 }
 

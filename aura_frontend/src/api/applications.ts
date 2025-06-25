@@ -1,7 +1,7 @@
 import { api } from './apiClient'
 import type { InsuranceType, Carrier, CoverageLine, ApplicationSession } from '@/types'
 
-// API Response interfaces 
+// API Response interfaces
 // (these sometimes can differ from our internal types)
 // just business specific and what is needed upfront.
 export interface CarriersByCoverageResponse {
@@ -54,26 +54,30 @@ class ApplicationsAPI {
 
   // Get carriers organized by coverage lines for a specific insurance type
   async getCarriersByCoverage(insuranceTypeId: number): Promise<CarriersByCoverageResponse> {
-    return api.get<CarriersByCoverageResponse>(`/carriers-by-coverage/?insurance_type_id=${insuranceTypeId}`)
+    return api.get<CarriersByCoverageResponse>(
+      `/carriers-by-coverage/?insurance_type_id=${insuranceTypeId}`,
+    )
   }
 
   // Preview questions that would be included for given selections
   async previewQuestions(
     insuranceTypeId: number,
     carrierIds: number[],
-    coverageIds: number[]
+    coverageIds: number[],
   ): Promise<PreviewQuestionsResponse> {
     const params = new URLSearchParams({
       insurance_type_id: insuranceTypeId.toString(),
       carrier_ids: carrierIds.join(','),
-      coverage_ids: coverageIds.join(',')
+      coverage_ids: coverageIds.join(','),
     })
-    
+
     return api.get<PreviewQuestionsResponse>(`/preview-questions/?${params}`)
   }
 
   // Create a new application session
-  async createApplicationSession(data: CreateApplicationSessionRequest): Promise<CreateApplicationSessionResponse> {
+  async createApplicationSession(
+    data: CreateApplicationSessionRequest,
+  ): Promise<CreateApplicationSessionResponse> {
     return api.post<CreateApplicationSessionResponse>('/create-application-session/', data)
   }
 

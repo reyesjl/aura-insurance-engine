@@ -27,13 +27,13 @@
               @input="clearFieldError('loginField')"
               :class="[
                 'p-2 backdrop-blur-sm bg-black/20 mb-2 border-b-1 focus:outline-none focus:ring-2',
-                validationErrors.loginField 
-                  ? 'border-red-400 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500'
+                validationErrors.loginField
+                  ? 'border-red-400 focus:ring-red-500'
+                  : 'border-gray-300 focus:ring-blue-500',
               ]"
             />
-            <div 
-              v-if="validationErrors.loginField" 
+            <div
+              v-if="validationErrors.loginField"
               class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit"
             >
               {{ validationErrors.loginField }}
@@ -49,13 +49,13 @@
               @input="clearFieldError('password')"
               :class="[
                 'p-2 backdrop-blur-sm bg-black/20 mb-2 border-b-1 focus:outline-none focus:ring-2',
-                validationErrors.password 
-                  ? 'border-red-400 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500'
+                validationErrors.password
+                  ? 'border-red-400 focus:ring-red-500'
+                  : 'border-gray-300 focus:ring-blue-500',
               ]"
             />
-            <div 
-              v-if="validationErrors.password" 
+            <div
+              v-if="validationErrors.password"
               class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit"
             >
               {{ validationErrors.password }}
@@ -114,7 +114,7 @@ function clearFieldError(field: keyof LoginFormData) {
 }
 
 function clearAllErrors() {
-  Object.keys(validationErrors).forEach(key => {
+  Object.keys(validationErrors).forEach((key) => {
     delete validationErrors[key as keyof LoginFormData]
   })
   errorMessage.value = ''
@@ -123,18 +123,18 @@ function clearAllErrors() {
 async function handleLogin() {
   // Clear all previous errors
   clearAllErrors()
-  
+
   // Validate form data
   const formData = {
     loginField: loginField.value.trim(),
-    password: password.value
+    password: password.value,
   }
 
   const validation = loginSchema.safeParse(formData)
 
   if (!validation.success) {
     // Handle validation errors
-    validation.error.errors.forEach(error => {
+    validation.error.errors.forEach((error) => {
       const field = error.path[0] as keyof LoginFormData
       validationErrors[field] = error.message
     })

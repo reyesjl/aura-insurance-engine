@@ -9,7 +9,6 @@ import CreateApplicationSession from '@/pages/CreateApplicationSession.vue'
 import ApplicationSessions from '@/pages/ApplicationSessions.vue'
 import ApplicationSessionDetail from '@/pages/ApplicationSessionDetail.vue'
 
-
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
   { path: '/about', name: 'About', component: About },
@@ -19,9 +18,17 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/agent', name: 'Agent', component: AgentDashboard },
 
   { path: '/applications', name: 'ApplicationSessions', component: ApplicationSessions },
-  { path: '/applications/create', name: 'CreateApplicationSession', component: CreateApplicationSession },
-  { path: '/applications/:sessionId', name: 'ApplicationSessionDetail', component: ApplicationSessionDetail, props: true}
-
+  {
+    path: '/applications/create',
+    name: 'CreateApplicationSession',
+    component: CreateApplicationSession,
+  },
+  {
+    path: '/applications/:sessionId',
+    name: 'ApplicationSessionDetail',
+    component: ApplicationSessionDetail,
+    props: true,
+  },
 ]
 
 const router = createRouter({

@@ -13,7 +13,7 @@
               />
             </router-link>
           </div>
-          <!-- Footer badges -->
+          <!-- Footer badges
           <div class="text-xs py-5 flex flex-col gap-1">
             <div>
               Sic Semper Tyrannis
@@ -33,7 +33,7 @@
               <img :src="niceBadge" alt="Nice Badge" class="inline-block align-middle" />
               Always
             </div>
-          </div>
+          </div> -->
         </div>
 
         <!-- Right footer column -->

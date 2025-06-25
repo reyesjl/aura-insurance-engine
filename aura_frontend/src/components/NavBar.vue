@@ -13,9 +13,7 @@
     <div
       :class="[
         'p-4 md:p-6 w-fit font-bold font-scp flex flex-grow-1 md:flex-grow-0 items-center align-center duration-300',
-        isScrolled
-          ? 'hover:bg-gray-200 hover:text-black'
-          : 'hover:bg-gray-400 hover:text-black',
+        isScrolled ? 'hover:bg-gray-200 hover:text-black' : 'hover:bg-gray-400 hover:text-black',
       ]"
     >
       <router-link class="min-h-[37px]" to="/">
@@ -54,22 +52,25 @@
         target="_blank"
         rel="noopener"
         :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-        >Feedback</a>
+        >Feedback</a
+      >
     </div>
-    <div 
+    <div
       v-if="!userStore.isLoggedIn"
-      class="md:flex align-center items-center px-10 hidden text-lg">
-        <!-- <a
+      class="md:flex align-center items-center px-10 hidden text-lg"
+    >
+      <!-- <a
           href="https://forms.gle/9T3hno3iGvyiuWGd7"
           target="_blank"
           rel="noopener"
           :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
           >Leave Feedback</a
         > -->
-        <router-link
-          to="/agent"
-          :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-          >Login/Signup</router-link>
+      <router-link
+        to="/agent"
+        :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
+        >Login/Signup</router-link
+      >
     </div>
     <div
       @click="toggleMenu"
@@ -110,13 +111,11 @@
         <ul class="flex list-none m-0 p-0 py-10 flex-col text-2xl md:text-4xl">
           <li class="py-5 border-b-1 text-right md:text-left">
             <router-link to="/">Home</router-link>
-          </li>          
+          </li>
           <li class="py-5 border-b-1 text-right md:text-left">
             <router-link to="/about">About Us</router-link>
           </li>
-          <li 
-            v-if="!userStore.isLoggedIn"
-            class="py-5 border-b-1 text-right md:text-left">
+          <li v-if="!userStore.isLoggedIn" class="py-5 border-b-1 text-right md:text-left">
             <router-link to="/auth/login">Login/Signup</router-link>
           </li>
           <li class="py-5 border-b-1 text-right md:text-left">

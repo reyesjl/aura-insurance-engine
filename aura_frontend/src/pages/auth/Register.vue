@@ -35,13 +35,13 @@
               @input="clearFieldError('email')"
               :class="[
                 'p-2 backdrop-blur-sm bg-black/20 mb-2 border-b-1 focus:outline-none focus:ring-2',
-                validationErrors.email 
-                  ? 'border-red-400 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500'
+                validationErrors.email
+                  ? 'border-red-400 focus:ring-red-500'
+                  : 'border-gray-300 focus:ring-blue-500',
               ]"
             />
-            <div 
-              v-if="validationErrors.email" 
+            <div
+              v-if="validationErrors.email"
               class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit"
             >
               {{ validationErrors.email }}
@@ -57,13 +57,13 @@
               @input="clearFieldError('username')"
               :class="[
                 'p-2 backdrop-blur-sm bg-black/20 mb-2 border-b-1 focus:outline-none focus:ring-2',
-                validationErrors.username 
-                  ? 'border-red-400 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500'
+                validationErrors.username
+                  ? 'border-red-400 focus:ring-red-500'
+                  : 'border-gray-300 focus:ring-blue-500',
               ]"
             />
-            <div 
-              v-if="validationErrors.username" 
+            <div
+              v-if="validationErrors.username"
               class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit"
             >
               {{ validationErrors.username }}
@@ -79,13 +79,13 @@
               @input="clearFieldError('password')"
               :class="[
                 'p-2 backdrop-blur-sm bg-black/20 mb-2 border-b-1 focus:outline-none focus:ring-2',
-                validationErrors.password 
-                  ? 'border-red-400 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500'
+                validationErrors.password
+                  ? 'border-red-400 focus:ring-red-500'
+                  : 'border-gray-300 focus:ring-blue-500',
               ]"
             />
-            <div 
-              v-if="validationErrors.password" 
+            <div
+              v-if="validationErrors.password"
               class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit"
             >
               {{ validationErrors.password }}
@@ -101,13 +101,13 @@
               @input="clearFieldError('confirmPassword')"
               :class="[
                 'p-2 backdrop-blur-sm bg-black/20 mb-2 border-b-1 focus:outline-none focus:ring-2',
-                validationErrors.confirmPassword 
-                  ? 'border-red-400 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500'
+                validationErrors.confirmPassword
+                  ? 'border-red-400 focus:ring-red-500'
+                  : 'border-gray-300 focus:ring-blue-500',
               ]"
             />
-            <div 
-              v-if="validationErrors.confirmPassword" 
+            <div
+              v-if="validationErrors.confirmPassword"
               class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit"
             >
               {{ validationErrors.confirmPassword }}
@@ -173,7 +173,7 @@ function clearFieldError(field: keyof RegisterFormData) {
 }
 
 function clearAllErrors() {
-  Object.keys(validationErrors).forEach(key => {
+  Object.keys(validationErrors).forEach((key) => {
     delete validationErrors[key as keyof RegisterFormData]
   })
   errorMessage.value = ''
@@ -183,20 +183,20 @@ function clearAllErrors() {
 async function handleRegister() {
   // Clear all previous errors
   clearAllErrors()
-  
+
   // Validate form data
   const formData = {
     email: email.value.trim(),
     username: username.value.trim(),
     password: password.value,
-    confirmPassword: confirmPassword.value
+    confirmPassword: confirmPassword.value,
   }
 
   const validation = registerSchema.safeParse(formData)
 
   if (!validation.success) {
     // Handle validation errors
-    validation.error.errors.forEach(error => {
+    validation.error.errors.forEach((error) => {
       const field = error.path[0] as keyof RegisterFormData
       validationErrors[field] = error.message
     })
