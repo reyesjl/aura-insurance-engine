@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from core import views
 from core.views import ApiInfo, ApiHealth
 from core.auth_views import login_view, register_view, logout_view, user_profile_view
+from core.application_views import get_carriers_by_coverage, create_application_session, preview_questions
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -30,4 +31,9 @@ urlpatterns = [
     path('api/auth/logout/', logout_view, name='logout'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/auth/profile/', user_profile_view, name='user_profile'),
+    
+    # New application workflow endpoints
+    path('api/carriers-by-coverage/', get_carriers_by_coverage, name='carriers-by-coverage'),
+    path('api/create-application-session/', create_application_session, name='create-application-session'),
+    path('api/preview-questions/', preview_questions, name='preview-questions'),
 ]

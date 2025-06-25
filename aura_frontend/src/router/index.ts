@@ -5,6 +5,10 @@ import Register from '@/pages/auth/Register.vue'
 import Login from '@/pages/auth/Login.vue'
 import ResetPassword from '@/pages/auth/ResetPassword.vue'
 import AgentDashboard from '@/pages/AgentDashboard.vue'
+import CreateApplicationSession from '@/pages/CreateApplicationSession.vue'
+import ApplicationSessions from '@/pages/ApplicationSessions.vue'
+import ApplicationSessionDetail from '@/pages/ApplicationSessionDetail.vue'
+
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
@@ -13,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/auth/login', name: 'Login', component: Login },
   { path: '/auth/reset-password', name: 'ResetPassword', component: ResetPassword },
   { path: '/agent', name: 'Agent', component: AgentDashboard },
+
+  { path: '/applications', name: 'ApplicationSessions', component: ApplicationSessions },
+  { path: '/applications/create', name: 'CreateApplicationSession', component: CreateApplicationSession },
+  { path: '/applications/:sessionId', name: 'ApplicationSessionDetail', component: ApplicationSessionDetail, props: true}
+
 ]
 
 const router = createRouter({

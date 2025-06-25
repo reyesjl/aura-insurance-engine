@@ -21,6 +21,7 @@
         <h3 class="text-xl font-bold mb-4">Create Application</h3>
         <p class="mb-4">Start a new insurance application</p>
         <button
+          @click="navigateToCreateApplication"
           :disabled="!userStore.isAgent"
           class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
@@ -32,6 +33,7 @@
         <h3 class="text-xl font-bold mb-4">My Sessions</h3>
         <p class="mb-4">View active application sessions</p>
         <button
+          @click="navigateToApplicationSessions"
           :disabled="!userStore.isAgent"
           class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
@@ -99,6 +101,14 @@ const handleLogout = async () => {
     console.error('Logout failed:', error)
     router.push('/') // Redirect anyway
   }
+}
+
+const navigateToCreateApplication = () => {
+  router.push('/applications/create')
+}
+
+const navigateToApplicationSessions = () => {
+  router.push('/applications')
 }
 
 // Protect the route - redirect if not logged in, but allow non-agents
