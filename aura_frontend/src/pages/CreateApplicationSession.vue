@@ -191,7 +191,7 @@ const loadingPreview = ref(false)
 const previewError = ref('')
 const creatingSession = ref(false)
 // Time estimation constants
-const timePerQuestion = 90 // seconds per question (you can adjust this)
+const timePerQuestion = 15 // seconds per question (you can adjust this)
 
 // Computed properties
 const hasSelections = computed(() => {
