@@ -25,7 +25,10 @@ export interface PreviewQuestionsResponse {
     id: number
     text: string
     carriers: string[]
-    coverages: string[]
+    coverages: Array<{
+      name: string
+      abbreviation: string
+    }>
   }>
 }
 

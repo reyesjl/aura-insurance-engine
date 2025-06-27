@@ -1,19 +1,12 @@
 <template>
-  <Section mode="dark">
-    <router-link to="/agent" class="text-white underline underline-offset-5 mb-4">
-      Back to Dashboard
-    </router-link>
-    <h1 class="text-2xl font-bold">My Sessions</h1>
-    <p>Track your ongoing applications.</p>
-  </Section>
-
   <!-- Sessions List -->
   <Section mode="light">
+    <h1 class="text-2xl font-bold">My Sessions</h1>
     <div v-if="loading" class="text-gray-600">Loading sessions...</div>
     <div v-else-if="error" class="text-red-600">{{ error }}</div>
     <div v-else-if="!sessions || sessions.length === 0" class="text-gray-600">
       <p>No application sessions found.</p>
-      <router-link to="/applications/create" class="text-black underline underline-offset-5">
+      <router-link to="/applications/create" class="text-lg text-black underline underline-offset-5">
         Create your first application
       </router-link>
     </div>

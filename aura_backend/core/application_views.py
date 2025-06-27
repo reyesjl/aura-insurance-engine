@@ -196,7 +196,10 @@ def preview_questions(request):
                     'id': q.pk,
                     'text': q.text,
                     'carriers': [c.name for c in q.carriers.all()],
-                    'coverages': [c.name for c in q.coverages.all()]
+                    'coverages': [
+                        {'name': c.name, 'abbreviation': c.abbreviation}
+                        for c in q.coverages.all()
+                    ]
                 }
                 for q in questions
             ]

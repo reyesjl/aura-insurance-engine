@@ -1,11 +1,9 @@
 <template>
-  <NavBar />
-  <div class="page-spacer bg-black"></div>
   <!-- Step 1: Insurance Type Selection -->
   <Section v-if="currentStep === 1" mode="light">
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-10">
       <h2 class="text-2xl font-bold">Select Type</h2>
-      <button @click="navigateToDashboard" class="px-4 py-2 bg-black text-white hover:bg-gray-500">
+      <button @click="navigateToDashboard" class="px-4 py-2 bg-black text-white hover:bg-gray-500 duration-300">
         Cancel
       </button>
     </div>
@@ -15,7 +13,7 @@
       <div
         v-for="type in insuranceTypes"
         :key="type.id"
-        class="p-4 border cursor-pointer hover:bg-black hover:text-white"
+        class="p-4 border cursor-pointer hover:bg-black hover:text-white duration-300"
         :class="{ 'bg-black text-white border-black': selectedInsuranceType?.id === type.id }"
         @click="selectInsuranceType(type)"
       >
@@ -26,34 +24,35 @@
 
   <!-- Step 2: Carrier Selection by Coverage -->
   <Section v-if="currentStep === 2" mode="light">
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-10">
       <h2 class="text-2xl font-bold">Select Carriers</h2>
-      <button @click="goBack" class="px-4 py-2 bg-black text-white hover:bg-gray-500">
+      <button @click="goBack" class="px-4 py-2 bg-black text-white hover:bg-gray-500 duration-300">
         Back
       </button>
     </div>
 
     <div v-if="loadingCarriers" class="text-gray-600">Loading carriers...</div>
     <div v-else-if="carriersError" class="text-red-600">{{ carriersError }}</div>
-    <div v-else class="space-y-6">
+    <div v-else class="space-y-6 flex flex-col gap-10">
       <div v-for="coverageLine in carriersByCoverage" :key="coverageLine.coverage.id">
-        <div class="flex gap-2 items-center mb-3">
-          <InsuranceTypeBox :insurance-type="coverageLine.coverage.abbreviation" />
+        <div class="flex gap-2 items-center mb-10">
+          <InsuranceTypeBox :coverage="coverageLine.coverage" />
           <h3 class="text-lg font-semibold">
             {{ coverageLine.coverage.name }}
           </h3>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div class="grid grid-cols-2 lg:grid-cols-3">
           <div
             v-for="carrier in coverageLine.carriers"
             :key="carrier.id"
-            class="p-3 border cursor-pointer hover:bg-black hover:text-white"
+            class="p-3 cursor-pointer hover:bg-black hover:text-white duration-300"
             :class="{
-              'bg-black text-white border-black': isCarrierSelected(
+              'bg-black text-white': isCarrierSelected(
                 coverageLine.coverage.id,
                 carrier.id,
               ),
+              'bg-gray-100': !isCarrierSelected(coverageLine.coverage.id, carrier.id),
             }"
             @click="toggleCarrier(coverageLine.coverage.id, carrier.id)"
           >
@@ -63,9 +62,9 @@
       </div>
 
       <button
-        v-if="hasSelections"
+        :disabled="!hasSelections"
         @click="nextStep"
-        class="p-10 bg-green-500 text-white hover:bg-blue-699"
+        class="p-10 w-full bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400 duration-300"
       >
         Preview Questions
       </button>
@@ -74,9 +73,9 @@
 
   <!-- Step 3: Question Preview -->
   <Section v-if="currentStep === 3" mode="light">
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-10">
       <h2 class="text-2xl font-bold">Questions Preview</h2>
-      <button @click="goBack" class="px-4 py-2 bg-black text-white hover:bg-gray-500">
+      <button @click="goBack" class="px-4 py-2 bg-black text-white hover:bg-gray-500 duration-300">
         Back
       </button>
     </div>
@@ -84,27 +83,12 @@
     <div v-if="loadingPreview" class="text-gray-500">Loading questions preview...</div>
     <div v-else-if="previewError" class="text-red-600">{{ previewError }}</div>
     <div v-else>
-      <div class="mb-4 flex flex-col gap-5 md:max-w-1/3 w-full">
-        <div class="flex justify-between border-b">
-          <div class="label">Question Count</div>
-          <div class="value">{{ questionPreview?.questions_count || 0 }} ques</div>
-        </div>
-        
-        <div class="flex justify-between border-b">
-          <div class="label">Estimated Burden</div>
-          <div class="value">{{ estimatedTime || 0 }}</div>
-        </div>
-      </div>
-
-      <div class="my-10">
-        <label for="sessionName" class="hidden text-sm font-medium text-gray-700 mb-2">
-          Application Name
-        </label>
+      <div class="mb-10">
         <input
           v-model="sessionName"
           id="sessionName"
           type="text"
-          class="w-full p-3 border focus:ring-2 focus:ring-blue-500"
+          class="w-full p-3 border-b bg-gray-100 focus:ring-2 focus:ring-blue-500"
           placeholder="Enter application name"
         />
 
@@ -112,23 +96,59 @@
           <button
             @click="createApplication"
             :disabled="!sessionName.trim() || creatingSession"
-            class="p-10 w-full bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400"
+            class="p-10 w-full bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400 duration-300"
           >
             {{ creatingSession ? 'Creating...' : 'Create Application' }}
           </button>
         </div>
       </div>
 
-      <div class="space-y-3 mb-6">
+      <div class="mb-10 flex flex-col gap-5 md:max-w-1/3 w-full">
+        <div class="flex justify-between border-b items-baseline">
+          <div class="label">Question Count</div>
+          <div class="value"><span class="text-4xl">{{ questionPreview?.questions_count || 0 }}</span> ques</div>
+        </div>
+        
+        <div class="flex justify-between border-b items-baseline">
+          <div class="label">Estimated Burden</div>
+          <div class="value"><span class="text-4xl">{{ estimatedTime || 0 }}</span> mins</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
         <div
           v-for="question in questionPreview?.questions"
           :key="question.id"
-          class="p-4 border bg-white"
+          class="border-b-1 p-3 flex flex-col md:flex-row md:items-stretch gap-2 md:gap-4"
         >
-          <p class="font-medium">{{ question.text }}</p>
-          <div class="mt-2 text-sm text-gray-600">
-            <span class="mr-4">Carriers: {{ question.carriers.join(', ') }}</span>
-            <span>Coverages: {{ question.coverages.join(', ') }}</span>
+          <!-- Question text -->
+          <p class="font-semibold min-w-0 w-full md:w-auto md:flex-1 md:max-w-[75%]">
+            {{ question.text }}
+          </p>
+
+          <!-- Coverages -->
+          <div
+            class="flex flex-wrap gap-1 w-full md:w-[160px] flex-shrink-0"
+          >
+            <InsuranceTypeBox
+              v-for="coverage in question.coverages"
+              :key="coverage.name"
+              :coverage="coverage"
+            />
+          </div>
+
+          <!-- Carriers -->
+          <div
+            class="text-sm text-gray-600 w-full md:w-[160px] flex-shrink-0"
+          >
+            <template v-if="question.carriers && question.carriers.length">
+              <span class="hidden md:flex flex-wrap gap-2">
+                <span v-for="carrier in question.carriers" :key="carrier">{{ carrier }}</span>
+              </span>
+              <span class="md:hidden">
+                {{ question.carriers.join(', ') }}
+              </span>
+            </template>
           </div>
         </div>
       </div>
@@ -183,7 +203,7 @@ const estimatedTime = computed(() => {
   const totalSeconds = totalQuestions * timePerQuestion
   const minutes = Math.ceil(totalSeconds / 60)
   
-  return `${minutes} min${minutes !== 1 ? 's' : ''}`
+  return minutes
 })
 
 // Methods
