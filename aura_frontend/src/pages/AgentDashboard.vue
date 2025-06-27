@@ -72,7 +72,7 @@
         <h3 class="text-xl font-bold mb-4">Logout</h3>
         <p class="mb-4">Logout of your profile</p>
         <button @click="handleLogout" class="bg-black text-white px-4 py-2 hover:bg-gray-800">
-          Leave
+          Logout
         </button>
       </div>
     </div>

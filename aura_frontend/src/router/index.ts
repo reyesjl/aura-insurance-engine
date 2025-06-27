@@ -7,7 +7,7 @@ import ResetPassword from '@/pages/auth/ResetPassword.vue'
 import AgentDashboard from '@/pages/AgentDashboard.vue'
 import CreateApplicationSession from '@/pages/CreateApplicationSession.vue'
 import ApplicationSessions from '@/pages/ApplicationSessions.vue'
-import ApplicationSessionDetail from '@/pages/ApplicationSessionDetail.vue'
+import ViewApplicationSession from '@/pages/ViewApplicationSession.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/applications/:sessionId',
     name: 'ApplicationSessionDetail',
-    component: ApplicationSessionDetail,
+    component: ViewApplicationSession,
     props: true,
   },
 ]

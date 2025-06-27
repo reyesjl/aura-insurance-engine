@@ -1,37 +1,25 @@
 <template>
   <NavBar />
   <div class="page-spacer bg-black"></div>
-  <Section mode="dark">
-    <router-link to="/agent" class="text-white underline underline-offset-5 mb-4">
-      Dashboard
-    </router-link>
-
-    <!-- Insert progress tracker -->
-
-    <h1 class="text-2xl font-bold">Create Application</h1>
-    <p>Start a new insurance application.</p>
-  </Section>
-
   <!-- Step 1: Insurance Type Selection -->
   <Section v-if="currentStep === 1" mode="light">
-    <h2 class="text-xl font-bold mb-4">Step 1: Insurance Type</h2>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-2xl font-bold">Select Type</h2>
+      <button @click="navigateToDashboard" class="px-4 py-2 bg-black text-white hover:bg-gray-500">
+        Cancel
+      </button>
+    </div>
     <div v-if="loading" class="text-gray-600">Loading insurance types...</div>
     <div v-else-if="error" class="text-red-600">{{ error }}</div>
     <div v-else class="space-y-3">
       <div
         v-for="type in insuranceTypes"
         :key="type.id"
-        class="p-4 border cursor-pointer hover:bg-gray-100"
+        class="p-4 border cursor-pointer hover:bg-black hover:text-white"
         :class="{ 'bg-black text-white border-black': selectedInsuranceType?.id === type.id }"
         @click="selectInsuranceType(type)"
       >
-        <h3 class="font-semibold">{{ type.label }}</h3>
-        <p
-          class="text-sm"
-          :class="selectedInsuranceType?.id === type.id ? 'text-gray-300' : 'text-gray-600'"
-        >
-          {{ type.key }}
-        </p>
+        <h3>{{ type.label }}</h3>
       </div>
     </div>
   </Section>
@@ -39,8 +27,8 @@
   <!-- Step 2: Carrier Selection by Coverage -->
   <Section v-if="currentStep === 2" mode="light">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-xl font-bold">Step 2: Select Carriers</h2>
-      <button @click="goBack" class="px-4 py-2 bg-gray-500 text-white hover:bg-gray-600">
+      <h2 class="text-2xl font-bold">Select Carriers</h2>
+      <button @click="goBack" class="px-4 py-2 bg-black text-white hover:bg-gray-500">
         Back
       </button>
     </div>
@@ -87,8 +75,8 @@
   <!-- Step 3: Question Preview -->
   <Section v-if="currentStep === 3" mode="light">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-xl font-bold">Questions Preview</h2>
-      <button @click="goBack" class="px-4 py-2 bg-gray-500 text-white hover:bg-gray-600">
+      <h2 class="text-2xl font-bold">Questions Preview</h2>
+      <button @click="goBack" class="px-4 py-2 bg-black text-white hover:bg-gray-500">
         Back
       </button>
     </div>
@@ -199,6 +187,11 @@ const estimatedTime = computed(() => {
 })
 
 // Methods
+
+const navigateToDashboard = () => {
+  router.push('/agent')
+}
+
 const goBack = () => {
   if (currentStep.value > 1) {
     currentStep.value--

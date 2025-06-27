@@ -27,7 +27,7 @@ def get_carriers_by_coverage(request):
         return Response({'error': 'Insurance type not found'}, status=status.HTTP_404_NOT_FOUND)
     
     # Get all coverage lines for this insurance type
-    coverage_lines = CoverageLine.objects.filter(insurance_types=insurance_type)
+    coverage_lines = CoverageLine.objects.filter(insurance_types=insurance_type).order_by('name')
     
     result = []
     for coverage in coverage_lines:
@@ -36,7 +36,7 @@ def get_carriers_by_coverage(request):
             question__coverages=coverage,
             question__insurance_types=insurance_type,
             insurance_types=insurance_type
-        ).distinct()
+        ).distinct().order_by('name')
         
         result.append({
             'coverage': {
