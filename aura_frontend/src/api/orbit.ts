@@ -1,17 +1,16 @@
-import axios, { 
+import axios, {
     AxiosError,
-    type AxiosInstance, 
-    type AxiosRequestConfig } 
-    from 'axios'
+    type AxiosInstance,
+    type AxiosRequestConfig,
+    type AxiosResponse
+} from 'axios'
 
-// In production, API_BASE should be empty (same origin)
-// In development, it should be http://localhost:8000
 const API_BASE =
   import.meta.env.VITE_API_BASE || (import.meta.env.PROD ? '' : 'http://localhost:8000')
 const API_VERSION = import.meta.env.VITE_API_VERSION || '/api'
 const BASE_URL = `${API_BASE}${API_VERSION}`
 
-class ApiClient {
+class OrbitClient {
   private axiosInstance: AxiosInstance
 
   constructor() {
@@ -22,7 +21,7 @@ class ApiClient {
       },
     })
 
-    // Add a request interceptor to set auth headers
+    // Attach auth token if present
     this.axiosInstance.interceptors.request.use((config) => {
       const token = localStorage.getItem('access_token')
       if (token) {
@@ -63,7 +62,6 @@ class ApiClient {
   async delete<T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> {
     try {
       const response = await this.axiosInstance.delete<T>(endpoint, config)
-      // Axios returns data as undefined for 204, so return empty object
       return response.data ?? ({} as T)
     } catch (error) {
       this.handleError(error)
@@ -79,4 +77,4 @@ class ApiClient {
   }
 }
 
-export const api = new ApiClient()
+export const Orbit = new OrbitClient()

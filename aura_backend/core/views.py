@@ -1,7 +1,8 @@
 import time
 import django
 import platform
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from datetime import timedelta, datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -65,6 +66,9 @@ class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = [IsAgentUser]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['insurance_type']
+    search_fields = ['text'] 
 
 
 class ApplicationTemplateViewSet(viewsets.ModelViewSet):

@@ -87,6 +87,7 @@ def create_application_session(request):
     """
     insurance_type_id = request.data.get('insurance_type_id')
     session_name = request.data.get('session_name', 'New Application')
+    insured_email = request.data.get('insured_email', None)
     selections = request.data.get('selections', [])
     
     if not insurance_type_id or not selections:
@@ -143,6 +144,7 @@ def create_application_session(request):
                 template=template,
                 agent=request.user,
                 name=session_name,
+                insured_email=insured_email,
                 status='pending'
             )
             

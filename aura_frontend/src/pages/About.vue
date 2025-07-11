@@ -12,7 +12,7 @@
   </div>
 
   <!-- About Section -->
-  <Section mode="light">
+  <Section mode="light" padding="large">
     <div class="flex flex-col gap-7 md:gap-none md:flex-row mt-10">
       <div class="w-full md:w-1/2">
         <div class="text-4xl md:text-3xl font-semibold w-full">
@@ -30,7 +30,7 @@
   </Section>
 
   <!--  Section -->
-  <Section mode="beige">
+  <Section mode="beige" padding="large">
     <div class="flex flex-col gap-7 md:gap-none md:flex-row mt-10">
       <div class="w-full md:w-1/2">
         <div class="text-4xl md:text-3xl font-semibold w-full">Who We Are</div>

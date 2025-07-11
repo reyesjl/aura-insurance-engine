@@ -1,9 +1,10 @@
 <template>
   <NavBar />
   <div class="page-spacer bg-black"></div>
+  <Breadcrumbs />
 
-  <Section mode="light">
-    <div class="text-4xl md:text-5xl font-bold mb-10">
+  <Section mode="light" padding="small" class="min-h-screen">
+    <div class="text-4xl md:text-5xl font-bold mb-5">
       Welcome back, {{ user?.username || 'Agent' }}
     </div>
 
@@ -16,65 +17,51 @@
       <p>Your account is being reviewed for agent access. Please contact support for assistance.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="p-6 border border-gray-300">
-        <h3 class="text-xl font-bold mb-4">Create Application</h3>
-        <p class="mb-4">Start a new insurance application</p>
-        <button
-          @click="navigateToCreateApplication"
-          :disabled="!userStore.isAgent"
-          class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          Get Started
-        </button>
-      </div>
-
-      <div class="p-6 border border-gray-300">
-        <h3 class="text-xl font-bold mb-4">My Sessions</h3>
-        <p class="mb-4">View active application sessions</p>
-        <button
-          @click="navigateToApplicationSessions"
-          :disabled="!userStore.isAgent"
-          class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          View Sessions
-        </button>
-      </div>
-
-      <div class="p-6 border border-gray-300">
-        <h3 class="text-xl font-bold mb-4">Site Carriers</h3>
-        <p class="mb-4">View and manage carriers</p>
-        <button
-          :disabled="!userStore.isAgent"
-          class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          View Carriers
-        </button>
-      </div>
-
-      <div class="p-6 border border-gray-300">
-        <h3 class="text-xl font-bold mb-4">Site Coverages</h3>
-        <p class="mb-4">View and manage coverages</p>
-        <button
-          :disabled="!userStore.isAgent"
-          class="bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          View Coverages
-        </button>
-      </div>
-
-      <div class="p-6 border border-gray-300">
-        <h3 class="text-xl font-bold mb-4">Profile</h3>
-        <p class="mb-4">Manage your profile</p>
-        <button class="bg-black text-white px-4 py-2 hover:bg-gray-800">Edit Profile</button>
-      </div>
-      <div class="p-6 border border-gray-300">
-        <h3 class="text-xl font-bold mb-4">Logout</h3>
-        <p class="mb-4">Logout of your profile</p>
-        <button @click="handleLogout" class="bg-black text-white px-4 py-2 hover:bg-gray-800">
-          Logout
-        </button>
-      </div>
+    <!-- Tiles -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+      <button
+        @click="navigateToCreateApplication"
+        @keydown.enter="navigateToCreateApplication"
+        @keydown.space.prevent="navigateToCreateApplication"
+        class="flex flex-col gap-5 duration-200 bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 p-10 text-left"
+        aria-label="Start a new insurance application"
+      >
+        <div class="text-2xl">+ New App</div>
+        <div class="tile-description">Start a new insurance application</div>
+      </button>
+      
+      <button
+        @click="navigateToApplicationSessions"
+        @keydown.enter="navigateToApplicationSessions"
+        @keydown.space.prevent="navigateToApplicationSessions"
+        class="flex flex-col gap-5 duration-200 bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 p-10 text-left"
+        aria-label="View active application sessions"
+      >
+        <div class="text-2xl">My Sessions</div>
+        <div class="tile-description">View active application sessions</div>
+      </button>
+      
+      <button
+        @click="navigateToQuestions"
+        @keydown.enter="navigateToQuestions"
+        @keydown.space.prevent="navigateToQuestions"
+        class="flex flex-col gap-5 duration-200 bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 p-10 text-left"
+        aria-label="View and manage your questions"
+      >
+        <div class="text-2xl">Questions</div>
+        <div class="tile-description">View and manage your questions</div>
+      </button>
+      
+      <button
+        @click="handleLogout"
+        @keydown.enter="handleLogout"
+        @keydown.space.prevent="handleLogout"
+        class="flex flex-col gap-5 duration-200 bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 p-10 text-left"
+        aria-label="Logout of your account"
+      >
+        <div class="text-2xl">Logout</div>
+        <div class="tile-description">Logout of your account</div>
+      </button>
     </div>
   </Section>
 
@@ -88,6 +75,7 @@ import { useUserStore } from '@/stores/user.ts'
 import NavBar from '@/components/NavBar.vue'
 import FootBar from '@/components/FootBar.vue'
 import Section from '@/components/Section.vue'
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -109,6 +97,10 @@ const navigateToCreateApplication = () => {
 
 const navigateToApplicationSessions = () => {
   router.push('/applications')
+}
+
+const navigateToQuestions = () => {
+  router.push('/questions')
 }
 
 // Protect the route - redirect if not logged in, but allow non-agents

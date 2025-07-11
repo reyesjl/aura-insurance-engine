@@ -40,7 +40,7 @@ export interface CoverageLine {
 export interface Question {
   id: number
   text: string
-  carriers: number[] // Array of Carrier IDs
+  carriers: number[]  // Array of Carrier IDs
   coverages: number[] // Array of CoverageLine IDs
   insurance_types: number[] // Array of InsuranceType IDs
 }
@@ -71,6 +71,7 @@ export interface ApplicationSession {
   agent?: number // User ID, optional
   token: string // UUID
   name?: string
+  insured_email?: string // Optional email for the insured
   created_at: string // ISO date string
   status: 'pending' | 'completed' | 'error'
 }

@@ -35,6 +35,7 @@ export interface PreviewQuestionsResponse {
 export interface CreateApplicationSessionRequest {
   insurance_type_id: number
   session_name: string
+  insured_email?: string // Optional email for the insured
   selections: Array<{
     coverage_id: number
     carrier_ids: number[]

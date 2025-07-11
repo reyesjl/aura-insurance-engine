@@ -1,15 +1,21 @@
 <template>
+  <NavBar />
+  <div class="page-spacer bg-black"></div>
+  <Breadcrumbs />
   <!-- Sessions List -->
-  <Section mode="light">
+  <Section mode="light" padding="small">
     <h1 class="text-2xl font-bold">My Sessions</h1>
     <div v-if="loading" class="text-gray-600">Loading sessions...</div>
-    <div v-else-if="error" class="text-red-600">{{ error }}</div>
+
+    <div v-else-if="error" class="text-red-600 mt-10">{{ error }}</div>
+    
     <div v-else-if="!sessions || sessions.length === 0" class="text-gray-600">
       <p>No application sessions found.</p>
       <router-link to="/applications/create" class="text-lg text-black underline underline-offset-5">
-        Create your first application
+        Create your first USMI Application
       </router-link>
     </div>
+    
     <div v-else class="space-y-4">
       <div
         v-for="session in sessions"
@@ -41,6 +47,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import NavBar from '@/components/NavBar.vue'
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Section from '@/components/Section.vue'
 import { applicationsAPI } from '@/api/applications'
 import type { ApplicationSession } from '@/types'
@@ -89,7 +97,7 @@ const getStatusClass = (status: string) => {
     case 'error':
       return 'bg-red-100 text-red-800'
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-gray-200 text-gray-800'
   }
 }
 

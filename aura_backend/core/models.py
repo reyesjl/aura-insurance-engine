@@ -151,6 +151,7 @@ class ApplicationSession(models.Model):
     )
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255, blank=True, null=True)
+    insured_email = models.EmailField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(default='pending', max_length=20)
 

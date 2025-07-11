@@ -8,6 +8,7 @@ import AgentDashboard from '@/pages/AgentDashboard.vue'
 import CreateApplicationSession from '@/pages/CreateApplicationSession.vue'
 import ApplicationSessions from '@/pages/ApplicationSessions.vue'
 import ViewApplicationSession from '@/pages/ViewApplicationSession.vue'
+import Questions from '@/pages/Questions.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
@@ -16,6 +17,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/auth/login', name: 'Login', component: Login },
   { path: '/auth/reset-password', name: 'ResetPassword', component: ResetPassword },
   { path: '/agent', name: 'Agent', component: AgentDashboard },
+  { path: '/questions', name: 'Questions', component: Questions },
 
   { path: '/applications', name: 'ApplicationSessions', component: ApplicationSessions },
   {

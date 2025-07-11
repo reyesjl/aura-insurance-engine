@@ -1,6 +1,7 @@
 <template>
+  <Breadcrumbs />
   <!-- Step 1: Insurance Type Selection -->
-  <Section v-if="currentStep === 1" mode="light">
+  <Section v-if="currentStep === 1" mode="light" padding="small">
     <div class="flex items-center justify-between mb-10">
       <h2 class="text-2xl font-bold">Select Type</h2>
       <button @click="navigateToDashboard" class="px-4 py-2 bg-black text-white hover:bg-gray-500 duration-300">
@@ -9,12 +10,14 @@
     </div>
     <div v-if="loading" class="text-gray-600">Loading insurance types...</div>
     <div v-else-if="error" class="text-red-600">{{ error }}</div>
-    <div v-else class="space-y-3">
+    <div v-else class="flex flex-col md:flex-row gap-2">
       <div
         v-for="type in insuranceTypes"
         :key="type.id"
-        class="p-4 border cursor-pointer hover:bg-black hover:text-white duration-300"
-        :class="{ 'bg-black text-white border-black': selectedInsuranceType?.id === type.id }"
+        class="w-full md:w-1/2 p-10 cursor-pointer duration-200"
+        :class="selectedInsuranceType?.id === type.id 
+          ? 'bg-black text-white' 
+          : 'bg-gray-200 hover:bg-black hover:text-white'"
         @click="selectInsuranceType(type)"
       >
         <h3>{{ type.label }}</h3>
@@ -23,7 +26,7 @@
   </Section>
 
   <!-- Step 2: Carrier Selection by Coverage -->
-  <Section v-if="currentStep === 2" mode="light">
+  <Section v-if="currentStep === 2" mode="light" padding="small">
     <div class="flex items-center justify-between mb-10">
       <h2 class="text-2xl font-bold">Select Carriers</h2>
       <button @click="goBack" class="px-4 py-2 bg-black text-white hover:bg-gray-500 duration-300">
@@ -35,24 +38,24 @@
     <div v-else-if="carriersError" class="text-red-600">{{ carriersError }}</div>
     <div v-else class="space-y-6 flex flex-col gap-10">
       <div v-for="coverageLine in carriersByCoverage" :key="coverageLine.coverage.id">
-        <div class="flex gap-2 items-center mb-10">
+        <div class="flex gap-2 items-center mb-5">
           <InsuranceTypeBox :coverage="coverageLine.coverage" />
           <h3 class="text-lg font-semibold">
             {{ coverageLine.coverage.name }}
           </h3>
         </div>
 
-        <div class="grid grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
           <div
             v-for="carrier in coverageLine.carriers"
             :key="carrier.id"
-            class="p-3 cursor-pointer hover:bg-black hover:text-white duration-300"
+            class="p-10 cursor-pointer hover:bg-black hover:text-white duration-300"
             :class="{
               'bg-black text-white': isCarrierSelected(
                 coverageLine.coverage.id,
                 carrier.id,
               ),
-              'bg-gray-100': !isCarrierSelected(coverageLine.coverage.id, carrier.id),
+              'bg-gray-200': !isCarrierSelected(coverageLine.coverage.id, carrier.id),
             }"
             @click="toggleCarrier(coverageLine.coverage.id, carrier.id)"
           >
@@ -72,7 +75,7 @@
   </Section>
 
   <!-- Step 3: Question Preview -->
-  <Section v-if="currentStep === 3" mode="light">
+  <Section v-if="currentStep === 3" mode="light" padding="small">
     <div class="flex items-center justify-between mb-10">
       <h2 class="text-2xl font-bold">Questions Preview</h2>
       <button @click="goBack" class="px-4 py-2 bg-black text-white hover:bg-gray-500 duration-300">
@@ -84,18 +87,28 @@
     <div v-else-if="previewError" class="text-red-600">{{ previewError }}</div>
     <div v-else>
       <div class="mb-10">
-        <input
-          v-model="sessionName"
-          id="sessionName"
-          type="text"
-          class="w-full p-3 border-b bg-gray-100 focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter application name"
-        />
+        <div class="flex flex-col gap-5">
+          <input
+            v-model="sessionName"
+            id="sessionName"
+            type="text"
+            class="w-full p-3 border-b bg-gray-200 focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter application name"
+          />
+
+          <input
+            v-model="insuredEmail"
+            id="insuredEmail"
+            type="email"
+            class="w-full mt-5 p-3 border-b bg-gray-200 focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter insured party's email"
+          />
+        </div>
 
         <div class="mt-5">
           <button
             @click="createApplication"
-            :disabled="!sessionName.trim() || creatingSession"
+            :disabled="!sessionName.trim() || !insuredEmail.trim() || creatingSession"
             class="p-10 w-full bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400 duration-300"
           >
             {{ creatingSession ? 'Creating...' : 'Create Application' }}
@@ -160,6 +173,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Section from '@/components/Section.vue'
 import InsuranceTypeBox from '@/components/InsuranceTypeBox.vue'
 import { applicationsAPI } from '@/api/applications'
@@ -187,6 +201,7 @@ const carriersError = ref('')
 // Step 3: Question Preview
 const questionPreview = ref<PreviewQuestionsResponse | null>(null)
 const sessionName = ref('')
+const insuredEmail = ref('')
 const loadingPreview = ref(false)
 const previewError = ref('')
 const creatingSession = ref(false)
@@ -195,7 +210,13 @@ const timePerQuestion = 15 // seconds per question (you can adjust this)
 
 // Computed properties
 const hasSelections = computed(() => {
-  return Object.values(selectedCarriers.value).some((carriers) => carriers.length > 0)
+  // For step 2 (carrier selection), check if any carriers are selected
+  if (currentStep.value === 2) {
+    return Object.values(selectedCarriers.value).some(carriers => carriers.length > 0)
+  }
+  
+  // For step 1 (insurance type selection), check if insurance type is selected
+  return selectedInsuranceType.value !== null
 })
 
 const estimatedTime = computed(() => {
@@ -230,6 +251,7 @@ const nextStep = () => {
 const selectInsuranceType = async (type: InsuranceType) => {
   selectedInsuranceType.value = type
   await loadCarriersByCoverage(type.id)
+  // Automatically proceed to next step after selecting insurance type
   nextStep()
 }
 
@@ -317,7 +339,7 @@ const loadQuestionPreview = async () => {
 }
 
 const createApplication = async () => {
-  if (!selectedInsuranceType.value || !sessionName.value.trim()) return
+  if (!selectedInsuranceType.value || !sessionName.value.trim() || !insuredEmail.value.trim()) return
 
   creatingSession.value = true
 
@@ -333,6 +355,7 @@ const createApplication = async () => {
     const response = await applicationsAPI.createApplicationSession({
       insurance_type_id: selectedInsuranceType.value.id,
       session_name: sessionName.value.trim(),
+      insured_email: insuredEmail.value.trim() || undefined,
       selections,
     })
 

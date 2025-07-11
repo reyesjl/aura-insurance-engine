@@ -66,7 +66,7 @@ class ApplicationSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationSession
         fields = [
-            'id', 'template', 'agent', 'token', 'name', 'created_at', 'status'
+            'id', 'template', 'agent', 'token', 'name', 'insured_email','created_at', 'status'
         ]
 
 class ApplicationAnswerSerializer(serializers.ModelSerializer):
