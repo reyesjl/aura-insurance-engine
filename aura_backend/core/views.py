@@ -48,6 +48,7 @@ class InsuranceTypeViewSet(viewsets.ModelViewSet):
     queryset = InsuranceType.objects.all()
     serializer_class = InsuranceTypeSerializer
     permission_classes = [IsAgentUser]
+    pagination_class = None
 
 
 class CarrierViewSet(viewsets.ModelViewSet):
@@ -67,7 +68,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     permission_classes = [IsAgentUser]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['insurance_type']
+    filterset_fields = ['insurance_types']
     search_fields = ['text'] 
 
 

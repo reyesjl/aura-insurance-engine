@@ -5,7 +5,10 @@
 
 <Section mode="light" padding="small">
   <div class="flex flex-col md:flex-row justify-between md:items-center md:gap-0 gap-5">
-    <div class="text-5xl font-bold">Questions</div>
+    <div class="flex flex-col">
+      <div class="text-5xl font-bold">Questions</div>
+      <div class="text-gray-600 text-sm">{{ questions.length }} of {{ questionsResponse?.count || 0 }} questions shown</div>
+    </div>
     <input
       id="searchQuestionText"
       type="text"
@@ -14,10 +17,12 @@
       v-model="searchText"
     />
   </div>
+
+  
   
 
   <div class="mt-10 border-t-1 flex flex-col">
-    <div v-if="loading" class="p-4">Loading...</div>
+    <div v-if="loading" class="p-4 text-gray-600">Loading...</div>
     <div v-else-if="error" class="p-4 text-red-600">{{ error }}</div>
     <div v-else-if="!questions.length" class="flex flex-col justify-center items-center p-4">
       <div class="text-gray-600">No questions found.</div>
@@ -54,6 +59,7 @@
   </div>
 </Section>
 </template>
+
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
