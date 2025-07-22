@@ -54,7 +54,7 @@
           >
             <template v-if="question.carriers && question.carriers.length">
               <span class="hidden md:flex flex-wrap gap-2">
-                <span v-for="carrier in question.carriers" :key="carrier">{{ carrier.name }}</span>
+                <span v-for="carrier in question.carriers" :key="carrier.id">{{ carrier.name }}</span>
               </span>
               <span class="md:hidden">
                 {{ question.carriers.map(carrier => carrier.name).join(', ') }}
