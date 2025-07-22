@@ -43,6 +43,9 @@ class CoverageLineSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'abbreviation', 'insurance_types']
 
 class QuestionSerializer(serializers.ModelSerializer):
+    coverages = CoverageLineSerializer(many=True, read_only=True)
+    carriers = CarrierSerializer(many=True, read_only=True)
+
     class Meta:
         model = Question
         fields = ['id', 'text', 'carriers', 'coverages', 'insurance_types']

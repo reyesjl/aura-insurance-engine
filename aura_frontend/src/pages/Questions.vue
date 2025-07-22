@@ -7,7 +7,9 @@
   <div class="flex flex-col md:flex-row justify-between md:items-center md:gap-0 gap-5">
     <div class="flex flex-col">
       <div class="text-5xl font-bold">Questions</div>
-      <div class="text-gray-600 text-sm">{{ questions.length }} of {{ questionsResponse?.count || 0 }} questions shown</div>
+      <div class="text-gray-600 text-sm">
+        Showing {{ startIndex }}–{{ endIndex }} of {{ questionsResponse?.count || 0 }} questions
+      </div>
     </div>
     <input
       id="searchQuestionText"
@@ -26,16 +28,42 @@
     <div v-else-if="error" class="p-4 text-red-600">{{ error }}</div>
     <div v-else-if="!questions.length" class="flex flex-col justify-center items-center p-4">
       <div class="text-gray-600">No questions found.</div>
-      <router-link to="/applications/create" class="mt-2 underline underline-offset-2 font-semibold">+ Create question</router-link>
+      <router-link to="/questions/create" class="mt-2 underline underline-offset-2 font-semibold">+ Create question</router-link>
     </div>
     <div v-else>
      <div>
         <div
           v-for="question in questions"
           :key="question.id"
-          class="question p-2 py-3 border-b-1 hover:bg-black hover:text-white duration-200"
+          class="question p-2 py-3 border-b-1 flex flex-col md:flex-row md:items-stretch gap-2 md:gap-4 hover:bg-black hover:text-white duration-200"
         >
-          {{ question.text }}
+          <!-- Question text -->
+          <p class="font-semibold min-w-0 w-full md:w-auto md:flex-1 md:max-w-[75%]">
+            {{ question.text }}
+          </p>
+
+          <!-- Coverages -->
+          <div class="flex flex-wrap gap-1 w-full md:w-[160px] flex-shrink-0">
+            <InsuranceTypeBox
+              v-for="coverage in question.coverages"
+              :key="coverage.name"
+              :coverage="coverage"
+            />
+          </div>
+
+          <!-- Carriers -->
+          <div
+            class="text-sm text-gray-600 w-full md:w-[160px] flex-shrink-0"
+          >
+            <template v-if="question.carriers && question.carriers.length">
+              <span class="hidden md:flex flex-wrap gap-2">
+                <span v-for="carrier in question.carriers" :key="carrier">{{ carrier.name }}</span>
+              </span>
+              <span class="md:hidden">
+                {{ question.carriers.map(carrier => carrier.name).join(', ') }}
+              </span>
+            </template>
+          </div>
         </div>
      </div>
         
@@ -47,6 +75,7 @@
         >
           Previous
         </button>
+        {{ currentPage }} / {{ Math.ceil(questionsResponse?.count / pageSize) || 1 }}
         <button
           @click="goToNextPage"
           :disabled="!questionsResponse?.next"
@@ -61,10 +90,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import NavBar from '@/components/NavBar.vue';
 import Section from '@/components/Section.vue';
+import InsuranceTypeBox from '@/components/InsuranceTypeBox.vue';
 import type { Question, InsuranceType } from '@/types';
 import { applicationsAPI } from '@/api/applications'
 import { fetchQuestions, type QuestionsResponse } from '@/api/questions';
@@ -134,6 +164,10 @@ watch(searchText, (newVal) => {
     loadQuestions(1, newVal);
   }, 500);
 });
+
+const pageSize = computed(() => questions.value.length || 10);
+const startIndex = computed(() => (questions.value.length ? (currentPage.value - 1) * pageSize.value + 1 : 0));
+const endIndex = computed(() => (questions.value.length ? startIndex.value + questions.value.length - 1 : 0));
 </script>
 <style scoped>
 /* You can add more custom styles here if needed */
