@@ -5,7 +5,6 @@
       <p><strong>Created At:</strong> {{ formatDate(session.created_at) }}</p>
       <p><strong>Status:</strong> <span :class="getStatusClass(session.status)">{{ session.status }}</span></p>
       <p><strong>Template:</strong> {{ session.template }}</p>
-      <p><strong>Description:</strong> {{ session.description || 'No description provided' }}</p>
 
       <!-- Add more fields as necessary -->
     </div>

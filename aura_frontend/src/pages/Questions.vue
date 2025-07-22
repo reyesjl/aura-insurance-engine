@@ -43,7 +43,7 @@
           <div class="flex flex-wrap gap-1 w-full md:w-[160px] flex-shrink-0">
             <InsuranceTypeBox
               v-for="coverage in question.coverages"
-              :key="coverage.name"
+              :key="coverage.id"
               :coverage="coverage"
             />
           </div>

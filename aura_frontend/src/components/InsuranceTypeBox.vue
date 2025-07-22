@@ -8,22 +8,21 @@
     :aria-label="coverage.name"
     :title="coverage.name"
   >
-    {{ coverage.abbreviation }}
+    {{ coverage.abbreviation || 'N/A' }}
   </div>
 </template>
 
 <script setup lang="ts">
+import type { CoverageLine } from '@/types'
+
 const props = defineProps<{
-  coverage: {
-    name: string
-    abbreviation: string
-  }
+  coverage: CoverageLine
   size?: 'xs' | 'sm' | 'md' | 'lg'
 }>()
 
 const size = props.size || 'xs'
 
-const getInsuranceTypeClass = (abbreviation: string): string => {
+const getInsuranceTypeClass = (abbreviation?: string): string => {
   const colorClasses: Record<string, string> = {
     'GL': 'bg-black text-white',
     'WC': 'bg-orange-500 text-white',
@@ -32,7 +31,7 @@ const getInsuranceTypeClass = (abbreviation: string): string => {
     'AUTO': 'bg-blue-500 text-white',
     'UMB': 'bg-yellow-500 text-black'
   }
-  return colorClasses[abbreviation] || 'bg-gray-500'
+  return abbreviation ? colorClasses[abbreviation] || 'bg-gray-500' : 'bg-gray-500'
 }
 
 const getSizeClass = (size: 'xs' | 'sm' | 'md' | 'lg'): string => {

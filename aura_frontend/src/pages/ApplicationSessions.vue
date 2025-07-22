@@ -59,7 +59,7 @@
           >
             Previous
           </button>
-          {{ currentPage }} / {{ Math.ceil(applicationsResponse?.count / pageSize) || 1 }}
+          {{ currentPage }} / {{ Math.ceil((applicationsResponse?.count ?? 0) / pageSize) || 1 }}
           <button
             @click="goToNextPage"
             :disabled="!applicationsResponse?.next"

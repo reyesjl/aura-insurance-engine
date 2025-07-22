@@ -38,6 +38,8 @@ class CarrierSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'insurance_types']
 
 class CoverageLineSerializer(serializers.ModelSerializer):
+    insurance_types = InsuranceTypeSerializer(many=True, read_only=True)
+    
     class Meta:
         model = CoverageLine
         fields = ['id', 'name', 'abbreviation', 'insurance_types']
