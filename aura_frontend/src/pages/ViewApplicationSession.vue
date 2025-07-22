@@ -16,7 +16,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Section from '@/components/Section.vue'
-import { applicationsAPI } from '@/api/applications'
+import { fetchApplicationSession } from '@/api/applications'
 import type { ApplicationSession } from '@/types'
 
 // Define props (in case sessionId is passed as prop)
@@ -51,9 +51,9 @@ const loadSession = async () => {
   error.value = ''
 
   try {
-    session.value = await applicationsAPI.getApplicationSession(id)
+    session.value = await fetchApplicationSession(id)
     // Note: You may need to fetch template data separately if needed
-    // templateData.value = await applicationsAPI.getApplicationTemplate(session.value.template)
+    // templateData.value = await fetchApplicationTemplate(session.value.template)
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Failed to load application session'
     console.error('Failed to load session:', err)

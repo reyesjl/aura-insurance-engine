@@ -30,6 +30,34 @@ class OrbitClient {
       }
       return config
     })
+
+    // Add response interceptor for 401 handling
+    this.axiosInstance.interceptors.response.use(
+      response => response,
+      async error => {
+        if (
+          error.response &&
+          error.response.status === 401 &&
+          localStorage.getItem('refresh_token')
+        ) {
+          // Try to refresh token
+          try {
+            const refreshToken = localStorage.getItem('refresh_token')
+            // Import your authAPI and call refreshToken
+            const { access } = await import('./auth').then(m => m.authAPI.refreshToken(refreshToken!))
+            localStorage.setItem('access_token', access)
+            // Update Authorization header and retry original request
+            error.config.headers['Authorization'] = `Bearer ${access}`
+            return this.axiosInstance.request(error.config)
+          } catch (refreshError) {
+            // If refresh fails, clear tokens and optionally redirect to login
+            localStorage.removeItem('access_token')
+            localStorage.removeItem('refresh_token')
+          }
+        }
+        return Promise.reject(error)
+      }
+    )
   }
 
   async get<T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> {

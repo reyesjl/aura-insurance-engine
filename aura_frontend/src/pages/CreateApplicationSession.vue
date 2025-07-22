@@ -176,8 +176,14 @@ import NavBar from '@/components/NavBar.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Section from '@/components/Section.vue'
 import InsuranceTypeBox from '@/components/InsuranceTypeBox.vue'
-import { applicationsAPI } from '@/api/applications'
-import type { CarriersByCoverageResponse, PreviewQuestionsResponse } from '@/api/applications'
+import {
+  fetchInsuranceTypes,
+  fetchCarriersByCoverage,
+  previewQuestions,
+  createApplicationSession,
+  type CarriersByCoverageResponse,
+  type PreviewQuestionsResponse
+} from '@/api/applications'
 import type { InsuranceType } from '@/types'
 
 const router = useRouter()
@@ -279,7 +285,7 @@ const loadInsuranceTypes = async () => {
   loading.value = true
   error.value = ''
   try {
-    insuranceTypes.value = await applicationsAPI.getInsuranceTypes()
+    insuranceTypes.value = await fetchInsuranceTypes()
     console.log('Loaded insurance types:', insuranceTypes.value)
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Failed to load insurance types'
@@ -292,9 +298,8 @@ const loadCarriersByCoverage = async (insuranceTypeId: number) => {
   loadingCarriers.value = true
   carriersError.value = ''
   try {
-    const response = await applicationsAPI.getCarriersByCoverage(insuranceTypeId)
+    const response = await fetchCarriersByCoverage(insuranceTypeId)
     carriersByCoverage.value = response.coverage_lines
-    // Reset selections when changing insurance type
     selectedCarriers.value = {}
   } catch (err) {
     carriersError.value = err instanceof Error ? err.message : 'Failed to load carriers'
@@ -310,7 +315,6 @@ const loadQuestionPreview = async () => {
   previewError.value = ''
 
   try {
-    // Collect all selected carrier IDs and coverage IDs
     const allCarrierIds: number[] = []
     const coverageIds: number[] = []
 
@@ -326,7 +330,7 @@ const loadQuestionPreview = async () => {
       return
     }
 
-    questionPreview.value = await applicationsAPI.previewQuestions(
+    questionPreview.value = await previewQuestions(
       selectedInsuranceType.value.id,
       allCarrierIds,
       coverageIds,
@@ -344,7 +348,6 @@ const createApplication = async () => {
   creatingSession.value = true
 
   try {
-    // Format selections for API
     const selections = Object.entries(selectedCarriers.value)
       .filter(([, carrierIds]) => carrierIds.length > 0)
       .map(([coverageId, carrierIds]) => ({
@@ -352,24 +355,22 @@ const createApplication = async () => {
         carrier_ids: carrierIds,
       }))
 
-    const response = await applicationsAPI.createApplicationSession({
+    const response = await createApplicationSession({
       insurance_type_id: selectedInsuranceType.value.id,
       session_name: sessionName.value.trim(),
       insured_email: insuredEmail.value.trim() || undefined,
       selections,
     })
 
-    // Redirect to the created application session
     router.push(`/applications/${response.session.id}`)
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Failed to create application'
-    alert(errorMessage) // You might want to use a proper notification system
+    alert(errorMessage)
   } finally {
     creatingSession.value = false
   }
 }
 
-// Initialize
 onMounted(() => {
   loadInsuranceTypes()
 })

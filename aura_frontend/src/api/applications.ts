@@ -1,9 +1,13 @@
-import { api } from './apiClient'
-import type { InsuranceType, Carrier, CoverageLine, ApplicationSession } from '@/types'
+import { Orbit } from './orbit'
+import type { ApplicationSession, InsuranceType, Carrier, CoverageLine } from '@/types'
 
-// API Response interfaces
-// (these sometimes can differ from our internal types)
-// just business specific and what is needed upfront.
+export interface ApplicationSessionsResponse {
+  count: number
+  next: string | null
+  previous: string | null
+  results: ApplicationSession[]
+}
+
 export interface CarriersByCoverageResponse {
   insurance_type: InsuranceType
   coverage_lines: Array<{
@@ -35,7 +39,7 @@ export interface PreviewQuestionsResponse {
 export interface CreateApplicationSessionRequest {
   insurance_type_id: number
   session_name: string
-  insured_email?: string // Optional email for the insured
+  insured_email?: string
   selections: Array<{
     coverage_id: number
     carrier_ids: number[]
@@ -49,52 +53,46 @@ export interface CreateApplicationSessionResponse {
   message: string
 }
 
-class ApplicationsAPI {
-  // Get all insurance types
-  async getInsuranceTypes(): Promise<InsuranceType[]> {
-    // API returns direct array, not paginated response
-    return api.get<InsuranceType[]>('/insurance-types/')
-  }
-
-  // Get carriers organized by coverage lines for a specific insurance type
-  async getCarriersByCoverage(insuranceTypeId: number): Promise<CarriersByCoverageResponse> {
-    return api.get<CarriersByCoverageResponse>(
-      `/carriers-by-coverage/?insurance_type_id=${insuranceTypeId}`,
-    )
-  }
-
-  // Preview questions that would be included for given selections
-  async previewQuestions(
-    insuranceTypeId: number,
-    carrierIds: number[],
-    coverageIds: number[],
-  ): Promise<PreviewQuestionsResponse> {
-    const params = new URLSearchParams({
-      insurance_type_id: insuranceTypeId.toString(),
-      carrier_ids: carrierIds.join(','),
-      coverage_ids: coverageIds.join(','),
-    })
-
-    return api.get<PreviewQuestionsResponse>(`/preview-questions/?${params}`)
-  }
-
-  // Create a new application session
-  async createApplicationSession(
-    data: CreateApplicationSessionRequest,
-  ): Promise<CreateApplicationSessionResponse> {
-    return api.post<CreateApplicationSessionResponse>('/create-application-session/', data)
-  }
-
-  // Get all application sessions (from the viewset)
-  async getApplicationSessions(): Promise<ApplicationSession[]> {
-    // The API returns a direct array, not a paginated response
-    return api.get<ApplicationSession[]>('/application-sessions/')
-  }
-
-  // Get a specific application session
-  async getApplicationSession(id: number): Promise<ApplicationSession> {
-    return api.get<ApplicationSession>(`/application-sessions/${id}/`)
-  }
+// Fetch all application sessions (paginated)
+export function fetchApplicationSessions(params?: Record<string, any>) {
+  return Orbit.get<ApplicationSessionsResponse>(
+    '/application-sessions/',
+    { params }
+  )
 }
 
-export const applicationsAPI = new ApplicationsAPI()
+// Fetch a single application session by ID
+export function fetchApplicationSession(id: number) {
+  return Orbit.get<ApplicationSession>(`/application-sessions/${id}/`)
+}
+
+// Create a new application session
+export function createApplicationSession(data: CreateApplicationSessionRequest) {
+  return Orbit.post<CreateApplicationSessionResponse>('/create-application-session/', data)
+}
+
+// Get all insurance types
+export function fetchInsuranceTypes() {
+  return Orbit.get<InsuranceType[]>('/insurance-types/')
+}
+
+// Get carriers organized by coverage lines for a specific insurance type
+export function fetchCarriersByCoverage(insuranceTypeId: number) {
+  return Orbit.get<CarriersByCoverageResponse>(
+    `/carriers-by-coverage/?insurance_type_id=${insuranceTypeId}`
+  )
+}
+
+// Preview questions for given selections
+export function previewQuestions(
+  insuranceTypeId: number,
+  carrierIds: number[],
+  coverageIds: number[]
+) {
+  const params = new URLSearchParams({
+    insurance_type_id: insuranceTypeId.toString(),
+    carrier_ids: carrierIds.join(','),
+    coverage_ids: coverageIds.join(','),
+  })
+  return Orbit.get<PreviewQuestionsResponse>(`/preview-questions/?${params}`)
+}
