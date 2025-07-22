@@ -20,9 +20,6 @@
     />
   </div>
 
-  
-  
-
   <div class="mt-10 border-t-1 flex flex-col">
     <div v-if="loading" class="p-4 text-gray-600">Loading...</div>
     <div v-else-if="error" class="p-4 text-red-600">{{ error }}</div>
@@ -95,8 +92,7 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import NavBar from '@/components/NavBar.vue';
 import Section from '@/components/Section.vue';
 import InsuranceTypeBox from '@/components/InsuranceTypeBox.vue';
-import type { Question, InsuranceType } from '@/types';
-import { applicationsAPI } from '@/api/applications'
+import type { Question } from '@/types';
 import { fetchQuestions, type QuestionsResponse } from '@/api/questions';
 
 const questionsResponse = ref<QuestionsResponse | null>(null);
@@ -106,26 +102,9 @@ const error = ref<string | null>(null);
 const currentPage = ref(1);
 const searchText = ref('');
 
-const insuranceTypes = ref<InsuranceType[]>([]);
-const selectedInsuranceType = ref('');
-
 onMounted(() => {
   loadQuestions();
-  loadInsuranceTypes();
 });
-
-const loadInsuranceTypes = async () => {
-  loading.value = true
-  error.value = ''
-  try {
-    insuranceTypes.value = await applicationsAPI.getInsuranceTypes()
-    console.log('Loaded insurance types:', insuranceTypes.value)
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Failed to load insurance types'
-  } finally {
-    loading.value = false
-  }
-}
 
 const loadQuestions = async (page = 1, search = '') => {
   loading.value = true;
