@@ -145,7 +145,7 @@
           >
             <InsuranceTypeBox
               v-for="coverage in question.coverages"
-              :key="coverage.name"
+              :key="coverage.id"
               :coverage="coverage"
             />
           </div>

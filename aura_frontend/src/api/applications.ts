@@ -11,15 +11,8 @@ export interface ApplicationSessionsResponse {
 export interface CarriersByCoverageResponse {
   insurance_type: InsuranceType
   coverage_lines: Array<{
-    coverage: {
-      id: number
-      name: string
-      abbreviation: string
-    }
-    carriers: Array<{
-      id: number
-      name: string
-    }>
+    coverage: CoverageLine,
+    carriers: Carrier[]
   }>
 }
 
@@ -29,10 +22,7 @@ export interface PreviewQuestionsResponse {
     id: number
     text: string
     carriers: string[]
-    coverages: Array<{
-      name: string
-      abbreviation: string
-    }>
+    coverages: CoverageLine[]
   }>
 }
 

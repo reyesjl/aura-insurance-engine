@@ -6,8 +6,9 @@ from .models import (
     InsuranceType, Carrier, CoverageLine, Question, 
     ApplicationTemplate, TemplateQuestionSnapshot, ApplicationSession
 )
-from .serializers import ApplicationSessionSerializer
+from .serializers import ApplicationSessionSerializer, CarrierSerializer
 from .permissions import IsAgentUser
+from .serializers import CoverageLineSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAgentUser])
@@ -39,18 +40,8 @@ def get_carriers_by_coverage(request):
         ).distinct().order_by('name')
         
         result.append({
-            'coverage': {
-                'id': coverage.pk,
-                'name': coverage.name,
-                'abbreviation': coverage.abbreviation
-            },
-            'carriers': [
-                {
-                    'id': carrier.pk,
-                    'name': carrier.name
-                }
-                for carrier in carriers_for_coverage
-            ]
+            'coverage': CoverageLineSerializer(coverage).data,
+            'carriers': [CarrierSerializer(carrier).data for carrier in carriers_for_coverage]
         })
     
     return Response({
