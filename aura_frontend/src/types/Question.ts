@@ -1,7 +1,11 @@
+import type { Carrier } from './Carrier'
+import type { CoverageLine } from './CoverageLine'
+import type { InsuranceType } from './InsuranceType'
+
 export interface Question {
   id: number
   text: string
-  carriers: number[]  // Array of Carrier IDs
-  coverages: number[] // Array of CoverageLine IDs
-  insurance_types: number[] // Array of InsuranceType IDs
+  carriers: Carrier[]
+  coverages: CoverageLine[]
+  insurance_types: InsuranceType[]
 }

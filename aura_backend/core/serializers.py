@@ -45,6 +45,7 @@ class CoverageLineSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     coverages = CoverageLineSerializer(many=True, read_only=True)
     carriers = CarrierSerializer(many=True, read_only=True)
+    insurance_types = InsuranceTypeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Question
