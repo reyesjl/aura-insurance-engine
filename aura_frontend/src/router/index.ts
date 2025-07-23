@@ -28,7 +28,7 @@ const routes: Array<RouteRecordRaw> = [
     component: CreateApplicationSession,
   },
   {
-    path: '/applications/:sessionId',
+    path: '/applications/:id',
     name: 'ApplicationSessionDetail',
     component: ViewApplicationSession,
     props: true,

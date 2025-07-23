@@ -32,8 +32,19 @@
         <div
           v-for="question in questions"
           :key="question.id"
-          class="question p-2 py-3 border-b-1 flex flex-col md:flex-row md:items-stretch gap-2 md:gap-4 hover:bg-black hover:text-white duration-200"
-        >
+          class="question p-2 py-3 border-b-1 flex flex-col md:flex-row md:items-stretch gap-2 md:gap-4 hover:bg-gray-300 duration-200"
+          :class="{ 'bg-beige-200': selectedQuestionIds.includes(question.id) }"
+          @click="toggleQuestionSelection(question.id)"
+          >
+
+          <div class="flex mt-2 md:mt-0 justify-end md:justify-start">
+            <!-- Custom Checkbox -->
+            <div
+              class="border-2 border-black h-4 w-4 mr-2 flex items-center justify-center"
+              :class="{ 'bg-black': selectedQuestionIds.includes(question.id) }"
+            ></div>
+          </div>
+
           <!-- Question text -->
           <p class="font-semibold min-w-0 w-full md:w-auto md:flex-1 md:max-w-[75%]">
             {{ question.text }}
@@ -95,6 +106,9 @@ import InsuranceTypeBox from '@/components/InsuranceTypeBox.vue';
 import type { Question } from '@/types';
 import { fetchQuestions, type QuestionsResponse } from '@/api/questions';
 
+const selectedQuestionId = ref<number | null>(null);
+const selectedQuestionIds = ref<number[]>([]);
+
 const questionsResponse = ref<QuestionsResponse | null>(null);
 const questions = ref<Question[]>([]);
 const loading = ref(false);
@@ -147,6 +161,17 @@ watch(searchText, (newVal) => {
 const pageSize = computed(() => questions.value.length || 10);
 const startIndex = computed(() => (questions.value.length ? (currentPage.value - 1) * pageSize.value + 1 : 0));
 const endIndex = computed(() => (questions.value.length ? startIndex.value + questions.value.length - 1 : 0));
+
+
+// Toggle selection for a question
+const toggleQuestionSelection = (id: number) => {
+  const idx = selectedQuestionIds.value.indexOf(id);
+  if (idx === -1) {
+    selectedQuestionIds.value.push(id);
+  } else {
+    selectedQuestionIds.value.splice(idx, 1);
+  }
+};
 </script>
 <style scoped>
 /* You can add more custom styles here if needed */

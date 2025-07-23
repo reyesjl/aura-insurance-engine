@@ -4,11 +4,17 @@ from rest_framework import status
 from django.db import transaction
 from .models import (
     InsuranceType, Carrier, CoverageLine, Question, 
-    ApplicationTemplate, TemplateQuestionSnapshot, ApplicationSession
+    ApplicationTemplate, TemplateQuestionSnapshot, ApplicationSession,
+    ApplicationAnswer
 )
-from .serializers import ApplicationSessionSerializer, CarrierSerializer
+from .serializers import (
+    ApplicationSessionSerializer,
+    CarrierSerializer,
+    CoverageLineSerializer,
+    TemplateQuestionSnapshotSerializer,
+    ApplicationAnswerSerializer,
+)
 from .permissions import IsAgentUser
-from .serializers import CoverageLineSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAgentUser])
@@ -202,3 +208,28 @@ def preview_questions(request):
         return Response({'error': 'Insurance type not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+@permission_classes([IsAgentUser])
+def application_session_details(request, session_id):
+    """
+    Return all details for a given application session:
+    - session object
+    - all question snapshots for its template
+    - all answers for this session (with embedded question snapshots)
+    """
+    try:
+        session = ApplicationSession.objects.get(pk=session_id)
+    except ApplicationSession.DoesNotExist:
+        return Response({'error': 'Session not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Get all question snapshots for this session's template
+    question_snapshots = TemplateQuestionSnapshot.objects.filter(template=session.template)
+    # Get all answers for this session
+    answers = ApplicationAnswer.objects.filter(session=session)
+
+    return Response({
+        'session': ApplicationSessionSerializer(session).data,
+        'question_snapshots': TemplateQuestionSnapshotSerializer(question_snapshots, many=True).data,
+        'answers': ApplicationAnswerSerializer(answers, many=True).data,
+    })

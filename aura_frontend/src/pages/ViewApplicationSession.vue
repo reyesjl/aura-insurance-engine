@@ -1,12 +1,38 @@
 <template>
-  <Section title="Application Session Details" :loading="loading" :error="error">
-    <div v-if="session">
-      <h2 class="text-xl font-semibold mb-4">Session ID: {{ session.id }}</h2>
-      <p><strong>Created At:</strong> {{ formatDate(session.created_at) }}</p>
-      <p><strong>Status:</strong> <span :class="getStatusClass(session.status)">{{ session.status }}</span></p>
-      <p><strong>Template:</strong> {{ session.template }}</p>
+  <Breadcrumbs />
+  <Section>
 
-      <!-- Add more fields as necessary -->
+    <div class="flex justify-between mb-2">
+      <div v-if="session" class="text-4xl md:max-w-2/3">{{ session?.name }}</div>
+      <div :class="statusClass">{{ session?.status }}</div>
+    </div>
+
+    <div class="text-gray-400">Insured: {{ session?.insured_email }}</div>
+    <div v-if="session" class="text-gray-400 mb-5">Created: {{ session.created_at.slice(0, 10) }}</div>
+    
+    <div class="mt-5 md:w-1/2">
+      <div class="text-sm uppercase">Progress</div>
+      <div class="flex items-end w-full h-12 bg-neutral-900 overflow-hidden relative">
+        <div class="bg-orange-600 text-black text-2xl font-medium h-full flex items-end justify-start pl-2" style="width: 5%;">
+          {{ answers.length }}
+        </div>
+        <div class="absolute right-2 text-2xl text-white">
+          {{ Math.round((answers.length / questionSnapshots.length) * 100) }}%
+        </div>
+      </div>
+    </div>
+
+    <div v-if="loading" class="my-8 text-center text-gray-400">Loading...</div>
+    <div v-else>
+      <div v-for="snapshot in questionSnapshots" :key="snapshot.id" class="my-10 border-b pb-4">
+        <div class="font-semibold">{{ snapshot.question_text }}</div>
+        <div class="mt-2 text-gray-700">
+          <span v-if="getAnswerForSnapshot(snapshot.id)">
+            {{ getAnswerForSnapshot(snapshot.id)?.answer }}
+          </span>
+          <span v-else class="italic text-gray-400">No answer yet</span>
+        </div>
+      </div>
     </div>
   </Section>
 </template>
@@ -15,78 +41,40 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Section from '@/components/Section.vue'
-import { fetchApplicationSession } from '@/api/applications'
-import type { ApplicationSession } from '@/types'
-
-// Define props (in case sessionId is passed as prop)
-const props = defineProps<{
-  sessionId?: string | number
-}>()
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import { fetchApplicationSessionDetails } from '@/api/applications'
 
 const route = useRoute()
+const sessionId = Number(route.params.id)
 
-// Get session ID from props or route params
-const sessionId = computed(() => {
-  if (props.sessionId) {
-    return typeof props.sessionId === 'string' ? parseInt(props.sessionId) : props.sessionId
-  }
-  return parseInt(route.params.id as string)
-})
+const loading = ref(true)
+const session = ref<any>(null)
+const questionSnapshots = ref<any[]>([])
+const answers = ref<any[]>([])
 
-const session = ref<ApplicationSession | null>(null)
-const templateData = ref<any>(null) // We'll need to fetch template data separately
-const loading = ref(false)
-const error = ref('')
-
-const loadSession = async () => {
-  const id = sessionId.value
-
-  if (!id || isNaN(id)) {
-    error.value = 'Invalid session ID'
-    return
-  }
-
+onMounted(async () => {
   loading.value = true
-  error.value = ''
-
   try {
-    session.value = await fetchApplicationSession(id)
-    // Note: You may need to fetch template data separately if needed
-    // templateData.value = await fetchApplicationTemplate(session.value.template)
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Failed to load application session'
-    console.error('Failed to load session:', err)
+    const resp = await fetchApplicationSessionDetails(sessionId)
+    session.value = resp.session
+    questionSnapshots.value = resp.question_snapshots
+    answers.value = resp.answers
   } finally {
     loading.value = false
   }
-}
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
-
-const getStatusClass = (status: string) => {
-  switch (status) {
-    case 'pending':
-      return 'bg-yellow-100 text-yellow-800'
-    case 'completed':
-      return 'bg-green-100 text-green-800'
-    case 'error':
-      return 'bg-red-100 text-red-800'
-    default:
-      return 'bg-gray-200 text-gray-800'
-  }
-}
-
-onMounted(() => {
-  loadSession()
 })
+
+function getAnswerForSnapshot(snapshotId: number) {
+  return answers.value.find(a => a.question_snapshot.id === snapshotId)
+}
+
+const statusClass = computed(() =>
+  session.value?.status === 'completed'
+    ? 'text-green-600'
+    : session.value?.status === 'pending'
+      ? 'text-yellow-600'
+      : 'text-red-600'
+)
 </script>
 
 <style scoped>

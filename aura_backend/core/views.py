@@ -82,12 +82,22 @@ class TemplateQuestionSnapshotViewSet(viewsets.ModelViewSet):
     queryset = TemplateQuestionSnapshot.objects.all()
     serializer_class = TemplateQuestionSnapshotSerializer
     permission_classes = [IsAgentUser]
+    pagination_class = None
 
 
 class ApplicationSessionViewSet(viewsets.ModelViewSet):
     queryset = ApplicationSession.objects.all()
     serializer_class = ApplicationSessionSerializer
     permission_classes = [IsAgentUser]
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        template = instance.template
+        response = super().destroy(request, *args, **kwargs)
+        # Delete the related template (and its snapshots)
+        if template:
+            template.delete()
+        return response
 
 
 class ApplicationAnswerViewSet(viewsets.ModelViewSet):

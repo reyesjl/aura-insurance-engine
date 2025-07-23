@@ -67,7 +67,7 @@ const breadcrumbs = computed((): Breadcrumb[] => {
       crumbs.push(
         { text: 'Agent', to: '/agent' },
         { text: 'Applications', to: '/applications' },
-        { text: `Session ${route.params.sessionId}` }
+        { text: 'Session' }
       )
       break
     default:

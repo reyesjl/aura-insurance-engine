@@ -78,6 +78,8 @@ class ApplicationSessionSerializer(serializers.ModelSerializer):
         ]
 
 class ApplicationAnswerSerializer(serializers.ModelSerializer):
+    question_snapshot = TemplateQuestionSnapshotSerializer(read_only=True)
+    
     class Meta:
         model = ApplicationAnswer
         fields = [

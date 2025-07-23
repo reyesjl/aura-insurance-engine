@@ -1,5 +1,5 @@
 import { Orbit } from './orbit'
-import type { ApplicationSession, InsuranceType, Carrier, CoverageLine } from '@/types'
+import type { ApplicationSession, InsuranceType, Carrier, CoverageLine, ApplicationAnswer, TemplateQuestionSnapshot } from '@/types'
 
 export interface ApplicationSessionsResponse {
   count: number
@@ -41,6 +41,12 @@ export interface CreateApplicationSessionResponse {
   template_id: number
   questions_count: number
   message: string
+}
+
+export interface ApplicationSessionDetailsResponse {
+  session: ApplicationSession
+  answers: ApplicationAnswer[]
+  question_snapshots: TemplateQuestionSnapshot[]
 }
 
 // Fetch all application sessions (paginated)
@@ -85,4 +91,9 @@ export function previewQuestions(
     coverage_ids: coverageIds.join(','),
   })
   return Orbit.get<PreviewQuestionsResponse>(`/preview-questions/?${params}`)
+}
+
+// Fetch application session details by ID
+export function fetchApplicationSessionDetails(id: number) {
+  return Orbit.get<ApplicationSessionDetailsResponse>(`/application-session-details/${id}/`)
 }
