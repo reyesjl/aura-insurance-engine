@@ -1,7 +1,6 @@
 <template>
   <Breadcrumbs />
   <Section>
-
     <div class="flex justify-between mb-2">
       <div v-if="session" class="text-4xl md:max-w-2/3">{{ session?.name }}</div>
       <div :class="statusClass">{{ session?.status }}</div>
@@ -13,7 +12,10 @@
     <div class="mt-5 md:w-1/2">
       <div class="text-sm uppercase">Progress</div>
       <div class="flex items-end w-full h-12 bg-neutral-900 overflow-hidden relative">
-        <div class="bg-orange-600 text-black text-2xl font-medium h-full flex items-end justify-start pl-2" style="width: 5%;">
+        <div
+          class="bg-orange-600 text-black text-2xl font-medium h-full flex items-end justify-start pl-2"
+          :style="{ width: progressPercent + '%' }"
+        >
           {{ answers.length }}
         </div>
         <div class="absolute right-2 text-2xl text-white">
@@ -22,23 +24,69 @@
       </div>
     </div>
 
+    <!-- Access token -->
+    <div>
+      <div class="text-sm uppercase mt-5">Access Token</div>
+      <div class="flex items-center gap-2">
+        <div>{{ obfuscatedToken }}</div>
+        <button
+          class="text-xs bg-gray-200 hover:bg-gray-300 p-1"
+          @click="copyToClipboard(session?.token)"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 17H7C5.61667 17 4.4375 16.5125 3.4625 15.5375C2.4875 14.5625 2 13.3833 2 12C2 10.6167 2.4875 9.4375 3.4625 8.4625C4.4375 7.4875 5.61667 7 7 7H11V9H7C6.16667 9 5.45833 9.29167 4.875 9.875C4.29167 10.4583 4 11.1667 4 12C4 12.8333 4.29167 13.5417 4.875 14.125C5.45833 14.7083 6.16667 15 7 15H11V17ZM8 13V11H16V13H8ZM13 17V15H17C17.8333 15 18.5417 14.7083 19.125 14.125C19.7083 13.5417 20 12.8333 20 12C20 11.1667 19.7083 10.4583 19.125 9.875C18.5417 9.29167 17.8333 9 17 9H13V7H17C18.3833 7 19.5625 7.4875 20.5375 8.4625C21.5125 9.4375 22 10.6167 22 12C22 13.3833 21.5125 14.5625 20.5375 15.5375C19.5625 16.5125 18.3833 17 17 17H13Z" fill="#1D1B20"/>
+          </svg>
+        </button>
+        <button
+          class="text-xs bg-gray-200 hover:bg-gray-300 p-1"
+          @click="rollToken"
+        >
+          <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M46 8V20M46 20H34M46 20L36.74 11.28C33.9812 8.51948 30.4 6.73037 26.5359 6.18229C22.6719 5.6342 18.7343 6.35683 15.3167 8.24128C11.8991 10.1257 9.18649 13.0699 7.58772 16.6301C5.98895 20.1904 5.59061 24.1738 6.45272 27.9801C7.31484 31.7864 9.3907 35.2095 12.3675 37.7333C15.3443 40.2572 19.0608 41.7453 22.9568 41.9732C26.8529 42.2011 30.7175 41.1566 33.9683 38.997C37.2191 36.8374 39.6799 33.6798 40.98 30" stroke="#1E1E1E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+        </button>
+        <transition name="fade">
+          <span
+            v-if="copiedId === session?.token"
+            class="ml-2 bg-black text-white text-xs p-1"
+            style="vertical-align: middle;"
+          >
+            Copied to clipboard
+          </span>
+        </transition>
+      </div>
+    </div>
+
+
     <div v-if="loading" class="my-8 text-center text-gray-400">Loading...</div>
     <div v-else>
-      <div v-for="snapshot in questionSnapshots" :key="snapshot.id" class="my-10 border-b pb-4">
+      <div v-for="snapshot in questionSnapshots" :key="snapshot.id" class="my-10 border-b pb-4 relative">
         <div class="font-semibold">{{ snapshot.question_text }}</div>
-        <div class="mt-2 text-gray-700 relative">
+        <div class="mt-2 text-gray-700 relative flex items-center">
           <span v-if="getAnswerForSnapshot(snapshot.id)">
             {{ getAnswerForSnapshot(snapshot.id)?.answer }}
-            <button
-              class="absolute top-0 right-0 text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 ml-2"
-              @click="copyToClipboard(getAnswerForSnapshot(snapshot.id)?.answer)"
-              title="Copy to clipboard"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M11.5 22C9.96667 22 8.66667 21.4667 7.6 20.4C6.53333 19.3333 6 18.0333 6 16.5V6C6 4.9 6.39167 3.95833 7.175 3.175C7.95833 2.39167 8.9 2 10 2C11.1 2 12.0417 2.39167 12.825 3.175C13.6083 3.95833 14 4.9 14 6V15.5C14 16.2 13.7583 16.7917 13.275 17.275C12.7917 17.7583 12.2 18 11.5 18C10.8 18 10.2083 17.7583 9.725 17.275C9.24167 16.7917 9 16.2 9 15.5V6H10.5V15.5C10.5 15.7833 10.5958 16.0208 10.7875 16.2125C10.9792 16.4042 11.2167 16.5 11.5 16.5C11.7833 16.5 12.0208 16.4042 12.2125 16.2125C12.4042 16.0208 12.5 15.7833 12.5 15.5V6C12.5 5.3 12.2583 4.70833 11.775 4.225C11.2917 3.74167 10.7 3.5 10 3.5C9.3 3.5 8.70833 3.74167 8.225 4.225C7.74167 4.70833 7.5 5.3 7.5 6V16.5C7.5 17.6 7.89167 18.5417 8.675 19.325C9.45833 20.1083 10.4 20.5 11.5 20.5C12.6 20.5 13.5417 20.1083 14.325 19.325C15.1083 18.5417 15.5 17.6 15.5 16.5V6H17V16.5C17 18.0333 16.4667 19.3333 15.4 20.4C14.3333 21.4667 13.0333 22 11.5 22Z" fill="#1D1B20"/>
-</svg>
-
-            </button>
+            <span class="inline-block align-middle ml-2">
+              <button
+                class="text-xs bg-gray-200 hover:bg-gray-300 p-1"
+                @click="copyToClipboard(getAnswerForSnapshot(snapshot.id)?.answer, snapshot.id)"
+                title="Copy to clipboard"
+                style="vertical-align: middle;"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11 17H7C5.61667 17 4.4375 16.5125 3.4625 15.5375C2.4875 14.5625 2 13.3833 2 12C2 10.6167 2.4875 9.4375 3.4625 8.4625C4.4375 7.4875 5.61667 7 7 7H11V9H7C6.16667 9 5.45833 9.29167 4.875 9.875C4.29167 10.4583 4 11.1667 4 12C4 12.8333 4.29167 13.5417 4.875 14.125C5.45833 14.7083 6.16667 15 7 15H11V17ZM8 13V11H16V13H8ZM13 17V15H17C17.8333 15 18.5417 14.7083 19.125 14.125C19.7083 13.5417 20 12.8333 20 12C20 11.1667 19.7083 10.4583 19.125 9.875C18.5417 9.29167 17.8333 9 17 9H13V7H17C18.3833 7 19.5625 7.4875 20.5375 8.4625C21.5125 9.4375 22 10.6167 22 12C22 13.3833 21.5125 14.5625 20.5375 15.5375C19.5625 16.5125 18.3833 17 17 17H13Z" fill="#1D1B20"/>
+                </svg>
+              </button>
+              <transition name="fade">
+                <span
+                  v-if="copiedId === snapshot.id"
+                  class="ml-2 bg-black text-white text-xs p-1"
+                  style="vertical-align: middle;"
+                >
+                  Copied to clipboard
+                </span>
+              </transition>
+            </span>
           </span>
           <span v-else class="italic text-gray-400">No answer yet</span>
         </div>
@@ -62,6 +110,12 @@ const session = ref<any>(null)
 const questionSnapshots = ref<any[]>([])
 const answers = ref<any[]>([])
 
+const copiedId = ref<string | number | null>(null)
+let copyTimeout: ReturnType<typeof setTimeout> | null = null
+
+const tokenRefreshed = ref(false)
+let refreshTimeout: ReturnType<typeof setTimeout> | null = null
+
 onMounted(async () => {
   loading.value = true
   try {
@@ -74,6 +128,16 @@ onMounted(async () => {
   }
 })
 
+function copyToClipboard(text?: string, id?: number | string) {
+  if (!text) return
+  navigator.clipboard.writeText(text)
+  copiedId.value = id ?? text
+  if (copyTimeout) clearTimeout(copyTimeout)
+  copyTimeout = setTimeout(() => {
+    copiedId.value = null
+  }, 1500)
+}
+
 function getAnswerForSnapshot(snapshotId: number) {
   return answers.value.find(a => a.question_snapshot.id === snapshotId)
 }
@@ -85,8 +149,39 @@ const statusClass = computed(() =>
       ? 'text-yellow-600'
       : 'text-red-600'
 )
+
+const progressPercent = computed(() => {
+  if (questionSnapshots.value.length === 0) return 0
+  return (answers.value.length / questionSnapshots.value.length) * 100
+})
+
+const obfuscatedToken = computed(() => {
+  const token = session.value?.token || ''
+  if (copiedId.value === token) return token
+  if (token.length <= 12) return token // Not enough to obfuscate middle 8
+  const start = token.slice(0, 4)
+  const end = token.slice(-4)
+  return `${start}********${end}`
+})
+
+function rollToken() {
+  const uuid = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (Number(c) ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> Number(c) / 4).toString(16)
+  )
+  console.log('Rolled new token:', uuid)
+  tokenRefreshed.value = true
+  if (refreshTimeout) clearTimeout(refreshTimeout)
+  refreshTimeout = setTimeout(() => {
+    tokenRefreshed.value = false
+  }, 1500)
+}
 </script>
 
 <style scoped>
-/* Add any custom styles here */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
 </style>
