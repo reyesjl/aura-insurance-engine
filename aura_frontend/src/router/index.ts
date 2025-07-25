@@ -10,6 +10,8 @@ import ApplicationSessions from '@/pages/ApplicationSessions.vue'
 import ViewApplicationSession from '@/pages/ViewApplicationSession.vue'
 import Questions from '@/pages/Questions.vue'
 import CreateQuestion from '@/pages/CreateQuestion.vue'
+import AuthApplicationSession from '@/pages/AuthApplicationSession.vue'
+import FillApplicationSession from '@/pages/FillApplicationSession.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
@@ -33,6 +35,17 @@ const routes: Array<RouteRecordRaw> = [
     component: ViewApplicationSession,
     props: true,
   },
+  {
+    path: '/applications/auth/:token',
+    name: 'AuthApplicationSession',
+    component: AuthApplicationSession,
+  },
+  {
+    path: '/applications/fill/:id',
+    name: 'FillApplicationSession',
+    component: FillApplicationSession,
+    props: true,
+  }
 ]
 
 const router = createRouter({

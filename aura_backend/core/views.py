@@ -127,7 +127,7 @@ class ApiInfo(APIView):
                 "description": "Aura Insurance Engine Backend API",
                 "django_version": django.get_version(),
                 "python_version": platform.python_version(),
-                "app_version": "1.0.0",
+                "app_version": "v1.1.0",
             }
         )
 

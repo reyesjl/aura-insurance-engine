@@ -97,3 +97,21 @@ export function previewQuestions(
 export function fetchApplicationSessionDetails(id: number) {
   return Orbit.get<ApplicationSessionDetailsResponse>(`/application-session-details/${id}/`)
 }
+
+// Roll the token for an application session
+export function rollApplicationSessionToken(sessionId: number) {
+  return Orbit.post<{ token: string }>(`/application-session/${sessionId}/roll-token/`, {})
+}
+
+// Verify if an application session exists for a given token
+export function verifyApplicationToken(token: string) {
+  return Orbit.get<{ exists: boolean }>(`/application-session/verify-token/${token}/`)
+}
+
+// Authenticate an application session using the token and email
+export function authenticateApplicationSession(token: string, email: string) {
+  return Orbit.post<{ session: ApplicationSession }>(
+    `/application-session/authenticate/${token}/`,
+    { email }
+  )
+}

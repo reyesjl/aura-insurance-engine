@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from django.db import transaction
 from .models import (
     InsuranceType, Carrier, CoverageLine, Question, 
@@ -15,6 +16,7 @@ from .serializers import (
     ApplicationAnswerSerializer,
 )
 from .permissions import IsAgentUser
+from uuid import uuid4
 
 @api_view(['GET'])
 @permission_classes([IsAgentUser])
@@ -233,3 +235,47 @@ def application_session_details(request, session_id):
         'question_snapshots': TemplateQuestionSnapshotSerializer(question_snapshots, many=True).data,
         'answers': ApplicationAnswerSerializer(answers, many=True).data,
     })
+
+@api_view(['POST'])
+@permission_classes([IsAgentUser])
+def roll_application_session_token(request, session_id):
+    """
+    Generate a new token (UUID) for the given ApplicationSession.
+    """
+    try:
+        session = ApplicationSession.objects.get(pk=session_id)
+    except ApplicationSession.DoesNotExist:
+        return Response({'error': 'Session not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    session.token = uuid4()
+    session.save()
+    return Response({'token': str(session.token)}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def verify_application_token(request, token):
+    """
+    Verify if an application session exists for the given token.
+    Returns only existence, never session data.
+    """
+    exists = ApplicationSession.objects.filter(token=token).exists()
+    return Response({'exists': exists}, status=status.HTTP_200_OK if exists else status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def authenticate_application_session(request, token):
+    """
+    Authenticate user by token and email.
+    Only returns session data if email matches.
+    """
+    email = request.data.get('email', '').strip().lower()
+    try:
+        session = ApplicationSession.objects.get(token=token)
+    except ApplicationSession.DoesNotExist:
+        return Response({'error': 'Application does not exist or has expired.'}, status=status.HTTP_404_NOT_FOUND)
+    if session.insured_email and session.insured_email.lower() == email:
+        # Return session details (customize as needed)
+        return Response({
+            'session': ApplicationSessionSerializer(session).data
+        }, status=status.HTTP_200_OK)
+    return Response({'error': 'Email does not match.'}, status=status.HTTP_403_FORBIDDEN)
