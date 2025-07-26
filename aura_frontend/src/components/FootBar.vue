@@ -106,8 +106,4 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import prideBadge from '@/assets/pride-badge.gif'
-import niceBadge from '@/assets/nice-badge.gif'
-import vaSeal from '@/assets/va-seal.png'
-</script>
+<script setup lang="ts"></script>
