@@ -62,7 +62,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'FillApplicationSession',
     component: FillApplicationSession,
     props: true,
-  }
+  },
 ]
 
 const router = createRouter({

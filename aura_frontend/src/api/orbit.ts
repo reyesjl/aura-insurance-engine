@@ -16,10 +16,10 @@
  */
 
 import axios, {
-    AxiosError,
-    type AxiosInstance,
-    type AxiosRequestConfig,
-    type AxiosResponse
+  AxiosError,
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
 } from 'axios'
 
 const API_BASE =
@@ -50,8 +50,8 @@ class OrbitClient {
 
     // Add response interceptor for 401 handling
     this.axiosInstance.interceptors.response.use(
-      response => response,
-      async error => {
+      (response) => response,
+      async (error) => {
         if (
           error.response &&
           error.response.status === 401 &&
@@ -61,7 +61,9 @@ class OrbitClient {
           try {
             const refreshToken = localStorage.getItem('refresh_token')
             // Import your authAPI and call refreshToken
-            const { access } = await import('./auth').then(m => m.authAPI.refreshToken(refreshToken!))
+            const { access } = await import('./auth').then((m) =>
+              m.authAPI.refreshToken(refreshToken!),
+            )
             localStorage.setItem('access_token', access)
             // Update Authorization header and retry original request
             error.config.headers['Authorization'] = `Bearer ${access}`
@@ -73,7 +75,7 @@ class OrbitClient {
           }
         }
         return Promise.reject(error)
-      }
+      },
     )
   }
 

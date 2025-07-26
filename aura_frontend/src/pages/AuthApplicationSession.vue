@@ -1,19 +1,11 @@
-/*
- * Aura Insurance Engine – Proprietary Software
- *
- * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
- *
- * This software was developed solely by Jose Reyes – full-stack engineer and designer.
- * Jacob Powers contributed as the licensed insurance agent for the project.
- * It is a modern insurance submission platform built to streamline the intake
- * and processing of insurance applications.
- *
- * This code is proprietary and confidential. Unauthorized use, reproduction,
- * distribution, or modification is strictly prohibited.
- *
- * Project repository: https://github.com/reyesjl/aura-insurance-engine
- * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
- */
+/* * Aura Insurance Engine – Proprietary Software * * Copyright © 2025 Jose Reyes (GitHub:
+@reyesjl). All rights reserved. * * This software was developed solely by Jose Reyes – full-stack
+engineer and designer. * Jacob Powers contributed as the licensed insurance agent for the project. *
+It is a modern insurance submission platform built to streamline the intake * and processing of
+insurance applications. * * This code is proprietary and confidential. Unauthorized use,
+reproduction, * distribution, or modification is strictly prohibited. * * Project repository:
+https://github.com/reyesjl/aura-insurance-engine * DeepWiki:
+https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
 
 <template>
   <div class="min-h-screen flex flex-col items-center justify-center">
@@ -22,8 +14,20 @@
       <div v-else>
         <div v-if="!tokenValid" class="text-center">
           <div class="flex items-center justify-center mb-5">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14 22V14C14 11.3478 15.0536 8.8043 16.9289 6.92893C18.8043 5.05357 21.3478 4 24 4C26.6522 4 29.1957 5.05357 31.0711 6.92893C32.9464 8.8043 34 11.3478 34 14V22M10 22H38C40.2091 22 42 23.7909 42 26V40C42 42.2091 40.2091 44 38 44H10C7.79086 44 6 42.2091 6 40V26C6 23.7909 7.79086 22 10 22Z" stroke="#1E1E1E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14 22V14C14 11.3478 15.0536 8.8043 16.9289 6.92893C18.8043 5.05357 21.3478 4 24 4C26.6522 4 29.1957 5.05357 31.0711 6.92893C32.9464 8.8043 34 11.3478 34 14V22M10 22H38C40.2091 22 42 23.7909 42 26V40C42 42.2091 40.2091 44 38 44H10C7.79086 44 6 42.2091 6 40V26C6 23.7909 7.79086 22 10 22Z"
+                stroke="#1E1E1E"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
 
@@ -46,11 +50,16 @@
                 @input="clearError"
                 :class="[
                   'p-2 backdrop-blur-sm bg-black/20 mb-2 border-b-1 focus:outline-none focus:ring-2',
-                  error ? 'border-red-400 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500',
+                  error
+                    ? 'border-red-400 focus:ring-red-500'
+                    : 'border-gray-300 focus:ring-blue-500',
                 ]"
                 required
               />
-              <div v-if="error" class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit">
+              <div
+                v-if="error"
+                class="text-red-300 font-semibold text-xs mb-2 bg-black/50 p-1 w-fit"
+              >
                 {{ error }}
               </div>
             </div>
@@ -76,7 +85,7 @@ import router from '@/router'
 import { id } from 'zod/v4/locales'
 
 const route = useRoute()
-const token = route.params.token as string || ''
+const token = (route.params.token as string) || ''
 
 const email = ref('')
 const error = ref('')
@@ -103,7 +112,7 @@ async function handleSubmit() {
     router.push({
       name: 'FillApplicationSession',
       params: { id: resp.session.id },
-      state: { session: JSON.stringify(resp.session) }
+      state: { session: JSON.stringify(resp.session) },
     })
   } catch (err: any) {
     error.value = err.message || 'Authentication failed'
@@ -127,5 +136,4 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

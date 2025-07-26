@@ -16,21 +16,18 @@
  */
 
 import { Orbit } from './orbit'
-import type { Question } from '@/types';
+import type { Question } from '@/types'
 
 export interface QuestionsResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Question[];
+  count: number
+  next: string | null
+  previous: string | null
+  results: Question[]
 }
 
 // Fetch all questions (paginated)
 export function fetchQuestions(params?: Record<string, any>) {
-  return Orbit.get<QuestionsResponse>(
-    '/questions/',
-    { params }
-  )
+  return Orbit.get<QuestionsResponse>('/questions/', { params })
 }
 
 // Fetch a single question by ID

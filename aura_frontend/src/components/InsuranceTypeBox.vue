@@ -1,27 +1,16 @@
-/*
- * Aura Insurance Engine – Proprietary Software
- *
- * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
- *
- * This software was developed solely by Jose Reyes – full-stack engineer and designer.
- * Jacob Powers contributed as the licensed insurance agent for the project.
- * It is a modern insurance submission platform built to streamline the intake
- * and processing of insurance applications.
- *
- * This code is proprietary and confidential. Unauthorized use, reproduction,
- * distribution, or modification is strictly prohibited.
- *
- * Project repository: https://github.com/reyesjl/aura-insurance-engine
- * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
- */
+/* * Aura Insurance Engine – Proprietary Software * * Copyright © 2025 Jose Reyes (GitHub:
+@reyesjl). All rights reserved. * * This software was developed solely by Jose Reyes – full-stack
+engineer and designer. * Jacob Powers contributed as the licensed insurance agent for the project. *
+It is a modern insurance submission platform built to streamline the intake * and processing of
+insurance applications. * * This code is proprietary and confidential. Unauthorized use,
+reproduction, * distribution, or modification is strictly prohibited. * * Project repository:
+https://github.com/reyesjl/aura-insurance-engine * DeepWiki:
+https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
 
 <template>
   <div
     class="w-fit h-fit border border-black text-center font-medium flex items-center align-center justify-center"
-    :class="[
-      getInsuranceTypeClass(coverage.abbreviation),
-      getSizeClass(size)
-    ]"
+    :class="[getInsuranceTypeClass(coverage.abbreviation), getSizeClass(size)]"
     :aria-label="coverage.name"
     :title="coverage.name"
   >
@@ -41,12 +30,12 @@ const size = props.size || 'xs'
 
 const getInsuranceTypeClass = (abbreviation?: string): string => {
   const colorClasses: Record<string, string> = {
-    'GL': 'bg-black text-white',
-    'WC': 'bg-orange-500 text-white',
+    GL: 'bg-black text-white',
+    WC: 'bg-orange-500 text-white',
     'E&O': 'bg-red-500 text-white',
-    'CYB': 'bg-purple-500 text-white',
-    'AUTO': 'bg-blue-500 text-white',
-    'UMB': 'bg-yellow-500 text-black'
+    CYB: 'bg-purple-500 text-white',
+    AUTO: 'bg-blue-500 text-white',
+    UMB: 'bg-yellow-500 text-black',
   }
   return abbreviation ? colorClasses[abbreviation] || 'bg-gray-500' : 'bg-gray-500'
 }

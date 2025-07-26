@@ -16,7 +16,14 @@
  */
 
 import { Orbit } from './orbit'
-import type { ApplicationSession, InsuranceType, Carrier, CoverageLine, ApplicationAnswer, TemplateQuestionSnapshot } from '@/types'
+import type {
+  ApplicationSession,
+  InsuranceType,
+  Carrier,
+  CoverageLine,
+  ApplicationAnswer,
+  TemplateQuestionSnapshot,
+} from '@/types'
 
 export interface ApplicationSessionsResponse {
   count: number
@@ -28,7 +35,7 @@ export interface ApplicationSessionsResponse {
 export interface CarriersByCoverageResponse {
   insurance_type: InsuranceType
   coverage_lines: Array<{
-    coverage: CoverageLine,
+    coverage: CoverageLine
     carriers: Carrier[]
   }>
 }
@@ -68,10 +75,7 @@ export interface ApplicationSessionDetailsResponse {
 
 // Fetch all application sessions (paginated)
 export function fetchApplicationSessions(params?: Record<string, any>) {
-  return Orbit.get<ApplicationSessionsResponse>(
-    '/application-sessions/',
-    { params }
-  )
+  return Orbit.get<ApplicationSessionsResponse>('/application-sessions/', { params })
 }
 
 // Fetch a single application session by ID
@@ -92,7 +96,7 @@ export function fetchInsuranceTypes() {
 // Get carriers organized by coverage lines for a specific insurance type
 export function fetchCarriersByCoverage(insuranceTypeId: number) {
   return Orbit.get<CarriersByCoverageResponse>(
-    `/carriers-by-coverage/?insurance_type_id=${insuranceTypeId}`
+    `/carriers-by-coverage/?insurance_type_id=${insuranceTypeId}`,
   )
 }
 
@@ -100,7 +104,7 @@ export function fetchCarriersByCoverage(insuranceTypeId: number) {
 export function previewQuestions(
   insuranceTypeId: number,
   carrierIds: number[],
-  coverageIds: number[]
+  coverageIds: number[],
 ) {
   const params = new URLSearchParams({
     insurance_type_id: insuranceTypeId.toString(),
@@ -129,6 +133,6 @@ export function verifyApplicationToken(token: string) {
 export function authenticateApplicationSession(token: string, email: string) {
   return Orbit.post<{ session: ApplicationSession }>(
     `/application-session/authenticate/${token}/`,
-    { email }
+    { email },
   )
 }

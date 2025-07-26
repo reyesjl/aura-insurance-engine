@@ -1,19 +1,11 @@
-/*
- * Aura Insurance Engine – Proprietary Software
- *
- * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
- *
- * This software was developed solely by Jose Reyes – full-stack engineer and designer.
- * Jacob Powers contributed as the licensed insurance agent for the project.
- * It is a modern insurance submission platform built to streamline the intake
- * and processing of insurance applications.
- *
- * This code is proprietary and confidential. Unauthorized use, reproduction,
- * distribution, or modification is strictly prohibited.
- *
- * Project repository: https://github.com/reyesjl/aura-insurance-engine
- * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
- */
+/* * Aura Insurance Engine – Proprietary Software * * Copyright © 2025 Jose Reyes (GitHub:
+@reyesjl). All rights reserved. * * This software was developed solely by Jose Reyes – full-stack
+engineer and designer. * Jacob Powers contributed as the licensed insurance agent for the project. *
+It is a modern insurance submission platform built to streamline the intake * and processing of
+insurance applications. * * This code is proprietary and confidential. Unauthorized use,
+reproduction, * distribution, or modification is strictly prohibited. * * Project repository:
+https://github.com/reyesjl/aura-insurance-engine * DeepWiki:
+https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
 
 <template>
   <NavBar />
@@ -25,7 +17,8 @@
       <div class="flex flex-col">
         <div class="text-5xl font-bold">Applications</div>
         <div class="text-gray-600 text-sm">
-          Showing {{ startIndex }}–{{ endIndex }} of {{ applicationsResponse?.count || 0 }} applications
+          Showing {{ startIndex }}–{{ endIndex }} of
+          {{ applicationsResponse?.count || 0 }} applications
         </div>
       </div>
     </div>
@@ -35,7 +28,10 @@
       <div v-else-if="error" class="p-4 text-red-600">{{ error }}</div>
       <div v-else-if="!sessions.length" class="flex flex-col justify-center items-center p-4">
         <div class="text-gray-600">No applications found.</div>
-        <router-link to="/applications/create" class="mt-2 underline underline-offset-2 font-semibold">
+        <router-link
+          to="/applications/create"
+          class="mt-2 underline underline-offset-2 font-semibold"
+        >
           + Create application
         </router-link>
       </div>
@@ -161,8 +157,12 @@ const getStatusClass = (status: string) => {
 }
 
 const pageSize = computed(() => sessions.value.length || 10)
-const startIndex = computed(() => (sessions.value.length ? (currentPage.value - 1) * pageSize.value + 1 : 0))
-const endIndex = computed(() => (sessions.value.length ? startIndex.value + sessions.value.length - 1 : 0))
+const startIndex = computed(() =>
+  sessions.value.length ? (currentPage.value - 1) * pageSize.value + 1 : 0,
+)
+const endIndex = computed(() =>
+  sessions.value.length ? startIndex.value + sessions.value.length - 1 : 0,
+)
 
 onMounted(() => loadSessions())
 </script>

@@ -15,43 +15,45 @@
 # DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
 #
 
-import time
-import django
 import platform
-from rest_framework import viewsets, filters
+import time
+from datetime import datetime, timedelta
+
+import django
 from django_filters.rest_framework import DjangoFilterBackend
-from datetime import timedelta, datetime
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import filters, viewsets
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .permissions import IsAgentUser
 
 # Starttime for uptime tracking
 APP_START_TIME = time.time()
 
 from .models import (
-    User,
-    InsuranceType,
+    ApplicationAnswer,
+    ApplicationSession,
+    ApplicationTemplate,
     Carrier,
     CoverageLine,
+    InsuranceType,
     Question,
-    ApplicationTemplate,
-    TemplateQuestionSnapshot,
-    ApplicationSession,
-    ApplicationAnswer,
     Submission,
+    TemplateQuestionSnapshot,
+    User,
 )
 from .serializers import (
-    UserSerializer,
-    InsuranceTypeSerializer,
+    ApplicationAnswerSerializer,
+    ApplicationSessionSerializer,
+    ApplicationTemplateSerializer,
     CarrierSerializer,
     CoverageLineSerializer,
+    InsuranceTypeSerializer,
     QuestionSerializer,
-    ApplicationTemplateSerializer,
-    TemplateQuestionSnapshotSerializer,
-    ApplicationSessionSerializer,
-    ApplicationAnswerSerializer,
     SubmissionSerializer,
+    TemplateQuestionSnapshotSerializer,
+    UserSerializer,
 )
 
 
@@ -85,8 +87,8 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     permission_classes = [IsAgentUser]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['insurance_types']
-    search_fields = ['text'] 
+    filterset_fields = ["insurance_types"]
+    search_fields = ["text"]
 
 
 class ApplicationTemplateViewSet(viewsets.ModelViewSet):

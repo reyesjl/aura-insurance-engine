@@ -1,19 +1,11 @@
-/*
- * Aura Insurance Engine – Proprietary Software
- *
- * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
- *
- * This software was developed solely by Jose Reyes – full-stack engineer and designer.
- * Jacob Powers contributed as the licensed insurance agent for the project.
- * It is a modern insurance submission platform built to streamline the intake
- * and processing of insurance applications.
- *
- * This code is proprietary and confidential. Unauthorized use, reproduction,
- * distribution, or modification is strictly prohibited.
- *
- * Project repository: https://github.com/reyesjl/aura-insurance-engine
- * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
- */
+/* * Aura Insurance Engine – Proprietary Software * * Copyright © 2025 Jose Reyes (GitHub:
+@reyesjl). All rights reserved. * * This software was developed solely by Jose Reyes – full-stack
+engineer and designer. * Jacob Powers contributed as the licensed insurance agent for the project. *
+It is a modern insurance submission platform built to streamline the intake * and processing of
+insurance applications. * * This code is proprietary and confidential. Unauthorized use,
+reproduction, * distribution, or modification is strictly prohibited. * * Project repository:
+https://github.com/reyesjl/aura-insurance-engine * DeepWiki:
+https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
 
 <template>
   <Breadcrumbs />
@@ -21,7 +13,10 @@
   <Section v-if="currentStep === 1" mode="light" padding="small">
     <div class="flex items-center justify-between mb-10">
       <h2 class="text-2xl font-bold">Select Type</h2>
-      <button @click="navigateToDashboard" class="px-4 py-2 bg-black text-white hover:bg-gray-500 duration-300">
+      <button
+        @click="navigateToDashboard"
+        class="px-4 py-2 bg-black text-white hover:bg-gray-500 duration-300"
+      >
         Cancel
       </button>
     </div>
@@ -32,9 +27,11 @@
         v-for="type in insuranceTypes"
         :key="type.id"
         class="w-full md:w-1/2 p-10 cursor-pointer duration-200"
-        :class="selectedInsuranceType?.id === type.id 
-          ? 'bg-black text-white' 
-          : 'bg-gray-200 hover:bg-black hover:text-white'"
+        :class="
+          selectedInsuranceType?.id === type.id
+            ? 'bg-black text-white'
+            : 'bg-gray-200 hover:bg-black hover:text-white'
+        "
         @click="selectInsuranceType(type)"
       >
         <h3>{{ type.label }}</h3>
@@ -68,10 +65,7 @@
             :key="carrier.id"
             class="p-10 cursor-pointer hover:bg-black hover:text-white duration-300"
             :class="{
-              'bg-black text-white': isCarrierSelected(
-                coverageLine.coverage.id,
-                carrier.id,
-              ),
+              'bg-black text-white': isCarrierSelected(coverageLine.coverage.id, carrier.id),
               'bg-gray-200': !isCarrierSelected(coverageLine.coverage.id, carrier.id),
             }"
             @click="toggleCarrier(coverageLine.coverage.id, carrier.id)"
@@ -136,12 +130,16 @@
       <div class="mb-10 flex flex-col gap-5 md:max-w-1/3 w-full">
         <div class="flex justify-between border-b items-baseline">
           <div class="label">Question Count</div>
-          <div class="value"><span class="text-4xl">{{ questionPreview?.questions_count || 0 }}</span> ques</div>
+          <div class="value">
+            <span class="text-4xl">{{ questionPreview?.questions_count || 0 }}</span> ques
+          </div>
         </div>
-        
+
         <div class="flex justify-between border-b items-baseline">
           <div class="label">Estimated Burden</div>
-          <div class="value"><span class="text-4xl">{{ estimatedTime || 0 }}</span> mins</div>
+          <div class="value">
+            <span class="text-4xl">{{ estimatedTime || 0 }}</span> mins
+          </div>
         </div>
       </div>
 
@@ -157,9 +155,7 @@
           </p>
 
           <!-- Coverages -->
-          <div
-            class="flex flex-wrap gap-1 w-full md:w-[160px] flex-shrink-0"
-          >
+          <div class="flex flex-wrap gap-1 w-full md:w-[160px] flex-shrink-0">
             <InsuranceTypeBox
               v-for="coverage in question.coverages"
               :key="coverage.id"
@@ -168,9 +164,7 @@
           </div>
 
           <!-- Carriers -->
-          <div
-            class="text-sm text-gray-600 w-full md:w-[160px] flex-shrink-0"
-          >
+          <div class="text-sm text-gray-600 w-full md:w-[160px] flex-shrink-0">
             <template v-if="question.carriers && question.carriers.length">
               <span class="hidden md:flex flex-wrap gap-2">
                 <span v-for="carrier in question.carriers" :key="carrier">{{ carrier }}</span>
@@ -199,7 +193,7 @@ import {
   previewQuestions,
   createApplicationSession,
   type CarriersByCoverageResponse,
-  type PreviewQuestionsResponse
+  type PreviewQuestionsResponse,
 } from '@/api/applications'
 import type { InsuranceType } from '@/types'
 
@@ -235,9 +229,9 @@ const timePerQuestion = 15 // seconds per question (you can adjust this)
 const hasSelections = computed(() => {
   // For step 2 (carrier selection), check if any carriers are selected
   if (currentStep.value === 2) {
-    return Object.values(selectedCarriers.value).some(carriers => carriers.length > 0)
+    return Object.values(selectedCarriers.value).some((carriers) => carriers.length > 0)
   }
-  
+
   // For step 1 (insurance type selection), check if insurance type is selected
   return selectedInsuranceType.value !== null
 })
@@ -246,7 +240,7 @@ const estimatedTime = computed(() => {
   const totalQuestions = questionPreview.value?.questions_count || 0
   const totalSeconds = totalQuestions * timePerQuestion
   const minutes = Math.ceil(totalSeconds / 60)
-  
+
   return minutes
 })
 
@@ -360,7 +354,8 @@ const loadQuestionPreview = async () => {
 }
 
 const createApplication = async () => {
-  if (!selectedInsuranceType.value || !sessionName.value.trim() || !insuredEmail.value.trim()) return
+  if (!selectedInsuranceType.value || !sessionName.value.trim() || !insuredEmail.value.trim())
+    return
 
   creatingSession.value = true
 

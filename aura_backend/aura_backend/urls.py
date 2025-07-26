@@ -16,21 +16,22 @@
 #
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView
+
 from core import views
-from core.views import ApiInfo, ApiHealth
-from core.auth_views import login_view, register_view, logout_view, user_profile_view
 from core.application_views import (
-    get_carriers_by_coverage,
-    create_application_session,
-    preview_questions,
     application_session_details,
+    authenticate_application_session,
+    create_application_session,
+    get_carriers_by_coverage,
+    preview_questions,
     roll_application_session_token,
     verify_application_token,
-    authenticate_application_session,
 )
+from core.auth_views import login_view, logout_view, register_view, user_profile_view
+from core.views import ApiHealth, ApiInfo
 
 router = routers.DefaultRouter()
 router.register(r"users", views.UserViewSet)

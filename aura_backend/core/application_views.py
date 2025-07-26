@@ -15,76 +15,102 @@
 # DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
 #
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import AllowAny
+from uuid import uuid4
+
 from django.db import transaction
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+
 from .models import (
-    InsuranceType, Carrier, CoverageLine, Question, 
-    ApplicationTemplate, TemplateQuestionSnapshot, ApplicationSession,
-    ApplicationAnswer
+    ApplicationAnswer,
+    ApplicationSession,
+    ApplicationTemplate,
+    Carrier,
+    CoverageLine,
+    InsuranceType,
+    Question,
+    TemplateQuestionSnapshot,
 )
+from .permissions import IsAgentUser
 from .serializers import (
+    ApplicationAnswerSerializer,
     ApplicationSessionSerializer,
     CarrierSerializer,
     CoverageLineSerializer,
     TemplateQuestionSnapshotSerializer,
-    ApplicationAnswerSerializer,
 )
-from .permissions import IsAgentUser
-from uuid import uuid4
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 @permission_classes([IsAgentUser])
 def get_carriers_by_coverage(request):
     """
     Get carriers organized by coverage lines for a specific insurance type.
     Query param: insurance_type_id
     """
-    insurance_type_id = request.GET.get('insurance_type_id')
-    
+    insurance_type_id = request.GET.get("insurance_type_id")
+
     if not insurance_type_id:
-        return Response({'error': 'insurance_type_id is required'}, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response(
+            {"error": "insurance_type_id is required"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
     try:
         insurance_type = InsuranceType.objects.get(id=insurance_type_id)
     except InsuranceType.DoesNotExist:
-        return Response({'error': 'Insurance type not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+        return Response(
+            {"error": "Insurance type not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+
     # Get all coverage lines for this insurance type
-    coverage_lines = CoverageLine.objects.filter(insurance_types=insurance_type).order_by('name')
-    
+    coverage_lines = CoverageLine.objects.filter(
+        insurance_types=insurance_type
+    ).order_by("name")
+
     result = []
     for coverage in coverage_lines:
         # Get carriers that have questions for this coverage and insurance type
-        carriers_for_coverage = Carrier.objects.filter(
-            question__coverages=coverage,
-            question__insurance_types=insurance_type,
-            insurance_types=insurance_type
-        ).distinct().order_by('name')
-        
-        result.append({
-            'coverage': CoverageLineSerializer(coverage).data,
-            'carriers': [CarrierSerializer(carrier).data for carrier in carriers_for_coverage]
-        })
-    
-    return Response({
-        'insurance_type': {
-            'id': insurance_type.pk,
-            'key': insurance_type.key,
-            'label': insurance_type.label
-        },
-        'coverage_lines': result
-    })
+        carriers_for_coverage = (
+            Carrier.objects.filter(
+                question__coverages=coverage,
+                question__insurance_types=insurance_type,
+                insurance_types=insurance_type,
+            )
+            .distinct()
+            .order_by("name")
+        )
 
-@api_view(['POST'])
+        result.append(
+            {
+                "coverage": CoverageLineSerializer(coverage).data,
+                "carriers": [
+                    CarrierSerializer(carrier).data for carrier in carriers_for_coverage
+                ],
+            }
+        )
+
+    return Response(
+        {
+            "insurance_type": {
+                "id": insurance_type.pk,
+                "key": insurance_type.key,
+                "label": insurance_type.label,
+            },
+            "coverage_lines": result,
+        }
+    )
+
+
+@api_view(["POST"])
 @permission_classes([IsAgentUser])
 def create_application_session(request):
     """
     Create a new application session with selected carriers and coverages.
     This will automatically create an ApplicationTemplate and then the session.
-    
+
     Expected payload:
     {
         "insurance_type_id": 1,
@@ -95,140 +121,154 @@ def create_application_session(request):
                 "carrier_ids": [1, 2, 3]
             },
             {
-                "coverage_id": 2, 
+                "coverage_id": 2,
                 "carrier_ids": [2, 4]
             }
         ]
     }
     """
-    insurance_type_id = request.data.get('insurance_type_id')
-    session_name = request.data.get('session_name', 'New Application')
-    insured_email = request.data.get('insured_email', None)
-    selections = request.data.get('selections', [])
-    
+    insurance_type_id = request.data.get("insurance_type_id")
+    session_name = request.data.get("session_name", "New Application")
+    insured_email = request.data.get("insured_email", None)
+    selections = request.data.get("selections", [])
+
     if not insurance_type_id or not selections:
-        return Response({
-            'error': 'insurance_type_id and selections are required'
-        }, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response(
+            {"error": "insurance_type_id and selections are required"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
     try:
         insurance_type = InsuranceType.objects.get(id=insurance_type_id)
     except InsuranceType.DoesNotExist:
-        return Response({'error': 'Insurance type not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+        return Response(
+            {"error": "Insurance type not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+
     # Collect all unique carriers and coverages from selections
     all_carrier_ids = set()
     all_coverage_ids = set()
-    
+
     for selection in selections:
-        coverage_id = selection.get('coverage_id')
-        carrier_ids = selection.get('carrier_ids', [])
-        
+        coverage_id = selection.get("coverage_id")
+        carrier_ids = selection.get("carrier_ids", [])
+
         if coverage_id:
             all_coverage_ids.add(coverage_id)
         all_carrier_ids.update(carrier_ids)
-    
+
     try:
         with transaction.atomic():
             # Create ApplicationTemplate
             template = ApplicationTemplate.objects.create(
                 name=f"Template for {session_name}",
                 agent=request.user,
-                insurance_type=insurance_type
+                insurance_type=insurance_type,
             )
-            
+
             # Set carriers and coverages
             template.carriers.set(list(all_carrier_ids))
             template.coverages.set(list(all_coverage_ids))
-            
+
             # Get relevant questions and create snapshots
             questions = Question.objects.filter(
                 insurance_types=insurance_type,
                 carriers__in=all_carrier_ids,
-                coverages__in=all_coverage_ids
+                coverages__in=all_coverage_ids,
             ).distinct()
-            
+
             for question in questions:
                 TemplateQuestionSnapshot.objects.create(
                     template=template,
                     original_question=question,
-                    question_text=question.text
+                    question_text=question.text,
                 )
-            
+
             # Create ApplicationSession
             session = ApplicationSession.objects.create(
                 template=template,
                 agent=request.user,
                 name=session_name,
                 insured_email=insured_email,
-                status='pending'
+                status="pending",
             )
-            
-            serializer = ApplicationSessionSerializer(session)
-            
-            return Response({
-                'session': serializer.data,
-                'template_id': template.pk,
-                'questions_count': questions.count(),
-                'message': f'Application session created successfully with {questions.count()} questions'
-            }, status=status.HTTP_201_CREATED)
-            
-    except Exception as e:
-        return Response({
-            'error': f'Failed to create application session: {str(e)}'
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(['GET'])
+            serializer = ApplicationSessionSerializer(session)
+
+            return Response(
+                {
+                    "session": serializer.data,
+                    "template_id": template.pk,
+                    "questions_count": questions.count(),
+                    "message": f"Application session created successfully with {questions.count()} questions",
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+    except Exception as e:
+        return Response(
+            {"error": f"Failed to create application session: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@api_view(["GET"])
 @permission_classes([IsAgentUser])
 def preview_questions(request):
     """
     Preview questions that would be included for given selections.
     Query params: insurance_type_id, carrier_ids (comma-separated), coverage_ids (comma-separated)
     """
-    insurance_type_id = request.GET.get('insurance_type_id')
-    carrier_ids = request.GET.get('carrier_ids', '').split(',')
-    coverage_ids = request.GET.get('coverage_ids', '').split(',')
-    
+    insurance_type_id = request.GET.get("insurance_type_id")
+    carrier_ids = request.GET.get("carrier_ids", "").split(",")
+    coverage_ids = request.GET.get("coverage_ids", "").split(",")
+
     # Filter out empty strings and convert to integers
     carrier_ids = [int(id) for id in carrier_ids if id.strip()]
     coverage_ids = [int(id) for id in coverage_ids if id.strip()]
-    
+
     if not insurance_type_id or not carrier_ids or not coverage_ids:
-        return Response({
-            'error': 'insurance_type_id, carrier_ids, and coverage_ids are required'
-        }, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response(
+            {"error": "insurance_type_id, carrier_ids, and coverage_ids are required"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
     try:
         insurance_type = InsuranceType.objects.get(id=insurance_type_id)
-        
+
         questions = Question.objects.filter(
             insurance_types=insurance_type,
             carriers__in=carrier_ids,
-            coverages__in=coverage_ids
+            coverages__in=coverage_ids,
         ).distinct()
-        
-        return Response({
-            'questions_count': questions.count(),
-            'questions': [
-                {
-                    'id': q.pk,
-                    'text': q.text,
-                    'carriers': [c.name for c in q.carriers.all()],
-                    'coverages': [
-                        {'name': c.name, 'abbreviation': c.abbreviation}
-                        for c in q.coverages.all()
-                    ]
-                }
-                for q in questions
-            ]
-        })
-        
-    except InsuranceType.DoesNotExist:
-        return Response({'error': 'Insurance type not found'}, status=status.HTTP_404_NOT_FOUND)
-    except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(['GET'])
+        return Response(
+            {
+                "questions_count": questions.count(),
+                "questions": [
+                    {
+                        "id": q.pk,
+                        "text": q.text,
+                        "carriers": [c.name for c in q.carriers.all()],
+                        "coverages": [
+                            {"name": c.name, "abbreviation": c.abbreviation}
+                            for c in q.coverages.all()
+                        ],
+                    }
+                    for q in questions
+                ],
+            }
+        )
+
+    except InsuranceType.DoesNotExist:
+        return Response(
+            {"error": "Insurance type not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(["GET"])
 @permission_classes([IsAgentUser])
 def application_session_details(request, session_id):
     """
@@ -240,20 +280,29 @@ def application_session_details(request, session_id):
     try:
         session = ApplicationSession.objects.get(pk=session_id)
     except ApplicationSession.DoesNotExist:
-        return Response({'error': 'Session not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND
+        )
 
     # Get all question snapshots for this session's template
-    question_snapshots = TemplateQuestionSnapshot.objects.filter(template=session.template)
+    question_snapshots = TemplateQuestionSnapshot.objects.filter(
+        template=session.template
+    )
     # Get all answers for this session
     answers = ApplicationAnswer.objects.filter(session=session)
 
-    return Response({
-        'session': ApplicationSessionSerializer(session).data,
-        'question_snapshots': TemplateQuestionSnapshotSerializer(question_snapshots, many=True).data,
-        'answers': ApplicationAnswerSerializer(answers, many=True).data,
-    })
+    return Response(
+        {
+            "session": ApplicationSessionSerializer(session).data,
+            "question_snapshots": TemplateQuestionSnapshotSerializer(
+                question_snapshots, many=True
+            ).data,
+            "answers": ApplicationAnswerSerializer(answers, many=True).data,
+        }
+    )
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 @permission_classes([IsAgentUser])
 def roll_application_session_token(request, session_id):
     """
@@ -262,13 +311,16 @@ def roll_application_session_token(request, session_id):
     try:
         session = ApplicationSession.objects.get(pk=session_id)
     except ApplicationSession.DoesNotExist:
-        return Response({'error': 'Session not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+        return Response(
+            {"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND
+        )
+
     session.token = uuid4()
     session.save()
-    return Response({'token': str(session.token)}, status=status.HTTP_200_OK)
+    return Response({"token": str(session.token)}, status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 @permission_classes([AllowAny])
 def verify_application_token(request, token):
     """
@@ -276,23 +328,33 @@ def verify_application_token(request, token):
     Returns only existence, never session data.
     """
     exists = ApplicationSession.objects.filter(token=token).exists()
-    return Response({'exists': exists}, status=status.HTTP_200_OK if exists else status.HTTP_404_NOT_FOUND)
+    return Response(
+        {"exists": exists},
+        status=status.HTTP_200_OK if exists else status.HTTP_404_NOT_FOUND,
+    )
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 @permission_classes([AllowAny])
 def authenticate_application_session(request, token):
     """
     Authenticate user by token and email.
     Only returns session data if email matches.
     """
-    email = request.data.get('email', '').strip().lower()
+    email = request.data.get("email", "").strip().lower()
     try:
         session = ApplicationSession.objects.get(token=token)
     except ApplicationSession.DoesNotExist:
-        return Response({'error': 'Application does not exist or has expired.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "Application does not exist or has expired."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
     if session.insured_email and session.insured_email.lower() == email:
         # Return session details (customize as needed)
-        return Response({
-            'session': ApplicationSessionSerializer(session).data
-        }, status=status.HTTP_200_OK)
-    return Response({'error': 'Email does not match.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            {"session": ApplicationSessionSerializer(session).data},
+            status=status.HTTP_200_OK,
+        )
+    return Response(
+        {"error": "Email does not match."}, status=status.HTTP_403_FORBIDDEN
+    )

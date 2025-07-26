@@ -16,7 +16,8 @@
 #
 
 from rest_framework import permissions
-    
+
+
 class IsAgentUser(permissions.BasePermission):
     """
     Custom permission to only allow agent members to access the view.
@@ -24,7 +25,8 @@ class IsAgentUser(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.user and request.user.is_agent
-    
+
+
 # Example permission functions:
 # class IsAuthenticated(BasePermission):
 #     """

@@ -16,27 +16,42 @@
 #
 
 import random
+
 from django.core.management.base import BaseCommand
-from core.models import InsuranceType, Carrier, CoverageLine, Question
+
+from core.models import Carrier, CoverageLine, InsuranceType, Question
+
 
 class Command(BaseCommand):
     help = "Seeds initial insurance data with 100 unique questions for development."
 
     def handle(self, *args, **kwargs):
         self.stdout.write("Seeding insurance types...")
-        personal = InsuranceType.objects.get_or_create(key="personal", label="Personal")[0]
-        commercial = InsuranceType.objects.get_or_create(key="commercial", label="Commercial")[0]
+        personal = InsuranceType.objects.get_or_create(
+            key="personal", label="Personal"
+        )[0]
+        commercial = InsuranceType.objects.get_or_create(
+            key="commercial", label="Commercial"
+        )[0]
 
         self.stdout.write("Seeding carriers...")
         carrier_names = [
-            "Acme Insurance", "GloboCoverage", "Universal Trust", "Titan Assurance",
-            "Zenith Mutual", "Ironclad Risk", "MapleShield", "Redline Insurance"
+            "Acme Insurance",
+            "GloboCoverage",
+            "Universal Trust",
+            "Titan Assurance",
+            "Zenith Mutual",
+            "Ironclad Risk",
+            "MapleShield",
+            "Redline Insurance",
         ]
         carriers = []
         for name in carrier_names:
             carrier = Carrier.objects.get_or_create(name=name)[0]
             # Randomly associate with personal, commercial, or both
-            assigned_types = random.sample([personal, commercial], k=random.choice([1, 2]))
+            assigned_types = random.sample(
+                [personal, commercial], k=random.choice([1, 2])
+            )
             carrier.insurance_types.set(assigned_types)
             carriers.append(carrier)
 
@@ -73,7 +88,6 @@ class Command(BaseCommand):
             "Do you carry collision coverage?",
             "Do you want roadside assistance included?",
             "Is the title of the vehicle in your name?",
-
             # Personal – Cyber
             "Do you store passwords digitally?",
             "Do you use a password manager?",
@@ -90,7 +104,6 @@ class Command(BaseCommand):
             "Do you want identity theft protection included?",
             "Have you clicked on suspicious email links in the past?",
             "Have you lost a personal device in the last year?",
-
             # Commercial – GL
             "What is your business type?",
             "How many employees do you have?",
@@ -112,7 +125,6 @@ class Command(BaseCommand):
             "Do you have existing lawsuits or pending legal action?",
             "Do you advertise using customer testimonials?",
             "Are drones used for any business operations?",
-
             # Commercial – Cyber
             "Do you collect customer SSNs or sensitive information?",
             "Do you use a third-party payment processor?",
@@ -129,7 +141,6 @@ class Command(BaseCommand):
             "Do you allow remote access to company systems?",
             "Is cloud storage used for confidential files?",
             "Do vendors have access to your data systems?",
-
             # Commercial – Auto
             "How many commercial vehicles do you operate?",
             "Are vehicles used across state lines?",
@@ -141,7 +152,6 @@ class Command(BaseCommand):
             "Is cargo transported as part of business operations?",
             "Do you hire independent contractors as drivers?",
             "Are driving records monitored for all employees?",
-
             # Shared / Misc
             "What is your preferred policy start date?",
             "Do you require bundled coverage?",
@@ -162,14 +172,18 @@ class Command(BaseCommand):
             "Will someone else complete this form on your behalf?",
             "Do you need document signing capabilities?",
             "Would you like to schedule a follow-up call?",
-            "Do you consent to digital communication?"
+            "Do you consent to digital communication?",
         ]
 
         for i, q_text in enumerate(questions, 1):
             coverage = random.choice(coverages)
             insurance_type = random.choice([personal, commercial])
-            valid_carriers = [c for c in carriers if insurance_type in c.insurance_types.all()]
-            selected_carriers = random.sample(valid_carriers, k=random.randint(1, len(valid_carriers)))
+            valid_carriers = [
+                c for c in carriers if insurance_type in c.insurance_types.all()
+            ]
+            selected_carriers = random.sample(
+                valid_carriers, k=random.randint(1, len(valid_carriers))
+            )
 
             question = Question.objects.create(text=q_text)
             question.coverages.set([coverage])

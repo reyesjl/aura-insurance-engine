@@ -1,19 +1,11 @@
-/*
- * Aura Insurance Engine – Proprietary Software
- *
- * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
- *
- * This software was developed solely by Jose Reyes – full-stack engineer and designer.
- * Jacob Powers contributed as the licensed insurance agent for the project.
- * It is a modern insurance submission platform built to streamline the intake
- * and processing of insurance applications.
- *
- * This code is proprietary and confidential. Unauthorized use, reproduction,
- * distribution, or modification is strictly prohibited.
- *
- * Project repository: https://github.com/reyesjl/aura-insurance-engine
- * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
- */
+/* * Aura Insurance Engine – Proprietary Software * * Copyright © 2025 Jose Reyes (GitHub:
+@reyesjl). All rights reserved. * * This software was developed solely by Jose Reyes – full-stack
+engineer and designer. * Jacob Powers contributed as the licensed insurance agent for the project. *
+It is a modern insurance submission platform built to streamline the intake * and processing of
+insurance applications. * * This code is proprietary and confidential. Unauthorized use,
+reproduction, * distribution, or modification is strictly prohibited. * * Project repository:
+https://github.com/reyesjl/aura-insurance-engine * DeepWiki:
+https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
 
 <template>
   <NavBar />
@@ -46,7 +38,7 @@
         <div class="text-2xl">+ New App</div>
         <div class="tile-description">Start a new insurance application</div>
       </button>
-      
+
       <button
         @click="navigateToApplicationSessions"
         @keydown.enter="navigateToApplicationSessions"
@@ -57,7 +49,7 @@
         <div class="text-2xl">My Sessions</div>
         <div class="tile-description">View active application sessions</div>
       </button>
-      
+
       <button
         @click="navigateToQuestions"
         @keydown.enter="navigateToQuestions"
@@ -68,7 +60,7 @@
         <div class="text-2xl">Questions</div>
         <div class="tile-description">View and manage your questions</div>
       </button>
-      
+
       <button
         @click="handleLogout"
         @keydown.enter="handleLogout"
