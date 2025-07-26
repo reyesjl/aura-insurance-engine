@@ -52,7 +52,6 @@ class User(AbstractUser):
         - xp: Integer, experience points for achievements
         - (future) achievements: ManyToMany to Achievement model
     """
-‌​​‌‌‌‌‌‌‌​‍‌​​‌​⁠‍‍‌​‍‍‌‍⁠⁠‌⁠​⁠‌‍‌‌​‍​​‌‌​‍‌‍‌‌‌⁠‍‌‌‍‌‌‌⁠​⁠​‍​​​‍‍​‌​​​‌⁠​‍‌‍‌‌‌⁠‍‌‌‍‌‌‌⁠​⁠‌‍‍‍‌‍⁠​​‍‍‌​⁠‍‍​⁠​‍​⁠​​​⁠​‍​⁠‌‌​‍⁠‌​⁠​​​⁠‌⁠​‍⁠‌​⁠​‍​⁠‌‍
 
     is_agent = models.BooleanField(default=False)
     agent_name = models.CharField(max_length=255, blank=True, null=True)
