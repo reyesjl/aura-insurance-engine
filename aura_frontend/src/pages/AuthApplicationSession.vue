@@ -1,11 +1,19 @@
-/* * Aura Insurance Engine – Proprietary Software * * Copyright © 2025 Jose Reyes (GitHub:
-@reyesjl). All rights reserved. * * This software was developed solely by Jose Reyes – full-stack
-engineer and designer. * Jacob Powers contributed as the licensed insurance agent for the project. *
-It is a modern insurance submission platform built to streamline the intake * and processing of
-insurance applications. * * This code is proprietary and confidential. Unauthorized use,
-reproduction, * distribution, or modification is strictly prohibited. * * Project repository:
-https://github.com/reyesjl/aura-insurance-engine * DeepWiki:
-https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
+<!-- prettier-ignore -->
+<!--
+ * Aura Insurance Engine – Proprietary Software
+ *
+ * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
+ *
+ * This software was developed solely by Jose Reyes – full-stack engineer and designer.
+ * It is a modern insurance submission platform built to streamline the intake
+ * and processing of insurance applications.
+ *
+ * This code is proprietary and confidential. Unauthorized use, reproduction,
+ * distribution, or modification is strictly prohibited.
+ *
+ * Project repository: https://github.com/reyesjl/aura-insurance-engine
+ * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
+-->
 
 <template>
   <div class="min-h-screen flex flex-col items-center justify-center">
@@ -77,12 +85,10 @@ https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import Breadcrumbs from '@/components/Breadcrumbs.vue'
-import { verifyApplicationToken, authenticateApplicationSession } from '@/api/applications'
+import { authenticateApplicationSession, verifyApplicationToken } from '@/api/applications'
 import router from '@/router'
-import { id } from 'zod/v4/locales'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const token = (route.params.token as string) || ''

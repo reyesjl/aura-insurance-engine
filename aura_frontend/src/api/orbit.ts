@@ -4,7 +4,6 @@
  * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
  *
  * This software was developed solely by Jose Reyes – full-stack engineer and designer.
- * Jacob Powers contributed as the licensed insurance agent for the project.
  * It is a modern insurance submission platform built to streamline the intake
  * and processing of insurance applications.
  *
@@ -15,12 +14,7 @@
  * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
  */
 
-import axios, {
-  AxiosError,
-  type AxiosInstance,
-  type AxiosRequestConfig,
-  type AxiosResponse,
-} from 'axios'
+import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios'
 
 const API_BASE =
   import.meta.env.VITE_API_BASE || (import.meta.env.PROD ? '' : 'http://localhost:8000')
@@ -68,7 +62,7 @@ class OrbitClient {
             // Update Authorization header and retry original request
             error.config.headers['Authorization'] = `Bearer ${access}`
             return this.axiosInstance.request(error.config)
-          } catch (refreshError) {
+          } catch (_refreshError) {
             // If refresh fails, clear tokens and optionally redirect to login
             localStorage.removeItem('access_token')
             localStorage.removeItem('refresh_token')

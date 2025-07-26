@@ -1,11 +1,19 @@
-/* * Aura Insurance Engine – Proprietary Software * * Copyright © 2025 Jose Reyes (GitHub:
-@reyesjl). All rights reserved. * * This software was developed solely by Jose Reyes – full-stack
-engineer and designer. * Jacob Powers contributed as the licensed insurance agent for the project. *
-It is a modern insurance submission platform built to streamline the intake * and processing of
-insurance applications. * * This code is proprietary and confidential. Unauthorized use,
-reproduction, * distribution, or modification is strictly prohibited. * * Project repository:
-https://github.com/reyesjl/aura-insurance-engine * DeepWiki:
-https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
+<!-- prettier-ignore -->
+<!--
+ * Aura Insurance Engine – Proprietary Software
+ *
+ * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
+ *
+ * This software was developed solely by Jose Reyes – full-stack engineer and designer.
+ * It is a modern insurance submission platform built to streamline the intake
+ * and processing of insurance applications.
+ *
+ * This code is proprietary and confidential. Unauthorized use, reproduction,
+ * distribution, or modification is strictly prohibited.
+ *
+ * Project repository: https://github.com/reyesjl/aura-insurance-engine
+ * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
+-->
 
 <template>
   <Breadcrumbs />
@@ -181,21 +189,20 @@ https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import NavBar from '@/components/NavBar.vue'
-import Breadcrumbs from '@/components/Breadcrumbs.vue'
-import Section from '@/components/Section.vue'
-import InsuranceTypeBox from '@/components/InsuranceTypeBox.vue'
 import {
-  fetchInsuranceTypes,
-  fetchCarriersByCoverage,
-  previewQuestions,
   createApplicationSession,
+  fetchCarriersByCoverage,
+  fetchInsuranceTypes,
+  previewQuestions,
   type CarriersByCoverageResponse,
   type PreviewQuestionsResponse,
 } from '@/api/applications'
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import InsuranceTypeBox from '@/components/InsuranceTypeBox.vue'
+import Section from '@/components/Section.vue'
 import type { InsuranceType } from '@/types'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 

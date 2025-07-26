@@ -24,7 +24,7 @@ echo "🎨 Formatting Aura Insurance Engine codebase..."
 echo "📱 Formatting frontend code..."
 cd aura_frontend
 npm run format
-npm run lint --fix
+npm run lint
 cd ..
 
 # Format Backend (Python)

@@ -1,11 +1,19 @@
-/* * Aura Insurance Engine – Proprietary Software * * Copyright © 2025 Jose Reyes (GitHub:
-@reyesjl). All rights reserved. * * This software was developed solely by Jose Reyes – full-stack
-engineer and designer. * Jacob Powers contributed as the licensed insurance agent for the project. *
-It is a modern insurance submission platform built to streamline the intake * and processing of
-insurance applications. * * This code is proprietary and confidential. Unauthorized use,
-reproduction, * distribution, or modification is strictly prohibited. * * Project repository:
-https://github.com/reyesjl/aura-insurance-engine * DeepWiki:
-https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
+<!-- prettier-ignore -->
+<!--
+ * Aura Insurance Engine – Proprietary Software
+ *
+ * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
+ *
+ * This software was developed solely by Jose Reyes – full-stack engineer and designer.
+ * It is a modern insurance submission platform built to streamline the intake
+ * and processing of insurance applications.
+ *
+ * This code is proprietary and confidential. Unauthorized use, reproduction,
+ * distribution, or modification is strictly prohibited.
+ *
+ * Project repository: https://github.com/reyesjl/aura-insurance-engine
+ * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
+-->
 
 <template>
   <NavBar />
@@ -108,15 +116,15 @@ https://app.devin.ai/wiki/reyesjl/aura-insurance-engine */
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { fetchQuestions, type QuestionsResponse } from '@/api/questions'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import InsuranceTypeBox from '@/components/InsuranceTypeBox.vue'
 import NavBar from '@/components/NavBar.vue'
 import Section from '@/components/Section.vue'
-import InsuranceTypeBox from '@/components/InsuranceTypeBox.vue'
 import type { Question } from '@/types'
-import { fetchQuestions, type QuestionsResponse } from '@/api/questions'
+import { computed, onMounted, ref, watch } from 'vue'
 
-const selectedQuestionId = ref<number | null>(null)
+// const selectedQuestionId = ref<number | null>(null)
 const selectedQuestionIds = ref<number[]>([])
 
 const questionsResponse = ref<QuestionsResponse | null>(null)

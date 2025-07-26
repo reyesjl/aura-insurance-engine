@@ -4,7 +4,6 @@
  * Copyright © 2025 Jose Reyes (GitHub: @reyesjl). All rights reserved.
  *
  * This software was developed solely by Jose Reyes – full-stack engineer and designer.
- * Jacob Powers contributed as the licensed insurance agent for the project.
  * It is a modern insurance submission platform built to streamline the intake
  * and processing of insurance applications.
  *

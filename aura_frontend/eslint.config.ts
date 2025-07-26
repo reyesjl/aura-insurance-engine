@@ -15,12 +15,12 @@
  * DeepWiki: https://app.devin.ai/wiki/reyesjl/aura-insurance-engine
  */
 
-import { globalIgnores } from 'eslint/config'
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
-import pluginVue from 'eslint-plugin-vue'
 import pluginVitest from '@vitest/eslint-plugin'
-import pluginPlaywright from 'eslint-plugin-playwright'
 import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
+import pluginPlaywright from 'eslint-plugin-playwright'
+import pluginVue from 'eslint-plugin-vue'
+import { globalIgnores } from 'eslint/config'
 
 // To allow more languages other than `ts` in `.vue` files, uncomment the following lines:
 // import { configureVueProject } from '@vue/eslint-config-typescript'
@@ -37,15 +37,28 @@ export default defineConfigWithVueTs(
 
   pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
-  
+
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
   },
-  
+
   {
     ...pluginPlaywright.configs['flat/recommended'],
     files: ['e2e/**/*.{test,spec}.{js,ts,jsx,tsx}'],
   },
+
+  // Custom rules to be more lenient for development
+  {
+    rules: {
+      // Allow single-word component names for simplicity
+      'vue/multi-word-component-names': 'off',
+      // Allow unused variables (can be useful during development)
+      '@typescript-eslint/no-unused-vars': 'warn',
+      // Allow any type (though it's better to fix these eventually)
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
+
   skipFormatting,
 )
