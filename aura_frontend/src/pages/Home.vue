@@ -84,29 +84,39 @@
     aria-label="Modern server infrastructure"
   >
     <div class="flex flex-col gap-15 text-white md:w-2/3">
-      <div class="text-5xl font-semibold">MCP Server with Automated Agents</div>
-      <div class="text-2xl">
-        Beyond intake—our Model Context Protocol server takes your completed applications and
-        automatically fills carrier portals across the industry. No more manual data entry, no more
-        portal juggling. From ApplicationSession to carrier quotes in minutes, not hours.
+      <div class="flex flex-col gap-3">
+        <div class="text-5xl font-semibold">AURA Bridge</div>
+        <div class="text-xl italic opacity-90">Powered by MCP Servers</div>
       </div>
-      <div class="flex flex-col gap-5">
-        <div class="text-xl">
-          <strong>Automated Portal Integration:</strong> Seamlessly connect with major carriers and
-          submit applications directly from your AURA workflow.
+      <div class="text-2xl leading-relaxed">
+        From completed application to carrier portal—automatically. AURA Bridge handles the heavy
+        lifting after intake, pushing submissions directly into carrier portals across the industry.
+        No more copy-pasting, no more tab juggling. Just seamless automation that gets you quotes in
+        minutes—not hours.
+      </div>
+      <div class="grid md:grid-cols-1 gap-6">
+        <div class="flex flex-col gap-2">
+          <div class="text-xl font-semibold">Seamless Portal Integration</div>
+          <div class="text-lg opacity-90">
+            Automatically syncs with major carriers from your existing AURA workflow.
+          </div>
         </div>
-        <div class="text-xl">
-          <strong>Real-time Quote Retrieval:</strong> Automated agents fetch quotes and post them
-          back to your dashboard for instant comparison.
+        <div class="flex flex-col gap-2">
+          <div class="text-xl font-semibold">Real-Time Quote Retrieval</div>
+          <div class="text-lg opacity-90">
+            Fetches quotes instantly and returns them to your dashboard.
+          </div>
         </div>
-        <div class="text-xl">
-          <strong>End-to-End Automation:</strong> From ApplicationAnswer collection to carrier
-          submission—streamline your entire workflow.
+        <div class="flex flex-col gap-2">
+          <div class="text-xl font-semibold">End-to-End Submission Automation</div>
+          <div class="text-lg opacity-90">
+            From ApplicationAnswer to carrier confirmation—fully automated.
+          </div>
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <router-link class="text-2xl w-fit underline underline-offset-6" to="/auth/register">
-          Experience automated carrier integration.
+        <router-link class="text-xl w-fit underline underline-offset-4" to="/auth/register">
+          Experience automated carrier integration with AURA Bridge.
         </router-link>
       </div>
     </div>
@@ -116,56 +126,53 @@
   <Section mode="dark" padding="large">
     <div class="flex flex-col gap-5 md:gap-none md:flex-row text-white">
       <div class="w-full md:w-1/2">
-        <div class="text-4xl md:text-5xl font-semibold w-full">
-          AI-Powered Carrier Recommendations
+        <div class="flex flex-col gap-3">
+          <div class="text-4xl md:text-5xl font-semibold">AURA Insight</div>
+          <div class="text-xl italic opacity-90">Powered by AI Analytics</div>
         </div>
       </div>
       <div class="w-full md:w-1/2 flex flex-col text-2xl gap-10 mt-10 md:mt-0">
-        <div>
-          Stop guessing which carriers to approach. Our AI analyzes quotes, carrier context, and
-          market conditions to provide intelligent recommendations—automating the agent's
-          decision-making process with data-driven insights.
+        <div class="leading-relaxed">
+          Smarter carrier selection, built into your workflow. AURA Insight removes the guesswork.
+          By analyzing submissions, coverage context, and market dynamics, it surfaces the most
+          aligned carriers—so you focus on advising, not digging through rate sheets.
         </div>
       </div>
     </div>
 
     <div class="grid md:grid-cols-2 gap-10 mt-15 text-white">
-      <div class="flex flex-col gap-5">
-        <div class="text-3xl font-semibold">Intelligent Analysis</div>
-        <div class="text-xl">
-          Advanced algorithms analyze carrier performance, quote competitiveness, and coverage
-          quality to rank your best options automatically.
+      <div class="flex flex-col gap-3">
+        <div class="text-2xl font-semibold">Context-Aware Matching</div>
+        <div class="text-lg opacity-90">
+          Understand carrier appetite, underwriting posture, and alignment.
         </div>
       </div>
-      <div class="flex flex-col gap-5">
-        <div class="text-3xl font-semibold">Contextual Insights</div>
-        <div class="text-xl">
-          Beyond price comparison—understand carrier appetite, underwriting preferences, and market
-          positioning for each submission.
+      <div class="flex flex-col gap-3">
+        <div class="text-2xl font-semibold">Competitive Scoring</div>
+        <div class="text-lg opacity-90">
+          Ranks carriers based on performance, price competitiveness, and fit.
         </div>
       </div>
-      <div class="flex flex-col gap-5">
-        <div class="text-3xl font-semibold">Automated Workflow</div>
-        <div class="text-xl">
-          From ApplicationSession completion to carrier recommendations—let AI handle the analysis
-          while you focus on client relationships.
+      <div class="flex flex-col gap-3">
+        <div class="text-2xl font-semibold">Integrated Workflow Intelligence</div>
+        <div class="text-lg opacity-90">
+          Activates the moment an ApplicationSession is completed.
         </div>
       </div>
-      <div class="flex flex-col gap-5">
-        <div class="text-3xl font-semibold">Market Intelligence</div>
-        <div class="text-xl">
-          Leverage real-time market data and carrier trends to make informed decisions with
-          confidence backed by comprehensive analytics.
+      <div class="flex flex-col gap-3">
+        <div class="text-2xl font-semibold">Market Data + Decision Support</div>
+        <div class="text-lg opacity-90">
+          Uses trends and live data to guide carrier prioritization.
         </div>
       </div>
     </div>
 
     <div class="mt-15 text-center">
       <router-link
-        class="text-2xl bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg transition-colors duration-200 inline-block text-white no-underline"
+        class="text-xl bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg transition-colors duration-200 inline-block text-white no-underline"
         to="/auth/register"
       >
-        Discover AI-Powered Recommendations
+        Act with clarity—powered by AURA Insight.
       </router-link>
     </div>
   </Section>
