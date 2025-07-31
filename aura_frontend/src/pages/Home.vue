@@ -60,8 +60,9 @@
   <Section id="UMSI" mode="beige" padding="large">
     <div class="flex flex-col gap-5 md:gap-none md:flex-row">
       <div class="w-full md:w-1/2">
-        <div class="text-4xl md:text-5xl font-semibold w-full">
-          Unified Multi-line Submission Intelligence
+        <div class="flex flex-col gap-3">
+          <div class="text-4xl md:text-5xl font-semibold w-full">AURA Intake</div>
+          <div class="text-xl italic opacity-90">Unified Multi-line Submission Intelligence</div>
         </div>
       </div>
       <div class="w-full md:w-1/2 flex flex-col text-2xl gap-10 mt-10 md:mt-0">
@@ -155,9 +156,7 @@
       </div>
       <div class="flex flex-col gap-3">
         <div class="text-2xl font-semibold">Integrated Workflow Intelligence</div>
-        <div class="text-lg opacity-90">
-          Activates the moment an ApplicationSession is completed.
-        </div>
+        <div class="text-lg opacity-90">Activates the moment an application is completed.</div>
       </div>
       <div class="flex flex-col gap-3">
         <div class="text-2xl font-semibold">Market Data + Decision Support</div>
