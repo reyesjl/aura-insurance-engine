@@ -76,19 +76,114 @@
     <AuraSteps />
   </Section>
 
+  <!-- MCP Server with Automated Agents Section -->
+  <ImageSection
+    :image="mcpBanner"
+    overlay
+    overlayClass="bg-blue-900/50 backdrop-blur-xs"
+    aria-label="Modern server infrastructure"
+  >
+    <div class="flex flex-col gap-15 text-white md:w-2/3">
+      <div class="text-5xl font-semibold">MCP Server with Automated Agents</div>
+      <div class="text-2xl">
+        Beyond intake—our Model Context Protocol server takes your completed applications and
+        automatically fills carrier portals across the industry. No more manual data entry, no more
+        portal juggling. From ApplicationSession to carrier quotes in minutes, not hours.
+      </div>
+      <div class="flex flex-col gap-5">
+        <div class="text-xl">
+          <strong>Automated Portal Integration:</strong> Seamlessly connect with major carriers and
+          submit applications directly from your AURA workflow.
+        </div>
+        <div class="text-xl">
+          <strong>Real-time Quote Retrieval:</strong> Automated agents fetch quotes and post them
+          back to your dashboard for instant comparison.
+        </div>
+        <div class="text-xl">
+          <strong>End-to-End Automation:</strong> From ApplicationAnswer collection to carrier
+          submission—streamline your entire workflow.
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <router-link class="text-2xl w-fit underline underline-offset-6" to="/auth/register">
+          Experience automated carrier integration.
+        </router-link>
+      </div>
+    </div>
+  </ImageSection>
+
+  <!-- AI-Powered Carrier Recommendations Section -->
+  <Section mode="dark" padding="large">
+    <div class="flex flex-col gap-5 md:gap-none md:flex-row text-white">
+      <div class="w-full md:w-1/2">
+        <div class="text-4xl md:text-5xl font-semibold w-full">
+          AI-Powered Carrier Recommendations
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 flex flex-col text-2xl gap-10 mt-10 md:mt-0">
+        <div>
+          Stop guessing which carriers to approach. Our AI analyzes quotes, carrier context, and
+          market conditions to provide intelligent recommendations—automating the agent's
+          decision-making process with data-driven insights.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-10 mt-15 text-white">
+      <div class="flex flex-col gap-5">
+        <div class="text-3xl font-semibold">Intelligent Analysis</div>
+        <div class="text-xl">
+          Advanced algorithms analyze carrier performance, quote competitiveness, and coverage
+          quality to rank your best options automatically.
+        </div>
+      </div>
+      <div class="flex flex-col gap-5">
+        <div class="text-3xl font-semibold">Contextual Insights</div>
+        <div class="text-xl">
+          Beyond price comparison—understand carrier appetite, underwriting preferences, and market
+          positioning for each submission.
+        </div>
+      </div>
+      <div class="flex flex-col gap-5">
+        <div class="text-3xl font-semibold">Automated Workflow</div>
+        <div class="text-xl">
+          From ApplicationSession completion to carrier recommendations—let AI handle the analysis
+          while you focus on client relationships.
+        </div>
+      </div>
+      <div class="flex flex-col gap-5">
+        <div class="text-3xl font-semibold">Market Intelligence</div>
+        <div class="text-xl">
+          Leverage real-time market data and carrier trends to make informed decisions with
+          confidence backed by comprehensive analytics.
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-15 text-center">
+      <router-link
+        class="text-2xl bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg transition-colors duration-200 inline-block text-white no-underline"
+        to="/auth/register"
+      >
+        Discover AI-Powered Recommendations
+      </router-link>
+    </div>
+  </Section>
+
   <!-- Footer -->
   <FootBar />
 </template>
 
 <script setup lang="ts">
-import NavBar from '@/components/NavBar.vue'
-import FootBar from '@/components/FootBar.vue'
-import AuraSteps from '@/components/AuraSteps.vue'
+import mcpBanner from '@/assets/dc-bg.jpg'
 import bannerImage from '@/assets/juliane-bg.jpg'
 import rebuildBanner from '@/assets/staircase-bg.jpg'
+import AuraSteps from '@/components/AuraSteps.vue'
+import FootBar from '@/components/FootBar.vue'
+import ImageSection from '@/components/ImageSection.vue'
+import NavBar from '@/components/NavBar.vue'
 import ScrollButton from '@/components/ScrollButton.vue'
 import Section from '@/components/Section.vue'
-import ImageSection from '@/components/ImageSection.vue'
 </script>
 
 <style scoped></style>
