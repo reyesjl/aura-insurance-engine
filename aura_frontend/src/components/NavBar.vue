@@ -33,49 +33,49 @@
     </div>
     <div
       :class="[
-        'px-10 w-fit text-lg hidden lg:flex flex-grow align-center items-center gap-8',
+        'px-10 w-fit hidden lg:flex flex-grow align-center items-center gap-8',
         isScrolled ? 'border-r border-black' : 'border-r border-white',
       ]"
     >
       <router-link
         to="/"
-        :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
+        :class="[
+          'text-base hover:underline underline-offset-4 hover:underline-offset-6 transition-all',
+          isScrolled ? 'text-black' : 'text-white',
+        ]"
         >Home</router-link
       >
       <router-link
         to="/about"
-        :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
+        :class="[
+          'text-base hover:underline underline-offset-4 hover:underline-offset-6 transition-all',
+          isScrolled ? 'text-black' : 'text-white',
+        ]"
         >About Us</router-link
       >
-      <a
-        href="https://forms.gle/9T3hno3iGvyiuWGd7"
-        target="_blank"
-        rel="noopener"
-        :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-        >Feedback</a
+      <router-link
+        to="/feedback"
+        :class="[
+          'text-base hover:underline underline-offset-4 hover:underline-offset-6 transition-all',
+          isScrolled ? 'text-black' : 'text-white',
+        ]"
+        >Feedback</router-link
       >
     </div>
-    <div
-      v-if="!userStore.isLoggedIn"
-      class="md:flex align-center items-center px-10 hidden text-lg"
-    >
-      <!-- <a
-          href="https://forms.gle/9T3hno3iGvyiuWGd7"
-          target="_blank"
-          rel="noopener"
-          :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
-          >Leave Feedback</a
-        > -->
+    <div v-if="!userStore.isLoggedIn" class="md:flex align-center items-center px-10 hidden">
       <router-link
         to="/agent"
-        :class="['hover:underline underline-offset-6', isScrolled ? 'text-black' : 'text-white']"
+        :class="[
+          'text-base hover:underline underline-offset-4 hover:underline-offset-6 transition-all',
+          isScrolled ? 'text-black' : 'text-white',
+        ]"
         >Login/Signup</router-link
       >
     </div>
     <div
       @click="toggleMenu"
       :class="[
-        'text-lg bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black cursor-pointer',
+        'bg-black text-white flex align-center items-center px-10 duration-300 hover:bg-white hover:text-black cursor-pointer',
         isScrolled ? 'border-l border-black' : 'border-l border-white',
       ]"
     >
@@ -90,12 +90,12 @@
       v-if="userStore.isLoggedIn"
       @click="navToAgent"
       :class="[
-        'text-lg bg-black text-white flex align-center items-center px-4 md:px-10 duration-300 hover:bg-white hover:text-black',
+        'bg-black text-white flex align-center items-center px-4 md:px-10 duration-300 hover:bg-white hover:text-black',
         isScrolled ? 'border-l border-black' : 'border-l border-white',
       ]"
     >
       <router-link to="/agent" class="flex align-center items-center">
-        <span>MyAgent</span>
+        <span class="text-base">MyAgent</span>
       </router-link>
     </div>
   </div>
@@ -119,9 +119,7 @@
             <router-link to="/auth/login">Login/Signup</router-link>
           </li>
           <li class="py-5 border-b-1 text-right md:text-left">
-            <a href="https://forms.gle/9T3hno3iGvyiuWGd7" target="_blank" rel="noopener"
-              >Feedback</a
-            >
+            <router-link to="/feedback">Feedback</router-link>
           </li>
           <li v-if="userStore.isLoggedIn" class="py-5 border-b-1 text-right md:text-left">
             <button
@@ -141,9 +139,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const userStore = useUserStore()

@@ -52,8 +52,9 @@
               <div class="flex flex-col gap-6">
                 <div class="text-xs">PRODUCTS</div>
                 <ul class="flex flex-col gap-2 list-none p-0 m-0">
-                  <li>AURA Engine</li>
-                  <li>UMSI Integration</li>
+                  <li>AURA Intake</li>
+                  <li>AURA Bridge</li>
+                  <li>AURA Insight</li>
                 </ul>
               </div>
             </div>
@@ -62,7 +63,11 @@
               <div class="text-xs">CONTACT US</div>
               <ul class="flex flex-col gap-2 list-none p-0 m-0">
                 <li>contact@aura.soon</li>
-                <li>Leave Feedback</li>
+                <li>
+                  <router-link to="/feedback" class="hover:text-gray-300 transition-colors">
+                    Leave Feedback
+                  </router-link>
+                </li>
               </ul>
             </div>
           </div>
@@ -75,8 +80,16 @@
         <div class="mt-10 md:mt-0">@Aura Solutions, 2025</div>
         <div class="md:w-1/2">
           <ul class="list-none p-0 m-0 flex gap-6">
-            <li>Privacy Policy</li>
-            <li>Terms of Use</li>
+            <li>
+              <router-link to="/license" class="hover:text-gray-300 transition-colors">
+                License
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/terms-of-service" class="hover:text-gray-300 transition-colors">
+                Terms of Service
+              </router-link>
+            </li>
             <li>Modern AI Policy</li>
           </ul>
         </div>
@@ -89,8 +102,4 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import prideBadge from '@/assets/pride-badge.gif'
-import niceBadge from '@/assets/nice-badge.gif'
-import vaSeal from '@/assets/va-seal.png'
-</script>
+<script setup lang="ts"></script>

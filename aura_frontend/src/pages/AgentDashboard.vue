@@ -4,27 +4,29 @@
   <Breadcrumbs />
 
   <Section mode="light" padding="small" class="min-h-screen">
-    <div class="text-4xl md:text-5xl font-bold mb-5">
+    <div class="text-4xl md:text-5xl font-semibold leading-tight mb-12">
       Welcome back, {{ user?.username || 'Agent' }}
     </div>
 
     <!-- Show different content based on agent status -->
     <div
       v-if="!userStore.isAgent"
-      class="mb-6 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded"
+      class="mb-8 p-6 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg"
     >
-      <p class="font-semibold">Account Pending Agent Approval</p>
-      <p>Your account is being reviewed for agent access. Please contact support for assistance.</p>
+      <p class="text-lg font-semibold mb-2">Account Pending Agent Approval</p>
+      <p class="text-base leading-relaxed">
+        Your account is being reviewed for agent access. Please contact support for assistance.
+      </p>
     </div>
 
     <!-- Tiles -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <button
         @click="userStore.isAgent ? navigateToCreateApplication : null"
         @keydown.enter="userStore.isAgent ? navigateToCreateApplication : null"
         @keydown.space.prevent="userStore.isAgent ? navigateToCreateApplication : null"
         :class="{
-          'flex flex-col gap-5 duration-200 p-10 text-left focus:outline-none focus:ring-2 focus:ring-offset-2': true,
+          'flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg': true,
           'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
             userStore.isAgent,
           'bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300':
@@ -35,8 +37,8 @@
         "
         :disabled="!userStore.isAgent"
       >
-        <div class="text-2xl">+ New App</div>
-        <div class="tile-description">
+        <div class="text-lg font-semibold">+ New App</div>
+        <div class="text-base opacity-80 leading-relaxed">
           {{ userStore.isAgent ? 'Start a new insurance application' : 'Agent access required' }}
         </div>
       </button>
@@ -46,7 +48,7 @@
         @keydown.enter="userStore.isAgent ? navigateToApplicationSessions : null"
         @keydown.space.prevent="userStore.isAgent ? navigateToApplicationSessions : null"
         :class="{
-          'flex flex-col gap-5 duration-200 p-10 text-left focus:outline-none focus:ring-2 focus:ring-offset-2': true,
+          'flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg': true,
           'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
             userStore.isAgent,
           'bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300':
@@ -57,8 +59,8 @@
         "
         :disabled="!userStore.isAgent"
       >
-        <div class="text-2xl">My Sessions</div>
-        <div class="tile-description">
+        <div class="text-lg font-semibold">My Sessions</div>
+        <div class="text-base opacity-80 leading-relaxed">
           {{ userStore.isAgent ? 'View active application sessions' : 'Agent access required' }}
         </div>
       </button>
@@ -68,7 +70,7 @@
         @keydown.enter="userStore.isAgent ? navigateToQuestions : null"
         @keydown.space.prevent="userStore.isAgent ? navigateToQuestions : null"
         :class="{
-          'flex flex-col gap-5 duration-200 p-10 text-left focus:outline-none focus:ring-2 focus:ring-offset-2': true,
+          'flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg': true,
           'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
             userStore.isAgent,
           'bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300':
@@ -77,8 +79,8 @@
         :aria-label="userStore.isAgent ? 'View and manage your questions' : 'Agent access required'"
         :disabled="!userStore.isAgent"
       >
-        <div class="text-2xl">Questions</div>
-        <div class="tile-description">
+        <div class="text-lg font-semibold">Questions</div>
+        <div class="text-base opacity-80 leading-relaxed">
           {{ userStore.isAgent ? 'View and manage your questions' : 'Agent access required' }}
         </div>
       </button>
@@ -87,11 +89,11 @@
         @click="handleLogout"
         @keydown.enter="handleLogout"
         @keydown.space.prevent="handleLogout"
-        class="flex flex-col gap-5 duration-200 bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 p-10 text-left"
+        class="flex flex-col gap-6 duration-200 bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 p-8 text-left rounded-lg"
         aria-label="Logout of your account"
       >
-        <div class="text-2xl">Logout</div>
-        <div class="tile-description">Logout of your account</div>
+        <div class="text-lg font-semibold">Logout</div>
+        <div class="text-base opacity-80 leading-relaxed">Logout of your account</div>
       </button>
     </div>
   </Section>
