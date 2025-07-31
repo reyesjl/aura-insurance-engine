@@ -68,8 +68,8 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     permission_classes = [IsAgentUser]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['insurance_types']
-    search_fields = ['text'] 
+    filterset_fields = ["insurance_types"]
+    search_fields = ["text"]
 
 
 class ApplicationTemplateViewSet(viewsets.ModelViewSet):
@@ -127,7 +127,7 @@ class ApiInfo(APIView):
                 "description": "Aura Insurance Engine Backend API",
                 "django_version": django.get_version(),
                 "python_version": platform.python_version(),
-                "app_version": "v1.1.0",
+                "app_version": "v1.1.1",
             }
         )
 
