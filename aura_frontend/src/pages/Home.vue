@@ -110,7 +110,7 @@
         <div class="flex flex-col gap-2">
           <div class="text-xl font-semibold">End-to-End Submission Automation</div>
           <div class="text-lg opacity-90">
-            From ApplicationAnswer to carrier confirmation—fully automated.
+            From application to carrier confirmation—fully automated.
           </div>
         </div>
       </div>
