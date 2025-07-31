@@ -20,38 +20,69 @@
     <!-- Tiles -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
       <button
-        @click="navigateToCreateApplication"
-        @keydown.enter="navigateToCreateApplication"
-        @keydown.space.prevent="navigateToCreateApplication"
-        class="flex flex-col gap-5 duration-200 bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 p-10 text-left"
-        aria-label="Start a new insurance application"
+        @click="userStore.isAgent ? navigateToCreateApplication : null"
+        @keydown.enter="userStore.isAgent ? navigateToCreateApplication : null"
+        @keydown.space.prevent="userStore.isAgent ? navigateToCreateApplication : null"
+        :class="{
+          'flex flex-col gap-5 duration-200 p-10 text-left focus:outline-none focus:ring-2 focus:ring-offset-2': true,
+          'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
+            userStore.isAgent,
+          'bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300':
+            !userStore.isAgent,
+        }"
+        :aria-label="
+          userStore.isAgent ? 'Start a new insurance application' : 'Agent access required'
+        "
+        :disabled="!userStore.isAgent"
       >
         <div class="text-2xl">+ New App</div>
-        <div class="tile-description">Start a new insurance application</div>
+        <div class="tile-description">
+          {{ userStore.isAgent ? 'Start a new insurance application' : 'Agent access required' }}
+        </div>
       </button>
-      
+
       <button
-        @click="navigateToApplicationSessions"
-        @keydown.enter="navigateToApplicationSessions"
-        @keydown.space.prevent="navigateToApplicationSessions"
-        class="flex flex-col gap-5 duration-200 bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 p-10 text-left"
-        aria-label="View active application sessions"
+        @click="userStore.isAgent ? navigateToApplicationSessions : null"
+        @keydown.enter="userStore.isAgent ? navigateToApplicationSessions : null"
+        @keydown.space.prevent="userStore.isAgent ? navigateToApplicationSessions : null"
+        :class="{
+          'flex flex-col gap-5 duration-200 p-10 text-left focus:outline-none focus:ring-2 focus:ring-offset-2': true,
+          'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
+            userStore.isAgent,
+          'bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300':
+            !userStore.isAgent,
+        }"
+        :aria-label="
+          userStore.isAgent ? 'View active application sessions' : 'Agent access required'
+        "
+        :disabled="!userStore.isAgent"
       >
         <div class="text-2xl">My Sessions</div>
-        <div class="tile-description">View active application sessions</div>
+        <div class="tile-description">
+          {{ userStore.isAgent ? 'View active application sessions' : 'Agent access required' }}
+        </div>
       </button>
-      
+
       <button
-        @click="navigateToQuestions"
-        @keydown.enter="navigateToQuestions"
-        @keydown.space.prevent="navigateToQuestions"
-        class="flex flex-col gap-5 duration-200 bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 p-10 text-left"
-        aria-label="View and manage your questions"
+        @click="userStore.isAgent ? navigateToQuestions : null"
+        @keydown.enter="userStore.isAgent ? navigateToQuestions : null"
+        @keydown.space.prevent="userStore.isAgent ? navigateToQuestions : null"
+        :class="{
+          'flex flex-col gap-5 duration-200 p-10 text-left focus:outline-none focus:ring-2 focus:ring-offset-2': true,
+          'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
+            userStore.isAgent,
+          'bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300':
+            !userStore.isAgent,
+        }"
+        :aria-label="userStore.isAgent ? 'View and manage your questions' : 'Agent access required'"
+        :disabled="!userStore.isAgent"
       >
         <div class="text-2xl">Questions</div>
-        <div class="tile-description">View and manage your questions</div>
+        <div class="tile-description">
+          {{ userStore.isAgent ? 'View and manage your questions' : 'Agent access required' }}
+        </div>
       </button>
-      
+
       <button
         @click="handleLogout"
         @keydown.enter="handleLogout"
@@ -69,13 +100,13 @@
 </template>
 
 <script setup lang="ts">
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import FootBar from '@/components/FootBar.vue'
+import NavBar from '@/components/NavBar.vue'
+import Section from '@/components/Section.vue'
+import { useUserStore } from '@/stores/user.ts'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user.ts'
-import NavBar from '@/components/NavBar.vue'
-import FootBar from '@/components/FootBar.vue'
-import Section from '@/components/Section.vue'
-import Breadcrumbs from '@/components/Breadcrumbs.vue'
 
 const userStore = useUserStore()
 const router = useRouter()
