@@ -23,8 +23,8 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Copy Nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
-EXPOSE 80
+# Expose HTTP and HTTPS
+EXPOSE 80 443
 
 # Run Nginx
 CMD ["nginx", "-g", "daemon off;"]
