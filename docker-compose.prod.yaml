@@ -10,8 +10,8 @@ services:
       - "443:443"
     volumes:
       - static_volume:/app/static/
-      - /etc/letsencrypt/live/wydstepbro.com/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
-      - /etc/letsencrypt/live/wydstepbro.com/privkey.pem:/etc/ssl/private/privkey.pem:ro
+      - /etc/letsencrypt/live/aurasurance.com/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/aurasurance.com/privkey.pem:/etc/ssl/private/privkey.pem:ro
     depends_on:
       - backend
     environment:
