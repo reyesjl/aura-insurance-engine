@@ -22,9 +22,9 @@
     <!-- Tiles -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <button
-        @click="userStore.isAgent ? navigateToCreateApplication : null"
-        @keydown.enter="userStore.isAgent ? navigateToCreateApplication : null"
-        @keydown.space.prevent="userStore.isAgent ? navigateToCreateApplication : null"
+        @click="navigateToCreateApplication"
+        @keydown.enter="navigateToCreateApplication"
+        @keydown.space.prevent="navigateToCreateApplication"
         :class="{
           'flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg': true,
           'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
@@ -44,9 +44,9 @@
       </button>
 
       <button
-        @click="userStore.isAgent ? navigateToApplicationSessions : null"
-        @keydown.enter="userStore.isAgent ? navigateToApplicationSessions : null"
-        @keydown.space.prevent="userStore.isAgent ? navigateToApplicationSessions : null"
+        @click="navigateToApplicationSessions"
+        @keydown.enter="navigateToApplicationSessions"
+        @keydown.space.prevent="navigateToApplicationSessions"
         :class="{
           'flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg': true,
           'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
@@ -66,9 +66,9 @@
       </button>
 
       <button
-        @click="userStore.isAgent ? navigateToQuestions : null"
-        @keydown.enter="userStore.isAgent ? navigateToQuestions : null"
-        @keydown.space.prevent="userStore.isAgent ? navigateToQuestions : null"
+        @click="navigateToQuestions"
+        @keydown.enter="navigateToQuestions"
+        @keydown.space.prevent="navigateToQuestions"
         :class="{
           'flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg': true,
           'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
@@ -125,14 +125,17 @@ const handleLogout = async () => {
 }
 
 const navigateToCreateApplication = () => {
+  if (!userStore.isAgent) return
   router.push('/applications/create')
 }
 
 const navigateToApplicationSessions = () => {
+  if (!userStore.isAgent) return
   router.push('/applications')
 }
 
 const navigateToQuestions = () => {
+  if (!userStore.isAgent) return
   router.push('/questions')
 }
 
