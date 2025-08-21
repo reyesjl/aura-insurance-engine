@@ -21,69 +21,68 @@
 
     <!-- Tiles -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <button
-        @click="navigateToCreateApplication"
-        @keydown.enter="navigateToCreateApplication"
-        @keydown.space.prevent="navigateToCreateApplication"
-        :class="{
-          'flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg': true,
-          'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
-            userStore.isAgent,
-          'bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300':
-            !userStore.isAgent,
-        }"
-        :aria-label="
-          userStore.isAgent ? 'Start a new insurance application' : 'Agent access required'
-        "
-        :disabled="!userStore.isAgent"
+      <!-- New Application Tile -->
+      <RouterLink
+        v-if="userStore.isAgent"
+        to="/applications/create"
+        class="flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer"
+        aria-label="Start a new insurance application"
       >
         <div class="text-lg font-semibold">+ New App</div>
-        <div class="text-base opacity-80 leading-relaxed">
-          {{ userStore.isAgent ? 'Start a new insurance application' : 'Agent access required' }}
-        </div>
-      </button>
+        <div class="text-base opacity-80 leading-relaxed">Start a new insurance application</div>
+      </RouterLink>
+      <div
+        v-else
+        class="flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300"
+        aria-label="Agent access required"
+        aria-disabled="true"
+        tabindex="-1"
+      >
+        <div class="text-lg font-semibold">+ New App</div>
+        <div class="text-base opacity-80 leading-relaxed">Agent access required</div>
+      </div>
 
-      <button
-        @click="navigateToApplicationSessions"
-        @keydown.enter="navigateToApplicationSessions"
-        @keydown.space.prevent="navigateToApplicationSessions"
-        :class="{
-          'flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg': true,
-          'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
-            userStore.isAgent,
-          'bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300':
-            !userStore.isAgent,
-        }"
-        :aria-label="
-          userStore.isAgent ? 'View active application sessions' : 'Agent access required'
-        "
-        :disabled="!userStore.isAgent"
+      <!-- Sessions Tile -->
+      <RouterLink
+        v-if="userStore.isAgent"
+        to="/applications"
+        class="flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer"
+        aria-label="View active application sessions"
       >
         <div class="text-lg font-semibold">My Sessions</div>
-        <div class="text-base opacity-80 leading-relaxed">
-          {{ userStore.isAgent ? 'View active application sessions' : 'Agent access required' }}
-        </div>
-      </button>
+        <div class="text-base opacity-80 leading-relaxed">View active application sessions</div>
+      </RouterLink>
+      <div
+        v-else
+        class="flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300"
+        aria-label="Agent access required"
+        aria-disabled="true"
+        tabindex="-1"
+      >
+        <div class="text-lg font-semibold">My Sessions</div>
+        <div class="text-base opacity-80 leading-relaxed">Agent access required</div>
+      </div>
 
-      <button
-        @click="navigateToQuestions"
-        @keydown.enter="navigateToQuestions"
-        @keydown.space.prevent="navigateToQuestions"
-        :class="{
-          'flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg': true,
-          'bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer':
-            userStore.isAgent,
-          'bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300':
-            !userStore.isAgent,
-        }"
-        :aria-label="userStore.isAgent ? 'View and manage your questions' : 'Agent access required'"
-        :disabled="!userStore.isAgent"
+      <!-- Questions Tile -->
+      <RouterLink
+        v-if="userStore.isAgent"
+        to="/questions"
+        class="flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg bg-gray-200 hover:bg-black hover:text-white focus:bg-black focus:text-white focus:ring-blue-500 cursor-pointer"
+        aria-label="View and manage your questions"
       >
         <div class="text-lg font-semibold">Questions</div>
-        <div class="text-base opacity-80 leading-relaxed">
-          {{ userStore.isAgent ? 'View and manage your questions' : 'Agent access required' }}
-        </div>
-      </button>
+        <div class="text-base opacity-80 leading-relaxed">View and manage your questions</div>
+      </RouterLink>
+      <div
+        v-else
+        class="flex flex-col gap-6 duration-200 p-8 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg bg-red-100 text-red-400 cursor-not-allowed hover:bg-red-200 focus:ring-red-300"
+        aria-label="Agent access required"
+        aria-disabled="true"
+        tabindex="-1"
+      >
+        <div class="text-lg font-semibold">Questions</div>
+        <div class="text-base opacity-80 leading-relaxed">Agent access required</div>
+      </div>
 
       <button
         @click="handleLogout"
@@ -108,7 +107,7 @@ import NavBar from '@/components/NavBar.vue'
 import Section from '@/components/Section.vue'
 import { useUserStore } from '@/stores/user.ts'
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -124,20 +123,7 @@ const handleLogout = async () => {
   }
 }
 
-const navigateToCreateApplication = () => {
-  if (!userStore.isAgent) return
-  router.push('/applications/create')
-}
-
-const navigateToApplicationSessions = () => {
-  if (!userStore.isAgent) return
-  router.push('/applications')
-}
-
-const navigateToQuestions = () => {
-  if (!userStore.isAgent) return
-  router.push('/questions')
-}
+// navigation handled via <RouterLink> for agent-only tiles
 
 // Protect the route - redirect if not logged in, but allow non-agents
 onMounted(() => {
